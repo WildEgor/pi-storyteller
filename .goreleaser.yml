@@ -16,9 +16,10 @@ builds:
     # GOOS list to build for
     goos:
       - linux
-      - darwin
-      - windows
+#      - darwin
+#      - windows
     # GOARCH to build for
     goarch:
-      - amd64
-      - arm64
+#      - amd64
+#      - arm64
+      - arm
