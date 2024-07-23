@@ -15,7 +15,7 @@ type AppConfig struct {
 }
 
 // NewAppConfig creates app config
-func NewAppConfig(c *Configurator) *AppConfig {
+func NewAppConfig() *AppConfig {
 	cfg := &AppConfig{}
 
 	if err := viper.UnmarshalKey("app", &cfg); err != nil {

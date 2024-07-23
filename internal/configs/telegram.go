@@ -12,7 +12,7 @@ type TelegramBotConfig struct {
 }
 
 // NewTelegramBotConfig creates telegram bot config
-func NewTelegramBotConfig(c *Configurator) *TelegramBotConfig {
+func NewTelegramBotConfig() *TelegramBotConfig {
 	cfg := &TelegramBotConfig{}
 
 	if err := viper.UnmarshalKey("telegram", &cfg); err != nil {

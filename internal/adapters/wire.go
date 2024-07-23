@@ -15,5 +15,5 @@ var Set = wire.NewSet(
 	wire.Bind(new(textor.ITextor), new(*textor.OllamaAdapter)),
 	bot.NewTelegramBot,
 	wire.Bind(new(bot.IBot), new(*bot.TelegramBot)),
-	wire.Bind(new(bot.ITelegramBotRegistry), new(*bot.TelegramBot)),
+	wire.Bind(new(bot.IBotRegistry), new(*bot.TelegramBot)),
 )

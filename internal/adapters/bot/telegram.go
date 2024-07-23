@@ -36,22 +36,41 @@ func (t *TelegramBot) Start() {
 	t.bot.Start()
 }
 
-// SendMsg implements IBot.
-func (t *TelegramBot) SendMsg(to *MessageRecipient, msg string) error {
-	_, err := t.bot.Send(to, msg)
-
-	return err
+func (t *TelegramBot) Stop() {
+	t.bot.Stop()
 }
 
-// SendSlices implements IBot.
-func (t *TelegramBot) SendSlices(to *MessageRecipient, slides []StorySlide) error {
+// SendMsg ...
+func (t *TelegramBot) SendMsg(to *MessageRecipient, msg string) (mid int, err error) {
+	m, err := t.bot.Send(to, msg)
+	if err != nil {
+		return 0, err
+	}
+
+	return m.ID, err
+}
+
+func (t *TelegramBot) EditMsg(to *MessageRecipient, msg string) (mid int, err error) {
+	m, err := t.bot.Edit(to, msg)
+	if err != nil {
+		return 0, err
+	}
+
+	return m.ID, err
+}
+
+// SendStory ...
+func (t *TelegramBot) SendStory(to *MessageRecipient, slides []StorySlide) error {
 	files := make(tele.Album, 0, len(slides))
 
 	for _, v := range slides {
 		buf := new(bytes.Buffer)
 		jpeg.Encode(buf, v.Image, nil)
 
-		photo := tele.Photo{File: tele.FromReader(bytes.NewReader(buf.Bytes()))}
+		photo := tele.Photo{
+			File:    tele.FromReader(bytes.NewReader(buf.Bytes())),
+			Caption: v.Desc,
+		}
 		files = append(files, &photo)
 	}
 
@@ -63,15 +82,11 @@ func (t *TelegramBot) SendSlices(to *MessageRecipient, slides []StorySlide) erro
 	return nil
 }
 
-func (t *TelegramBot) HandleCommand(command string, fn func(data *TelegramCommandData)) error {
+func (t *TelegramBot) HandleCommand(command string, fn func(data *CommandData) error) {
 	t.bot.Handle(command, func(c tele.Context) error {
-		fn(&TelegramCommandData{
+		return fn(&CommandData{
 			ChatID:  c.Chat().ID,
 			Payload: c.Message().Payload,
 		})
-
-		return nil
 	})
-
-	return nil
 }

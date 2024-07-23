@@ -16,6 +16,7 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/handlers/tg/start"
 	"github.com/WildEgor/pi-storyteller/internal/routers"
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
+	"github.com/WildEgor/pi-storyteller/internal/services/templater"
 	"github.com/google/wire"
 )
 
@@ -23,18 +24,19 @@ import (
 
 // NewServer
 func NewServer() (*Server, error) {
+	appConfig := configs.NewAppConfig()
+	loggerConfig := configs.NewLoggerConfig()
 	configurator := configs.NewConfigurator()
-	appConfig := configs.NewAppConfig(configurator)
-	loggerConfig := configs.NewLoggerConfig(configurator)
 	errorsHandler := http_error_handler.NewErrorsHandler()
 	healthCheckHandler := http_health_check_handler.NewHealthCheckHandler()
 	healthRouter := routers.NewHealthRouter(healthCheckHandler)
-	telegramBotConfig := configs.NewTelegramBotConfig(configurator)
+	telegramBotConfig := configs.NewTelegramBotConfig()
 	telegramBot := bot.NewTelegramBot(telegramBotConfig)
 	dispatcherDispatcher := dispatcher.NewDispatcher()
-	kandinskyConfig := configs.NewKandinskyConfig(configurator)
+	kandinskyConfig := configs.NewKandinskyConfig()
 	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyConfig)
-	generateHandler := tg_generate_handler.NewGenerateHandler(dispatcherDispatcher, kandinskyAdapter, telegramBot)
+	templaterTemplater := templater.NewTemplateService()
+	generateHandler := tg_generate_handler.NewGenerateHandler(dispatcherDispatcher, kandinskyAdapter, templaterTemplater, telegramBot)
 	startHandler := tg_start_handler.NewStartHandler(telegramBot)
 	telegramhRouter := routers.NewImageRouter(telegramBot, generateHandler, startHandler)
 	server := NewApp(appConfig, loggerConfig, configurator, errorsHandler, healthRouter, telegramhRouter, telegramBot, dispatcherDispatcher)

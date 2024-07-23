@@ -24,7 +24,7 @@ type LoggerConfig struct {
 }
 
 // NewLoggerConfig create logger config
-func NewLoggerConfig(c *Configurator) *LoggerConfig {
+func NewLoggerConfig() *LoggerConfig {
 	cfg := &LoggerConfig{}
 
 	if err := viper.UnmarshalKey("logger", cfg); err != nil {

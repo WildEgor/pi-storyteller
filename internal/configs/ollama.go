@@ -12,7 +12,7 @@ type OllamaConfig struct {
 }
 
 // NewOllamaConfig creates kandinsky config
-func NewOllamaConfig(c *Configurator) *OllamaConfig {
+func NewOllamaConfig() *OllamaConfig {
 	cfg := &OllamaConfig{}
 
 	if err := viper.UnmarshalKey("ollama", &cfg); err != nil {

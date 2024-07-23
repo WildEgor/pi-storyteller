@@ -1,11 +1,13 @@
 package bot
 
 type IBot interface {
+	SendStory(to *MessageRecipient, slides []StorySlide) error
+	SendMsg(to *MessageRecipient, msg string) (mid int, err error)
+	EditMsg(to *MessageRecipient, msg string) (mid int, err error)
 	Start()
-	SendSlices(to *MessageRecipient, slides []StorySlide) error
-	SendMsg(to *MessageRecipient, msg string) error
+	Stop()
 }
 
-type ITelegramBotRegistry interface {
-	HandleCommand(command string, fn func(data *TelegramCommandData)) error
+type IBotRegistry interface {
+	HandleCommand(command string, fn func(data *CommandData) error)
 }

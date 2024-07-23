@@ -2,6 +2,7 @@ package tg_generate_handler
 
 import (
 	"context"
+	"github.com/WildEgor/pi-storyteller/internal/services/templater"
 	"log/slog"
 	"strings"
 
@@ -13,13 +14,15 @@ import (
 type GenerateHandler struct {
 	dispatcher *dispatcher.Dispatcher
 	imaginator imaginator.Imagininator
+	templater  *templater.Templater
 	bot        bot.IBot
 }
 
-func NewGenerateHandler(dispatcher *dispatcher.Dispatcher, imaginator imaginator.Imagininator, bot bot.IBot) *GenerateHandler {
+func NewGenerateHandler(dispatcher *dispatcher.Dispatcher, imaginator imaginator.Imagininator, templater *templater.Templater, bot bot.IBot) *GenerateHandler {
 	return &GenerateHandler{
 		dispatcher,
 		imaginator,
+		templater,
 		bot,
 	}
 }
@@ -31,21 +34,21 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GeneratePayload) 
 	}
 
 	if len(promts) > 5 {
-		return h.bot.SendMsg(recp, "Ooops, limit reached")
+		_, err := h.bot.SendMsg(recp, "Ooops, limit reached")
+		return err
 	}
 
 	err := h.dispatcher.Dispatch(func() {
 		p := make(chan string, len(promts))
-		r := make(chan imaginator.ImageGenerationResult)
+		r := make(chan imaginator.ImageGenerationResult, 1)
+		defer close(p)
 
-		func() {
-			defer close(p)
-			for _, s := range promts {
-				p <- s
-			}
-		}()
+		mid, err := h.bot.SendMsg(recp, "Start process...")
+		recp.MessageID = int64(mid)
 
-		h.imaginator.GenerateImages(ctx, p, r)
+		h.imaginator.GenerateImages(ctx, promts, r, func() {
+			h.bot.EditMsg(recp, "...")
+		})
 
 		images := make([]bot.StorySlide, 0)
 		for v := range r {
@@ -55,7 +58,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GeneratePayload) 
 			})
 		}
 
-		err := h.bot.SendSlices(&bot.MessageRecipient{
+		err = h.bot.SendStory(&bot.MessageRecipient{
 			ID: payload.ChatID,
 		}, images)
 		if err != nil {

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .book-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .book-image {
+            max-width: 300px;
+            max-height: 400px;
+        }
+        .book-description {
+            margin-top: 20px;
+            text-align: justify;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+<div class="book-container">
+    <img class="book-image" src="data:image/png;base64,{{ .ImageBase64 }}" alt="{{ .Title }} Cover">
+    <div class="book-description">
+        <p>{{ .Description }}</p>
+    </div>
+</div>
+</body>
+</html>

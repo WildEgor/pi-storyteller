@@ -15,7 +15,7 @@ type KandinskyConfig struct {
 }
 
 // NewKandinskyConfig creates kandinsky config
-func NewKandinskyConfig(c *Configurator) *KandinskyConfig {
+func NewKandinskyConfig() *KandinskyConfig {
 	cfg := &KandinskyConfig{}
 
 	if err := viper.UnmarshalKey("kandinsky", &cfg); err != nil {

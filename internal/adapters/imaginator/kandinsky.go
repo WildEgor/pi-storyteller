@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
+	"fmt"
 	"image"
+	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/WildEgor/pi-storyteller/internal/configs"
@@ -26,47 +29,54 @@ func NewKandinskyAdapter(
 }
 
 // GenerateImages implements Imagininator.
-func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompt chan string, result chan ImageGenerationResult) {
-	go func() {
-		defer close(result)
+func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompt []string, result chan ImageGenerationResult, onUpdate func()) {
+	var wg sync.WaitGroup
 
-		for p := range prompt {
-			runner := func() {
-				uuid, err := k.generateImage(ctx, p)
-				if err != nil {
+	for _, p := range prompt {
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+			uuid, err := k.generateImage(ctx, p)
+			if err != nil {
+				return
+			}
+			ticker := time.NewTicker(5 * time.Second)
+
+			for {
+				select {
+				case <-ctx.Done():
+					ticker.Stop()
 					return
-				}
-				ticker := time.NewTicker(5 * time.Second)
+				case <-ticker.C:
+					onUpdate()
 
-				for {
-					select {
-					case <-ctx.Done():
+					slog.Debug(fmt.Sprintf("process uuid %s", uuid))
+
+					imgResult, err := k.client.CheckStatus(ctx, uuid)
+					if err != nil {
+						// TODO: count retry and cancel
+						continue
+					}
+
+					if imgResult.Done() {
+						img, _ := k.base64ToImage(imgResult.Images[0])
+
+						result <- ImageGenerationResult{
+							Prompt: p,
+							Image:  img,
+						}
+
 						ticker.Stop()
 						return
-					case <-ticker.C:
-						imgResult, err := k.client.CheckStatus(ctx, uuid)
-						if err != nil {
-							// TODO: count retry and cancel
-							continue
-						}
-
-						if imgResult.Done() {
-							img, _ := k.base64ToImage(imgResult.Images[0])
-
-							result <- ImageGenerationResult{
-								Prompt: p,
-								Image:  img,
-							}
-
-							ticker.Stop()
-							return
-						}
 					}
 				}
 			}
-			runner()
-		}
-	}()
+		}()
+	}
+
+	wg.Wait()
+	close(result)
 }
 
 func (k *KandinskyAdapter) generateImage(ctx context.Context, prompt string) (uuid string, err error) {

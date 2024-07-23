@@ -3,9 +3,10 @@ package pkg
 import (
 	"context"
 	"fmt"
-	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 	"log/slog"
 	"time"
+
+	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
@@ -63,6 +64,8 @@ func (srv *Server) Run(ctx context.Context) {
 func (srv *Server) Shutdown(ctx context.Context) {
 	slog.Info("shutdown service")
 
+	srv.Bot.Stop()
+
 	if err := srv.App.Shutdown(); err != nil {
 		slog.Error("unable to shutdown server")
 	}
@@ -71,7 +74,7 @@ func (srv *Server) Shutdown(ctx context.Context) {
 // NewApp init app
 func NewApp(
 	ac *configs.AppConfig,
-	lc *configs.LoggerConfig, // init logger
+	lc *configs.LoggerConfig,
 	c *configs.Configurator,
 	eh *eh.ErrorsHandler,
 	pbr *routers.HealthRouter,
