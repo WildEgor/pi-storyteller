@@ -1,0 +1,9 @@
+app:
+  name: "app"
+  mode: "debug"
+  http_port: "8080"
+  rpc_port: "8088"
+  assets_path: "assets"
+logger:
+  level: "debug"
+  format: "json"

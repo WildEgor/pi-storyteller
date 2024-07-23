@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  # Targets:
+  # dev - runs in dev mode and live-reloading on every source file update.
+  # debug - runs in debug mode exposing port and allow to connect from IDE
+  # prod - runs in prod mod with minimal binary
+  app:
+    restart: on-failure
+    build:
+##   if use private libs uncomment this
+#      args:
+#       - GITHUB_TOKEN=${GITHUB_TOKEN}
+      context: ./
+      dockerfile: Dockerfile
+      target: ${TARGET} # dev or debug or prod
+    environment:
+      - .env
+    security_opt:
+      - apparmor=unconfined
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - ./:.
+      # - ./config.yaml:/config.yaml
+    ports:
+      - "8080:8080" # http port
+      - "8088:8088" # rpc port
+      # - "40000:40000" # debug port

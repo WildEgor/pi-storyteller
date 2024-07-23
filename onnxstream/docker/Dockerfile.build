@@ -1,0 +1,18 @@
+FROM dockcross/linux-armv7-lts as deps
+RUN apt update && \
+    apt install -y git cmake build-essential curl
+
+FROM deps as build
+WORKDIR /onnx/XNNPACK
+RUN git clone https://github.com/google/XNNPACK.git . && \
+    git checkout 579de32260742a24166ecd13213d2e60af862675 && \
+    mkdir build
+WORKDIR /onnx/XNNPACK/build
+RUN cmake -DXNNPACK_BUILD_TESTS=OFF -DXNNPACK_BUILD_BENCHMARKS=OFF .. && \
+    cmake --build . --config Release
+WORKDIR /onnx/OnnxStream
+RUN git clone https://github.com/vitoplantamura/OnnxStream.git . && \
+    mkdir -p /onnx/OnnxStream/src/build
+WORKDIR /onnx/OnnxStream/src/build
+RUN cmake -DMAX_SPEED=ON -DXNNPACK_DIR=/onnx/XNNPACK .. && \
+    cmake --build . -j --config Release

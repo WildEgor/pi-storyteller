@@ -1,0 +1,9 @@
+{
+    "type": "GENERATE",
+    "numImages": 1,
+    "width": 512,
+    "height": 512,
+    "generateParams": {
+        "query": "Generate anime style Geralt from Rivea"
+    }
+}

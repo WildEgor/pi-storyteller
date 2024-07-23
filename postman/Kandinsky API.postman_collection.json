@@ -1,0 +1,264 @@
+{
+	"info": {
+		"_postman_id": "5b45aeeb-9ace-4528-894f-05fd4d751285",
+		"name": "Kandinsky API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13445472"
+	},
+	"item": [
+		{
+			"name": "Get models",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"kandinsky_model_id\", jsonData[0].id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Key",
+						"value": "Key 7378B5BF4CE7B09B015FAB94AF054C7E",
+						"type": "text"
+					},
+					{
+						"key": "X-Secret",
+						"value": "Secret 1FE0619EFF48F5CF4EA795A98F3BDFA5",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api-key.fusionbrain.ai/key/api/v1/models",
+					"protocol": "https",
+					"host": [
+						"api-key",
+						"fusionbrain",
+						"ai"
+					],
+					"path": [
+						"key",
+						"api",
+						"v1",
+						"models"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"// Ensure the response contains the images array and it has at least one image\r",
+							"if (response.images && response.images.length > 0) {\r",
+							"    let base64Image = response.images[0];\r",
+							"    pm.visualizer.set(`\r",
+							"        <div>\r",
+							"            <img src=\"data:image/png;base64,{{base64Image}}\" alt=\"Generated Image\" style=\"max-width: 100%; height: auto;\"/>\r",
+							"        </div>\r",
+							"    `, {\r",
+							"        base64Image: base64Image\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.visualizer.set(`\r",
+							"        <div>\r",
+							"            <p>No image found in the response.</p>\r",
+							"        </div>\r",
+							"    `);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Key",
+						"value": "Key 7378B5BF4CE7B09B015FAB94AF054C7E",
+						"type": "text"
+					},
+					{
+						"key": "X-Secret",
+						"value": "Secret 1FE0619EFF48F5CF4EA795A98F3BDFA5",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api-key.fusionbrain.ai/key/api/v1/text2image/status/{{kandinsky_uuid}}",
+					"protocol": "https",
+					"host": [
+						"api-key",
+						"fusionbrain",
+						"ai"
+					],
+					"path": [
+						"key",
+						"api",
+						"v1",
+						"text2image",
+						"status",
+						"{{kandinsky_uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"if (jsonData.status === \"INITIAL\") {\r",
+							"    postman.setEnvironmentVariable(\"kandinsky_uuid\", jsonData.uuid);\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Key",
+						"value": "Key 7378B5BF4CE7B09B015FAB94AF054C7E",
+						"type": "text"
+					},
+					{
+						"key": "X-Secret",
+						"value": "Secret 1FE0619EFF48F5CF4EA795A98F3BDFA5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "model_id",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "params",
+							"type": "file",
+							"src": "/F:/Work/my/pi-storyteller/postman/params.json"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-key.fusionbrain.ai/key/api/v1/text2image/run",
+					"protocol": "https",
+					"host": [
+						"api-key",
+						"fusionbrain",
+						"ai"
+					],
+					"path": [
+						"key",
+						"api",
+						"v1",
+						"text2image",
+						"run"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset 415",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"if (jsonData.status === \"INITIAL\") {\r",
+							"    postman.setEnvironmentVariable(\"kandinsky_uuid\", jsonData.uuid);\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Key",
+						"value": "Key 7378B5BF4CE7B09B015FAB94AF054C7E",
+						"type": "text"
+					},
+					{
+						"key": "X-Secret",
+						"value": "Secret 1FE0619EFF48F5CF4EA795A98F3BDFA5",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "model_id",
+							"value": "{{kandinsky_model_id}}",
+							"type": "text"
+						},
+						{
+							"key": "params",
+							"type": "file",
+							"src": [
+								"/F:/Work/my/pi-storyteller/postman/params.json",
+								"/F:/Work/my/pi-storyteller/postman/reset_params.json"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api-key.fusionbrain.ai/key/api/v1/text2image/run",
+					"protocol": "https",
+					"host": [
+						"api-key",
+						"fusionbrain",
+						"ai"
+					],
+					"path": [
+						"key",
+						"api",
+						"v1",
+						"text2image",
+						"run"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

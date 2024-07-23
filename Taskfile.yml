@@ -1,0 +1,21 @@
+---
+version: '3'
+
+tasks:
+  # Run using docker
+  docker:
+    dir: '{{.USER_WORKING_DIR}}'
+    preconditions:
+      - test -f docker-compose.yml
+    cmd: docker-compose up -d app
+
+  # Run locally with hot-reload
+  local:
+    cmd: air -d
+
+  # Update DI deps
+  wire:
+    cmd: cd internal && wire
+
+  debug-build:
+    goreleaser release --snapshot --clean
