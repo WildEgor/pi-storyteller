@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const templatePath = "templates"
+const templatePath = "assets/templates"
 
 // TemplateCache ...
 type TemplateCache struct {
@@ -35,7 +35,7 @@ func (t *TemplateCache) Init(path string) {
 		if file.IsDir() {
 			continue
 		}
-		
+
 		tml, err := template.ParseFiles(filepath.Join(tp, file.Name()))
 		if err != nil {
 			slog.Error("parse template error", slog.Any("err", err))

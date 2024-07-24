@@ -35,7 +35,7 @@ func NewServer() (*App, error) {
 	telegramBot := bot.NewTelegramBot(telegramBotConfig)
 	dispatcherDispatcher := dispatcher.NewDispatcher()
 	kandinskyConfig := configs.NewKandinskyConfig()
-	kandinskyClientProvider := imaginator.NewKandinskyDummyClientProvider(kandinskyConfig)
+	kandinskyClientProvider := imaginator.NewKandinskyClientProvider(kandinskyConfig)
 	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyClientProvider)
 	templaterTemplater := templater.NewTemplateService(appConfig)
 	prompterPrompter := prompter.New(appConfig)

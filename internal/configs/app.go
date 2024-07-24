@@ -47,9 +47,15 @@ func (ac *AppConfig) IsDebug() bool {
 }
 
 func (ac *AppConfig) TemplatesPath() string {
-	return filepath.Join(ac.AssetsPath, "templates")
+	if len(ac.AssetsPath) != 0 {
+		return filepath.Join(ac.AssetsPath, "templates")
+	}
+	return ""
 }
 
 func (ac *AppConfig) PromptsFilePath() string {
-	return filepath.Join(ac.AssetsPath, "prompts.json")
+	if len(ac.AssetsPath) != 0 {
+		return filepath.Join(ac.AssetsPath, "prompts.json")
+	}
+	return ""
 }
