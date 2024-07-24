@@ -43,10 +43,14 @@ func (c *Configurator) Register(name string, fn func()) {
 
 // load Load env data from files (default: .env, .env.local)
 func (c *Configurator) load() {
-	p, _ := os.Getwd()
-	// viper.AddConfigPath(".")
-	// viper.AddConfigPath("$HOME/configs")
-	viper.AddConfigPath(p)
+	path := os.Getenv("PI_STORYTELLER_CONFIG_PATH")
+	if len(path) != 0 {
+		viper.AddConfigPath(path)
+	} else {
+		p, _ := os.Getwd()
+		viper.AddConfigPath(p)
+	}
+
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 

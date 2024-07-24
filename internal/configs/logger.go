@@ -32,11 +32,14 @@ func NewLoggerConfig() *LoggerConfig {
 		panic("")
 	}
 
-	slog.Debug("logger config", slog.Any("value", cfg))
+	lvl := logLevelToSlogLevel[cfg.Level]
 
 	so := &slog.HandlerOptions{
-		AddSource: true,
-		Level:     logLevelToSlogLevel[cfg.Level],
+		Level: lvl,
+	}
+
+	if cfg.Level == "debug" {
+		so.AddSource = true
 	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, so))
@@ -44,6 +47,8 @@ func NewLoggerConfig() *LoggerConfig {
 		logger = slog.New(slog.NewJSONHandler(os.Stdout, so))
 	}
 	slog.SetDefault(logger)
+
+	slog.Debug("logger config", slog.Any("value", cfg))
 
 	return cfg
 }

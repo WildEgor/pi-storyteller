@@ -98,6 +98,7 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 func (t *TelegramBot) HandleCommand(ctx context.Context, command string, fn func(data *CommandData) error) {
 	t.bot.Handle(command, func(c tele.Context) error {
 		return fn(&CommandData{
+			Nickname:  c.Sender().Username,
 			MessageID: c.Message().ID,
 			ChatID:    c.Chat().ID,
 			Payload:   c.Message().Payload,

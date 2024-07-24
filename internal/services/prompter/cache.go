@@ -17,20 +17,23 @@ type Cache struct {
 	cache map[string]string
 }
 
-func NewPromptsCache() *Cache {
+func NewPromptsCache(path string) *Cache {
 	cache := &Cache{}
-	cache.Init()
+	cache.Init(path)
 
 	return cache
 }
 
 // Init ...
-func (t *Cache) Init() {
+func (t *Cache) Init(path string) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, promptsPath)
+	if len(path) != 0 {
+		tp = filepath.Join(path)
+	}
 
 	file, err := os.Open(tp)
 	if err != nil {

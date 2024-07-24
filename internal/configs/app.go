@@ -2,16 +2,19 @@ package configs
 
 import (
 	"log/slog"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
 
 // AppConfig holds the main app configurations
 type AppConfig struct {
-	Name     string `mapstructure:"name"`
-	Mode     string `mapstructure:"mode"`
-	HTTPPort string `mapstructure:"http_port"`
-	changer  func(ac *AppConfig)
+	Name         string   `mapstructure:"name"`
+	Mode         string   `mapstructure:"mode"`
+	HTTPPort     string   `mapstructure:"http_port"`
+	PriorityList []string `mapstructure:"priority_list"`
+	AssetsPath   string   `mapstructure:"assets_path"`
+	changer      func(ac *AppConfig)
 }
 
 // NewAppConfig creates app config
@@ -41,4 +44,12 @@ func (ac *AppConfig) IsProduction() bool {
 // IsDebug Check is application running in debug mode
 func (ac *AppConfig) IsDebug() bool {
 	return ac.Mode == "debug"
+}
+
+func (ac *AppConfig) TemplatesPath() string {
+	return filepath.Join(ac.AssetsPath, "templates")
+}
+
+func (ac *AppConfig) PromptsFilePath() string {
+	return filepath.Join(ac.AssetsPath, "prompts.json")
 }

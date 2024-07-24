@@ -37,6 +37,7 @@ func NewImageRouter(
 func (r *TelegramRouter) Setup(app *fiber.App) {
 	r.registry.HandleCommand(context.TODO(), "/generate", func(data *bot.CommandData) error {
 		return r.gh.Handle(context.TODO(), &tg_generate_handler.GeneratePayload{
+			Nickname:  data.Nickname,
 			ChatID:    strconv.Itoa(int(data.ChatID)),
 			MessageID: strconv.Itoa(int(data.MessageID)),
 			Prompt:    data.Payload,
@@ -45,7 +46,8 @@ func (r *TelegramRouter) Setup(app *fiber.App) {
 
 	r.registry.HandleCommand(context.TODO(), "/start", func(data *bot.CommandData) error {
 		return r.sh.Handle(context.TODO(), &tg_start_handler.StartPayload{
-			ChatID: strconv.Itoa(int(data.ChatID)),
+			Nickname: data.Nickname,
+			ChatID:   strconv.Itoa(int(data.ChatID)),
 		})
 	})
 }

@@ -2,6 +2,7 @@ package prompter
 
 import (
 	"fmt"
+	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"math/rand"
 	"strings"
 	"time"
@@ -11,11 +12,11 @@ type Prompter struct {
 	cache *Cache
 }
 
-func New() *Prompter {
+func New(appConfig *configs.AppConfig) *Prompter {
 	rand.Seed(time.Now().UnixNano())
 
 	return &Prompter{
-		cache: NewPromptsCache(),
+		cache: NewPromptsCache(appConfig.PromptsFilePath()),
 	}
 }
 

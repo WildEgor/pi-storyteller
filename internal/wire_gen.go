@@ -25,9 +25,9 @@ import (
 
 // NewServer
 func NewServer() (*App, error) {
+	configurator := configs.NewConfigurator()
 	appConfig := configs.NewAppConfig()
 	loggerConfig := configs.NewLoggerConfig()
-	configurator := configs.NewConfigurator()
 	errorsHandler := http_error_handler.NewErrorsHandler()
 	healthCheckHandler := http_health_check_handler.NewHealthCheckHandler()
 	healthRouter := routers.NewHealthRouter(healthCheckHandler)
@@ -35,14 +35,14 @@ func NewServer() (*App, error) {
 	telegramBot := bot.NewTelegramBot(telegramBotConfig)
 	dispatcherDispatcher := dispatcher.NewDispatcher()
 	kandinskyConfig := configs.NewKandinskyConfig()
-	kandinskyClientProvider := imaginator.NewKandinskyClientProvider(kandinskyConfig)
+	kandinskyClientProvider := imaginator.NewKandinskyDummyClientProvider(kandinskyConfig)
 	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyClientProvider)
-	templaterTemplater := templater.NewTemplateService()
-	prompterPrompter := prompter.New()
-	generateHandler := tg_generate_handler.NewGenerateHandler(dispatcherDispatcher, kandinskyAdapter, templaterTemplater, prompterPrompter, telegramBot)
+	templaterTemplater := templater.NewTemplateService(appConfig)
+	prompterPrompter := prompter.New(appConfig)
+	generateHandler := tg_generate_handler.NewGenerateHandler(appConfig, dispatcherDispatcher, kandinskyAdapter, templaterTemplater, prompterPrompter, telegramBot)
 	startHandler := tg_start_handler.NewStartHandler(telegramBot)
 	telegramRouter := routers.NewImageRouter(telegramBot, generateHandler, startHandler)
-	app := NewApp(appConfig, loggerConfig, configurator, errorsHandler, healthRouter, telegramRouter, telegramBot, dispatcherDispatcher)
+	app := NewApp(configurator, appConfig, loggerConfig, errorsHandler, healthRouter, telegramRouter, telegramBot, dispatcherDispatcher)
 	return app, nil
 }
 

@@ -49,3 +49,4 @@ dist/*
 .env
 .env.example
 config.yaml
+config.pi.yaml

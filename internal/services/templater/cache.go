@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log/slog"
 	"os"
-	"path"
 	"path/filepath"
 )
 
@@ -17,9 +16,13 @@ type TemplateCache struct {
 }
 
 // Init ...
-func (t *TemplateCache) Init() {
+func (t *TemplateCache) Init(path string) {
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, templatePath)
+
+	if len(path) != 0 {
+		tp = filepath.Join(path)
+	}
 
 	files, err := os.ReadDir(tp)
 	if err != nil {
@@ -29,7 +32,11 @@ func (t *TemplateCache) Init() {
 
 	t.templates = make(map[string]*template.Template, len(files))
 	for _, file := range files {
-		tml, err := template.ParseFiles(path.Join(templatePath, file.Name()))
+		if file.IsDir() {
+			continue
+		}
+		
+		tml, err := template.ParseFiles(filepath.Join(tp, file.Name()))
 		if err != nil {
 			slog.Error("parse template error", slog.Any("err", err))
 			continue

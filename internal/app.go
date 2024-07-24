@@ -76,9 +76,9 @@ func (srv *App) Shutdown(ctx context.Context) {
 
 // NewApp init app
 func NewApp(
+	c *configs.Configurator,
 	ac *configs.AppConfig,
 	lc *configs.LoggerConfig,
-	c *configs.Configurator,
 	eh *eh.ErrorsHandler,
 	pbr *routers.HealthRouter,
 	tr *routers.TelegramRouter,

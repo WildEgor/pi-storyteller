@@ -20,7 +20,7 @@ func NewKandinskyDummyClient(config kandinsky.IConfigFactory) *KandinskyDummyCli
 }
 
 func (c *KandinskyDummyClient) GenerateImage(ctx context.Context, prompt string, opts *kandinsky.GenerateImageOpts) (*kandinsky.GenerateResult, error) {
-	time.Sleep(15 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	return &kandinsky.GenerateResult{
 		Status: kandinsky.Done,
@@ -51,7 +51,7 @@ func (c *KandinskyDummyClient) CheckStatus(ctx context.Context, uuid string) (*k
 
 	encoded := base64.StdEncoding.EncodeToString(buf.Bytes())
 
-	time.Sleep(15 * time.Second)
+	time.Sleep(10 * time.Second)
 
 	return &kandinsky.GenerateImageResult{
 		UUID:   uuid,

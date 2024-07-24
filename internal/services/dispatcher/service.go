@@ -3,23 +3,27 @@ package dispatcher
 import (
 	"errors"
 	"github.com/google/uuid"
-	"time"
-
-	"github.com/robfig/cron/v3"
+	"github.com/samber/lo"
+	"sync"
 )
 
 // Dispatcher maintains a pool for available workers
 // and a job queue that workers will process
 type Dispatcher struct {
-	maxWorkers int
-	maxQueue   int
-	workers    []*Worker
-	tickers    []*DispatchTicker
-	crons      []*DispatchCron
-	workerPool chan chan Job
-	jobQueue   chan Job
-	done       chan struct{}
-	active     bool
+	maxHighWorkers int
+	maxLowWorkers  int
+	maxQueueLen    int
+	minQueueLen    int
+	workers        []*Worker
+	lowWorkerPool  chan chan Job
+	highWorkerPool chan chan Job
+	lowQueue       chan Job
+	highQueue      chan Job
+	done           chan struct{}
+	active         bool
+
+	mu            sync.Mutex
+	inProgressMap map[string][]string
 }
 
 // NewDispatcher creates a new dispatcher with the given
@@ -28,12 +32,13 @@ type Dispatcher struct {
 func NewDispatcher() *Dispatcher {
 	return &Dispatcher{
 		// TODO: move to config
-		maxWorkers: 10,
-		maxQueue:   1000,
-		done:       make(chan struct{}),
-		workers:    make([]*Worker, 0),
-		tickers:    make([]*DispatchTicker, 0),
-		crons:      make([]*DispatchCron, 0),
+		maxHighWorkers: 10,
+		maxLowWorkers:  1,
+		maxQueueLen:    1000,
+		minQueueLen:    100,
+		done:           make(chan struct{}),
+		workers:        make([]*Worker, 0),
+		inProgressMap:  make(map[string][]string),
 	}
 }
 
@@ -41,11 +46,19 @@ func NewDispatcher() *Dispatcher {
 // Then, it starts a select loop to wait for job to be dispatched
 // to available workers
 func (d *Dispatcher) Start() {
-	d.workerPool = make(chan chan Job, d.maxWorkers)
-	d.jobQueue = make(chan Job, d.maxQueue)
+	d.lowWorkerPool = make(chan chan Job, d.maxLowWorkers)
+	d.lowQueue = make(chan Job, d.minQueueLen)
+	d.highWorkerPool = make(chan chan Job, d.maxHighWorkers)
+	d.highQueue = make(chan Job, d.maxQueueLen)
 
-	for i := 0; i < d.maxWorkers; i++ {
-		worker := NewWorker(d.workerPool)
+	for i := 0; i < d.maxLowWorkers; i++ {
+		worker := NewWorker(d.lowWorkerPool)
+		worker.Start()
+		d.workers = append(d.workers, worker)
+	}
+
+	for i := 0; i < d.maxHighWorkers; i++ {
+		worker := NewWorker(d.highWorkerPool)
 		worker.Start()
 		d.workers = append(d.workers, worker)
 	}
@@ -55,9 +68,14 @@ func (d *Dispatcher) Start() {
 	go func() {
 		for {
 			select {
-			case job := <-d.jobQueue:
+			case job := <-d.highQueue:
 				go func(job Job) {
-					jobChannel := <-d.workerPool
+					jobChannel := <-d.highWorkerPool
+					jobChannel <- job
+				}(job)
+			case job := <-d.lowQueue:
+				go func(job Job) {
+					jobChannel := <-d.lowWorkerPool
 					jobChannel <- job
 				}(job)
 			case <-d.done:
@@ -80,79 +98,76 @@ func (d *Dispatcher) Stop() {
 		d.workers[i].Stop()
 	}
 
-	for i := range d.tickers {
-		d.tickers[i].Stop()
-	}
-
-	for i := range d.crons {
-		d.crons[i].Stop()
-	}
-
 	d.workers = []*Worker{}
-	d.tickers = []*DispatchTicker{}
-	d.crons = []*DispatchCron{}
 	d.done <- struct{}{}
 }
 
 // Dispatch pushes the given job into the job queue.
 // The first available worker will perform the job
-func (d *Dispatcher) Dispatch(run func()) (id string, err error) {
+func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) {
 	if !d.active {
 		return "", errors.New("dispatcher is not active")
 	}
 
-	newUUID, err := uuid.NewUUID()
-	if err != nil {
-		return "", err
+	newUUID := d.uuid()
+	onDone := func(ctx JobCtx) {
+		d.dequeue(ctx.Meta)
+	}
+	onStart := func(ctx JobCtx) {}
+
+	job := Job{
+		ID:      newUUID,
+		handler: fn,
+		Status:  StatusStarted,
+		onStart: onStart,
+		onDone:  onDone,
+		opts:    opts,
 	}
 
-	d.jobQueue <- Job{
-		ID:  newUUID.String(),
-		Run: run,
+	if opts != nil && opts.Priority == LowPriority {
+		d.lowQueue <- job
+	} else {
+		d.highQueue <- job
 	}
-	return newUUID.String(), nil
+
+	d.enqueue(&job)
+
+	return newUUID, nil
 }
 
-// DispatchAt pushes the given job into the job queue
-// at the given time
-func (d *Dispatcher) DispatchAt(run func(), at time.Time) error {
-	if !d.active {
-		return errors.New("dispatcher is not active")
+func (d *Dispatcher) CountActiveJobs(ownerId string) int {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	if v, ok := d.inProgressMap[ownerId]; ok {
+		return len(v)
 	}
 
-	go func() {
-		now := time.Now()
-		diff := at.Sub(now)
-
-		if diff < 0 {
-			return
-		}
-
-		time.Sleep(diff)
-		d.jobQueue <- Job{Run: run}
-	}()
-
-	return nil
+	return 0
 }
 
-// DispatchCron pushes the given job into the job queue
-// each time the cron definition is met
-func (d *Dispatcher) DispatchCron(run func(), cronStr string) (*DispatchCron, error) {
-	if !d.active {
-		return nil, errors.New("dispatcher is not active")
+func (d *Dispatcher) uuid() string {
+	newUUID, _ := uuid.NewUUID()
+	return newUUID.String()
+}
+
+func (d *Dispatcher) enqueue(job *Job) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	v, _ := d.inProgressMap[job.opts.OwnerID]
+	v = append(v, job.ID)
+	d.inProgressMap[job.opts.OwnerID] = lo.Uniq(v)
+}
+
+func (d *Dispatcher) dequeue(meta *JobMeta) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	if v, ok := d.inProgressMap[meta.OwnerID]; ok {
+		v = lo.Filter(v, func(item string, _ int) bool {
+			return item != meta.ID
+		})
+		d.inProgressMap[meta.OwnerID] = v
 	}
-
-	dc := &DispatchCron{cron: cron.New(cron.WithSeconds())}
-	d.crons = append(d.crons, dc)
-
-	_, err := dc.cron.AddFunc(cronStr, func() {
-		d.jobQueue <- Job{Run: run}
-	})
-
-	if err != nil {
-		return nil, errors.New("invalid cron definition")
-	}
-
-	dc.cron.Start()
-	return dc, nil
 }
