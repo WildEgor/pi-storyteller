@@ -10,10 +10,12 @@ var (
 	ErrParseTemplate    = errors.New("cannot parse template")
 )
 
+// Templater ...
 type Templater struct {
 	cache *TemplateCache
 }
 
+// NewTemplateService ...
 func NewTemplateService() *Templater {
 	cache := &TemplateCache{}
 	cache.Init()
@@ -23,8 +25,9 @@ func NewTemplateService() *Templater {
 	}
 }
 
+// Build ...
 func (t *Templater) Build(name string, data interface{}) (string, error) {
-	tmpl := t.cache.GetByName(name)
+	tmpl := t.cache.Get(name)
 	if tmpl == nil {
 		return "", ErrTemplateNotFound
 	}

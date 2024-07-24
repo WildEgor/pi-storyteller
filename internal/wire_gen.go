@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package pkg
+package app
 
 import (
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
@@ -16,6 +16,7 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/handlers/tg/start"
 	"github.com/WildEgor/pi-storyteller/internal/routers"
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
+	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
 	"github.com/WildEgor/pi-storyteller/internal/services/templater"
 	"github.com/google/wire"
 )
@@ -23,7 +24,7 @@ import (
 // Injectors from server.go:
 
 // NewServer
-func NewServer() (*Server, error) {
+func NewServer() (*App, error) {
 	appConfig := configs.NewAppConfig()
 	loggerConfig := configs.NewLoggerConfig()
 	configurator := configs.NewConfigurator()
@@ -34,16 +35,18 @@ func NewServer() (*Server, error) {
 	telegramBot := bot.NewTelegramBot(telegramBotConfig)
 	dispatcherDispatcher := dispatcher.NewDispatcher()
 	kandinskyConfig := configs.NewKandinskyConfig()
-	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyConfig)
+	kandinskyClientProvider := imaginator.NewKandinskyClientProvider(kandinskyConfig)
+	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyClientProvider)
 	templaterTemplater := templater.NewTemplateService()
-	generateHandler := tg_generate_handler.NewGenerateHandler(dispatcherDispatcher, kandinskyAdapter, templaterTemplater, telegramBot)
+	prompterPrompter := prompter.New()
+	generateHandler := tg_generate_handler.NewGenerateHandler(dispatcherDispatcher, kandinskyAdapter, templaterTemplater, prompterPrompter, telegramBot)
 	startHandler := tg_start_handler.NewStartHandler(telegramBot)
-	telegramhRouter := routers.NewImageRouter(telegramBot, generateHandler, startHandler)
-	server := NewApp(appConfig, loggerConfig, configurator, errorsHandler, healthRouter, telegramhRouter, telegramBot, dispatcherDispatcher)
-	return server, nil
+	telegramRouter := routers.NewImageRouter(telegramBot, generateHandler, startHandler)
+	app := NewApp(appConfig, loggerConfig, configurator, errorsHandler, healthRouter, telegramRouter, telegramBot, dispatcherDispatcher)
+	return app, nil
 }
 
 // server.go:
 
 // ServerSet
-var ServerSet = wire.NewSet(AppSet)
+var ServerSet = wire.NewSet(Set)

@@ -11,22 +11,22 @@ import (
 	tg_start_handler "github.com/WildEgor/pi-storyteller/internal/handlers/tg/start"
 )
 
-var _ IRouter[*fiber.App] = (*HealthRouter)(nil)
+var _ IRouter[*fiber.App] = (*TelegramRouter)(nil)
 
-// TelegramhRouter router
-type TelegramhRouter struct {
-	registry bot.IBotRegistry
+// TelegramRouter router
+type TelegramRouter struct {
+	registry bot.Registry
 	gh       *tg_generate_handler.GenerateHandler
 	sh       *tg_start_handler.StartHandler
 }
 
-// NewHealthRouter creates router
+// NewImageRouter creates router
 func NewImageRouter(
-	registry bot.IBotRegistry,
+	registry bot.Registry,
 	gh *tg_generate_handler.GenerateHandler,
 	sh *tg_start_handler.StartHandler,
-) *TelegramhRouter {
-	return &TelegramhRouter{
+) *TelegramRouter {
+	return &TelegramRouter{
 		registry: registry,
 		gh:       gh,
 		sh:       sh,
@@ -34,15 +34,16 @@ func NewImageRouter(
 }
 
 // Setup router
-func (r *TelegramhRouter) Setup(app *fiber.App) {
-	r.registry.HandleCommand("/generate", func(data *bot.CommandData) error {
+func (r *TelegramRouter) Setup(app *fiber.App) {
+	r.registry.HandleCommand(context.TODO(), "/generate", func(data *bot.CommandData) error {
 		return r.gh.Handle(context.TODO(), &tg_generate_handler.GeneratePayload{
-			ChatID: strconv.Itoa(int(data.ChatID)),
-			Prompt: data.Payload,
+			ChatID:    strconv.Itoa(int(data.ChatID)),
+			MessageID: strconv.Itoa(int(data.MessageID)),
+			Prompt:    data.Payload,
 		})
 	})
 
-	r.registry.HandleCommand("/start", func(data *bot.CommandData) error {
+	r.registry.HandleCommand(context.TODO(), "/start", func(data *bot.CommandData) error {
 		return r.sh.Handle(context.TODO(), &tg_start_handler.StartPayload{
 			ChatID: strconv.Itoa(int(data.ChatID)),
 		})

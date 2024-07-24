@@ -3,8 +3,9 @@ package configs
 import (
 	"log/slog"
 
-	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 	"github.com/spf13/viper"
+
+	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 )
 
 // KandinskyConfig holds kandinsky api configuration
@@ -12,6 +13,7 @@ type KandinskyConfig struct {
 	BaseURL string `mapstructure:"base_url"`
 	Key     string `mapstructure:"key"`
 	Secret  string `mapstructure:"secret"`
+	Debug   bool   `mapstructure:"debug"`
 }
 
 // NewKandinskyConfig creates kandinsky config
@@ -19,10 +21,11 @@ func NewKandinskyConfig() *KandinskyConfig {
 	cfg := &KandinskyConfig{}
 
 	if err := viper.UnmarshalKey("kandinsky", &cfg); err != nil {
-		panic("kandinsky config parse error")
+		slog.Error("kandinsky parse error", slog.Any("err", err))
+		panic("")
 	}
 
-	slog.Info("config", slog.Any("value", cfg))
+	slog.Debug("kandinsky config", slog.Any("value", cfg))
 
 	return cfg
 }

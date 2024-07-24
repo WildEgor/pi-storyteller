@@ -1,17 +1,16 @@
 //go:build wireinject
-// +build wireinject
 
-package pkg
+package app
 
 import (
 	"github.com/google/wire"
 )
 
 // ServerSet
-var ServerSet = wire.NewSet(AppSet)
+var ServerSet = wire.NewSet(Set)
 
 // NewServer
-func NewServer() (*Server, error) {
+func NewServer() (*App, error) {
 	wire.Build(ServerSet)
 	return nil, nil
 }

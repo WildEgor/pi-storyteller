@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// KandinskyConfig holds kandinsky api configuration
+// OllamaConfig holds Ollama api configuration
 type OllamaConfig struct {
 	BaseURL string `mapstructure:"base_url"`
 }
@@ -16,10 +16,11 @@ func NewOllamaConfig() *OllamaConfig {
 	cfg := &OllamaConfig{}
 
 	if err := viper.UnmarshalKey("ollama", &cfg); err != nil {
-		panic("ollama config parse error")
+		slog.Error("ollama parse error", slog.Any("err", err))
+		panic("")
 	}
 
-	slog.Info("config", slog.Any("value", cfg))
+	slog.Debug("ollama config", slog.Any("value", cfg))
 
 	return cfg
 }

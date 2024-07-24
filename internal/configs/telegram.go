@@ -16,10 +16,11 @@ func NewTelegramBotConfig() *TelegramBotConfig {
 	cfg := &TelegramBotConfig{}
 
 	if err := viper.UnmarshalKey("telegram", &cfg); err != nil {
-		panic("telegram config parse error")
+		slog.Error("telegram parse error", slog.Any("err", err))
+		panic("")
 	}
 
-	slog.Info("config", slog.Any("value", cfg))
+	slog.Debug("telegram config", slog.Any("value", cfg))
 
 	return cfg
 }

@@ -19,11 +19,11 @@ func NewAppConfig() *AppConfig {
 	cfg := &AppConfig{}
 
 	if err := viper.UnmarshalKey("app", &cfg); err != nil {
-		slog.Error("app config parse error")
-		panic("logger parse error")
+		slog.Error("app parse error", slog.Any("err", err))
+		panic("")
 	}
 
-	slog.Info("config", slog.Any("value", cfg))
+	slog.Debug("app config", slog.Any("value", cfg))
 
 	return cfg
 }

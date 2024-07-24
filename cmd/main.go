@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os/signal"
 	"syscall"
 	"time"
@@ -33,7 +34,8 @@ func main() {
 
 	srv, err := server.NewServer()
 	if err != nil {
-		panic(err)
+		slog.Error("srv fail", slog.Any("err", err))
+		panic("")
 	}
 
 	srv.Run(ctx)

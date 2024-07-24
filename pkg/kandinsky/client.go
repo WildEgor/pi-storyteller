@@ -12,34 +12,35 @@ import (
 )
 
 //go:generate mockery --name=IKandinskyClient --structname=KandinskyClientMock --case=underscore
-type IKandinskyClient interface {
+type Client interface {
 	GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error)
 	GetModels(ctx context.Context) ([]ModelResult, error)
 	CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error)
 }
 
-type Client struct {
-	client *resty.Client
+type client struct {
+	httpClient *resty.Client
 }
 
-func New(config IConfigFactory) *Client {
-	client := resty.New()
+func New(config IConfigFactory) Client {
+	httpClient := resty.New()
 
-	client.SetBaseURL(config().BaseURL).
+	httpClient.SetBaseURL(config().BaseURL).
 		SetHeaders(map[string]string{
 			"X-Key":    fmt.Sprintf("Key %s", config().Key),
 			"X-Secret": fmt.Sprintf("Secret %s", config().Secret),
 		}).SetRetryCount(3).
 		SetRetryWaitTime(5 * time.Second).
-		SetRetryMaxWaitTime(20 * time.Second).
-		SetTimeout(10 * time.Second)
+		SetRetryMaxWaitTime(10 * time.Second).
+		SetTimeout(5 * time.Second).
+		SetDebug(config().Debug)
 
-	return &Client{
-		client,
+	return &client{
+		httpClient,
 	}
 }
 
-func (c *Client) GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error) {
+func (c *client) GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error) {
 	params := GenerateParams{
 		Type:      Generate,
 		NumImages: 1,
@@ -55,16 +56,13 @@ func (c *Client) GenerateImage(ctx context.Context, prompt string, opts *Generat
 		return nil, err
 	}
 
-	resp, err := c.client.R().
+	resp, err := c.httpClient.R().
 		SetContext(ctx).
-		EnableTrace().
-		SetDebug(true).
 		SetHeader("Content-Type", "multipart/form-data").
 		SetMultipartFormData(map[string]string{
 			"model_id": strconv.Itoa(int(opts.ModelId)),
 		}).
 		SetMultipartField("params", "params.json", "application/json", bytes.NewReader(paramsJson)).
-		SetDebug(true).
 		Post("/key/api/v1/text2image/run")
 
 	var generateResp *GenerateResult
@@ -76,11 +74,9 @@ func (c *Client) GenerateImage(ctx context.Context, prompt string, opts *Generat
 	return generateResp, nil
 }
 
-func (c *Client) GetModels(ctx context.Context) ([]ModelResult, error) {
-	resp, err := c.client.R().
+func (c *client) GetModels(ctx context.Context) ([]ModelResult, error) {
+	resp, err := c.httpClient.R().
 		SetContext(ctx).
-		EnableTrace().
-		SetDebug(true).
 		SetHeader("Accept", "application/json").
 		Get("/key/api/v1/models")
 	if err != nil {
@@ -100,13 +96,10 @@ func (c *Client) GetModels(ctx context.Context) ([]ModelResult, error) {
 	return modelsResp, nil
 }
 
-func (c *Client) CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error) {
-	resp, err := c.client.R().
-		EnableTrace().
-		SetDebug(true).
+func (c *client) CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error) {
+	resp, err := c.httpClient.R().
 		SetHeader("Accept", "application/json").
 		Get(fmt.Sprintf("/key/api/v1/text2image/status/%s", uuid))
-
 	if err != nil {
 		return nil, err
 	}

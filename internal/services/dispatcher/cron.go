@@ -8,7 +8,7 @@ type DispatchCron struct {
 	cron *cron.Cron
 }
 
-// Stops ends the execution cycle for the given cron.
+// Stop ends the execution cycle for the given cron.
 func (c *DispatchCron) Stop() {
 	c.cron.Stop()
 }

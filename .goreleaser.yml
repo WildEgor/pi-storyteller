@@ -1,12 +1,12 @@
 ---
 version: 2
 
-project_name: pi-stalker-radio-service
+project_name: pi-storyteller
 
 builds:
   - id: binary-build # ID of the build
     main: ./cmd/main.go # Path to main.go file or main package
-    binary: app # Binary name
+    binary: bin # Binary name
     # Custom ldflags
     ldflags:
       - -s -w -X main.version={{.Version}}
@@ -16,10 +16,6 @@ builds:
     # GOOS list to build for
     goos:
       - linux
-#      - darwin
-#      - windows
     # GOARCH to build for
     goarch:
-#      - amd64
-#      - arm64
       - arm

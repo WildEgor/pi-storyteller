@@ -11,7 +11,10 @@ require (
 	github.com/stretchr/testify v1.9.0
 )
 
-require gopkg.in/telebot.v3 v3.3.6 // indirect
+require (
+	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
+	gopkg.in/telebot.v3 v3.3.6 // indirect
+)
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect

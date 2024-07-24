@@ -1,8 +1,9 @@
+// Package configs contains any kind of configs
 package configs
 
 import "github.com/google/wire"
 
-// Set contains project configs
+// Set ...
 var Set = wire.NewSet(
 	NewConfigurator,
 	NewAppConfig,

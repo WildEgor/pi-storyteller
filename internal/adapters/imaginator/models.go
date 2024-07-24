@@ -2,7 +2,9 @@ package imaginator
 
 import "image"
 
-type ImageGenerationResult struct {
-	Prompt string
+// GeneratedImageResult ...
+type GeneratedImageResult struct {
+	ID     int
 	Image  image.Image
+	Prompt string
 }

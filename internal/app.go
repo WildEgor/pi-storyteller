@@ -1,4 +1,5 @@
-package pkg
+// Package app link main app deps
+package app
 
 import (
 	"context"
@@ -20,8 +21,8 @@ import (
 	"github.com/google/wire"
 )
 
-// AppSet link main app deps
-var AppSet = wire.NewSet(
+// Set ...
+var Set = wire.NewSet(
 	NewApp,
 	configs.Set,
 	routers.Set,
@@ -29,45 +30,47 @@ var AppSet = wire.NewSet(
 	services.Set,
 )
 
-// Server represents the main server configuration.
-type Server struct {
+// App represents the main server configuration.
+type App struct {
 	App          *fiber.App
-	Bot          bot.IBot
+	Bot          bot.Bot
 	Dispatcher   *dispatcher.Dispatcher
 	Configurator *configs.Configurator
 	AppConfig    *configs.AppConfig
 }
 
 // Run start service with deps
-func (srv *Server) Run(ctx context.Context) {
-	slog.Info("server is listening")
-
-	srv.Dispatcher.Start()
-
+func (srv *App) Run(ctx context.Context) {
 	go func() {
-		srv.Bot.Start()
+		slog.Info("dispatcher is listening")
+		srv.Dispatcher.Start()
 		slog.Info("bot is listening")
+		srv.Bot.Start()
+		// blocked
 	}()
+
+	slog.Info("server is listening")
 
 	if err := srv.App.Listen(fmt.Sprintf(":%s", srv.AppConfig.HTTPPort), fiber.ListenConfig{
 		DisableStartupMessage: false,
 		EnablePrintRoutes:     false,
 		OnShutdownSuccess: func() {
-			slog.Debug("success shutdown service")
+			slog.Info("success shutdown service")
 		},
 	}); err != nil {
-		slog.Error("unable to start server")
+		slog.Error("unable to start server", slog.Any("err", err))
 	}
 }
 
 // Shutdown graceful shutdown
-func (srv *Server) Shutdown(ctx context.Context) {
+func (srv *App) Shutdown(ctx context.Context) {
 	slog.Info("shutdown service")
 
 	srv.Bot.Stop()
+	srv.Dispatcher.Stop()
 
 	if err := srv.App.Shutdown(); err != nil {
-		slog.Error("unable to shutdown server")
+		slog.Error("unable to shutdown server", slog.Any("err", err))
 	}
 }
 
@@ -78,10 +81,10 @@ func NewApp(
 	c *configs.Configurator,
 	eh *eh.ErrorsHandler,
 	pbr *routers.HealthRouter,
-	tr *routers.TelegramhRouter,
-	bot bot.IBot,
+	tr *routers.TelegramRouter,
+	bot bot.Bot,
 	dispatcher *dispatcher.Dispatcher,
-) *Server {
+) *App {
 	app := fiber.New(fiber.Config{
 		AppName:      ac.Name,
 		ErrorHandler: eh.Handle,
@@ -100,7 +103,7 @@ func NewApp(
 	pbr.Setup(app)
 	tr.Setup(app)
 
-	return &Server{
+	return &App{
 		App:          app,
 		Dispatcher:   dispatcher,
 		Bot:          bot,

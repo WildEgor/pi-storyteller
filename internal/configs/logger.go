@@ -29,10 +29,10 @@ func NewLoggerConfig() *LoggerConfig {
 
 	if err := viper.UnmarshalKey("logger", cfg); err != nil {
 		slog.Error("logger parse error", slog.Any("err", err))
-		panic("logger parse error")
+		panic("")
 	}
 
-	slog.Info("config", slog.Any("value", cfg))
+	slog.Debug("logger config", slog.Any("value", cfg))
 
 	so := &slog.HandlerOptions{
 		AddSource: true,

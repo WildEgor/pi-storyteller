@@ -1,9 +1,9 @@
 package kandinsky
 
-type KandinskyModelType string
+type ModelType string
 
 var (
-	TextToImage KandinskyModelType = "TEXT2IMAGE"
+	TextToImage ModelType = "TEXT2IMAGE"
 )
 
 type GenerateImageOpts struct {
@@ -13,9 +13,9 @@ type GenerateImageOpts struct {
 }
 
 type ModelResult struct {
-	Id   uint               `json:"id"`
-	Name string             `json:"name"`
-	Type KandinskyModelType `json:"type"`
+	Id   uint      `json:"id"`
+	Name string    `json:"name"`
+	Type ModelType `json:"type"`
 }
 
 type GeneratePrompt struct {
@@ -26,6 +26,13 @@ type Type string
 
 var (
 	Generate Type = "GENERATE"
+)
+
+type Status string
+
+var (
+	Initial Status = "INITIAL"
+	Done    Status = "DONE"
 )
 
 type GenerateParams struct {
@@ -42,13 +49,13 @@ type GenerateData struct {
 }
 
 type GenerateResult struct {
-	Status string `json:"status"`
+	Status Status `json:"status"`
 	UUID   string `json:"uuid"`
 }
 
 type GenerateImageResult struct {
 	UUID   string   `json:"uuid"`
-	Status string   `json:"status"`
+	Status Status   `json:"status"`
 	Images []string `json:"images"`
 	//Censored bool     `json:"censored"`
 	//GenTime  uint     `json:"generationTime"`

@@ -1,0 +1,13 @@
+{
+  "abstract": "An abstract painting with vibrant colors and geometric shapes, blending together in a harmonious and eye-catching pattern of %s",
+  "cyberpunk": "Comics style a futuristic cityscape at night, with neon lights, towering skyscrapers, and rain-soaked streets, bustling with activity of %s",
+  "fantasy": "A fantasy illustration of %s in mystical forest with glowing plants, mythical creatures, and an ancient, magical tree at the center",
+  "impressionist": "An impressionist painting of %s in a lively market scene, with soft brush strokes and a vibrant palette capturing the hustle and bustle",
+  "minimalist": "A minimalist graphic of %s a lone tree in a vast, open field, with clean lines and a muted color scheme",
+  "vintage": "A vintage-style poster with a retro color palette and typography of %s",
+  "anime": "An anime-style character portrait, with exaggerated features, vibrant colors, and dynamic poses of %s",
+  "gothic": "%s in a gothic scene of a dark, abandoned cathedral, with intricate stone carvings, stained glass windows, and a haunting atmosphere",
+  "noir": "%s in a noir film-style scene of a detective in a trench coat, standing under a streetlamp in a dark alley, with dramatic lighting and shadows",
+  "pop_art": "%s in a pop art-inspired image of a comic book character, with bold lines, bright colors, and halftone patterns",
+  "watercolor": "A delicate watercolor painting of %s, with soft edges and a pastel color palette"
+}

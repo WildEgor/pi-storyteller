@@ -11,10 +11,12 @@ import (
 
 const templatePath = "templates"
 
+// TemplateCache ...
 type TemplateCache struct {
 	templates map[string]*template.Template
 }
 
+// Init ...
 func (t *TemplateCache) Init() {
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, templatePath)
@@ -37,7 +39,8 @@ func (t *TemplateCache) Init() {
 	}
 }
 
-func (t *TemplateCache) GetByName(name string) *template.Template {
+// Get ...
+func (t *TemplateCache) Get(name string) *template.Template {
 	fn := fmt.Sprintf("%s.html", name)
 
 	return t.templates[fn]

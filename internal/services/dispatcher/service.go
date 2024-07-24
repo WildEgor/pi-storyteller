@@ -2,6 +2,7 @@ package dispatcher
 
 import (
 	"errors"
+	"github.com/google/uuid"
 	"time"
 
 	"github.com/robfig/cron/v3"
@@ -95,53 +96,21 @@ func (d *Dispatcher) Stop() {
 
 // Dispatch pushes the given job into the job queue.
 // The first available worker will perform the job
-func (d *Dispatcher) Dispatch(run func()) error {
+func (d *Dispatcher) Dispatch(run func()) (id string, err error) {
 	if !d.active {
-		return errors.New("dispatcher is not active")
+		return "", errors.New("dispatcher is not active")
 	}
 
-	d.jobQueue <- Job{Run: run}
-	return nil
-}
-
-// DispatchIn pushes the given job into the job queue
-// after the given duration has elapsed
-func (d *Dispatcher) DispatchIn(run func(), duration time.Duration) error {
-	if !d.active {
-		return errors.New("dispatcher is not active")
+	newUUID, err := uuid.NewUUID()
+	if err != nil {
+		return "", err
 	}
 
-	go func() {
-		time.Sleep(duration)
-		d.jobQueue <- Job{Run: run}
-	}()
-
-	return nil
-}
-
-// DispatchEvery pushes the given job into the job queue
-// continuously at the given interval
-func (d *Dispatcher) DispatchEvery(run func(), interval time.Duration) (*DispatchTicker, error) {
-	if !d.active {
-		return nil, errors.New("dispatcher is not active")
+	d.jobQueue <- Job{
+		ID:  newUUID.String(),
+		Run: run,
 	}
-
-	t := time.NewTicker(interval)
-	dt := &DispatchTicker{ticker: t, quit: make(chan bool)}
-	d.tickers = append(d.tickers, dt)
-
-	go func() {
-		for {
-			select {
-			case <-t.C:
-				d.jobQueue <- Job{Run: run}
-			case <-dt.quit:
-				return
-			}
-		}
-	}()
-
-	return dt, nil
+	return newUUID.String(), nil
 }
 
 // DispatchAt pushes the given job into the job queue
@@ -174,28 +143,6 @@ func (d *Dispatcher) DispatchCron(run func(), cronStr string) (*DispatchCron, er
 	}
 
 	dc := &DispatchCron{cron: cron.New(cron.WithSeconds())}
-	d.crons = append(d.crons, dc)
-
-	_, err := dc.cron.AddFunc(cronStr, func() {
-		d.jobQueue <- Job{Run: run}
-	})
-
-	if err != nil {
-		return nil, errors.New("invalid cron definition")
-	}
-
-	dc.cron.Start()
-	return dc, nil
-}
-
-// DispatchCronWithLocation pushes the given job into the job queue
-// each time the cron definition is met, using the given location
-func (d *Dispatcher) DispatchCronWithLocation(run func(), cronStr string, loc *time.Location) (*DispatchCron, error) {
-	if !d.active {
-		return nil, errors.New("dispatcher is not active")
-	}
-
-	dc := &DispatchCron{cron: cron.New(cron.WithSeconds(), cron.WithLocation(loc))}
 	d.crons = append(d.crons, dc)
 
 	_, err := dc.cron.AddFunc(cronStr, func() {

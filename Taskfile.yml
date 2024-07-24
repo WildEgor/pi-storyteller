@@ -17,5 +17,5 @@ tasks:
   wire:
     cmd: cd internal && wire
 
-  debug-build:
-    goreleaser release --snapshot --clean
+  build:
+    goreleaser --skip=publish --snapshot --clean

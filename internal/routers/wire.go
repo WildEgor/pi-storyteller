@@ -1,3 +1,4 @@
+// Package routers route http/tg. Acts like "controllers" for routing http or etc.
 package routers
 
 import (
@@ -5,7 +6,7 @@ import (
 	"github.com/google/wire"
 )
 
-// Set acts like "controllers" for routing http or etc.
+// Set ...
 var Set = wire.NewSet(
 	handlers.Set,
 	NewHealthRouter,

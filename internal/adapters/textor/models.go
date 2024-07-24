@@ -14,4 +14,5 @@ type Opts struct {
 	Template       Template
 }
 
+// DefaultOpts ...
 var DefaultOpts = &Opts{}

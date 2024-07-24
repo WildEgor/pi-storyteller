@@ -2,12 +2,14 @@ package configs
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"log/slog"
 )
 
-// Configurator dummy
+// Configurator ...
 type Configurator struct {
 	watchers []func()
 }
@@ -18,7 +20,6 @@ func NewConfigurator() *Configurator {
 		watchers: make([]func(), 0),
 	}
 	c.load()
-
 	return c
 }
 
@@ -42,16 +43,19 @@ func (c *Configurator) Register(name string, fn func()) {
 
 // load Load env data from files (default: .env, .env.local)
 func (c *Configurator) load() {
-	viper.AddConfigPath(".")
+	p, _ := os.Getwd()
+	// viper.AddConfigPath(".")
+	// viper.AddConfigPath("$HOME/configs")
+	viper.AddConfigPath(p)
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
+
 	if err := viper.ReadInConfig(); err != nil {
 		slog.Error("error loading config file", slog.Any("err", err))
 		panic("error loading config file")
 	}
 
-	err := viper.MergeInConfig()
-	if err != nil {
+	if err := viper.MergeInConfig(); err != nil {
 		slog.Error("error merge config file", slog.Any("err", err))
 		return
 	}
