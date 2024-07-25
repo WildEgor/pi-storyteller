@@ -3,12 +3,15 @@ package templater
 import (
 	"bytes"
 	"errors"
+
 	"github.com/WildEgor/pi-storyteller/internal/configs"
 )
 
 var (
+	// ErrTemplateNotFound ...
 	ErrTemplateNotFound = errors.New("cannot find template")
-	ErrParseTemplate    = errors.New("cannot parse template")
+	// ErrParseTemplate ...
+	ErrParseTemplate = errors.New("cannot parse template")
 )
 
 // Templater ...

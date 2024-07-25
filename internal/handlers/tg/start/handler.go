@@ -1,3 +1,4 @@
+// Package responsible to show instructions
 package tg_start_handler
 
 import (

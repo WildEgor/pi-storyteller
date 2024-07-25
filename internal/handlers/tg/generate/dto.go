@@ -2,14 +2,16 @@ package tg_generate_handler
 
 import "fmt"
 
-type GeneratePayload struct {
+// GenerateCommandDTO ...
+type GenerateCommandDTO struct {
 	Nickname  string
 	ChatID    string
 	MessageID string
 	Prompt    string
 }
 
-func (p GeneratePayload) Validate() error {
+// Validate ...
+func (p GenerateCommandDTO) Validate() error {
 	if len(p.Prompt) == 0 {
 		return fmt.Errorf("empty prompt not allowed")
 	}

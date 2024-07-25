@@ -9,19 +9,25 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/samber/lo"
 )
 
+// Client for Kandinsky API
+//
 //go:generate mockery --name=IKandinskyClient --structname=KandinskyClientMock --case=underscore
 type Client interface {
 	GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error)
 	GetModels(ctx context.Context) ([]ModelResult, error)
+	GetTextToImageModel(ctx context.Context) (*ModelResult, error)
 	CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error)
 }
 
+// client ...
 type client struct {
 	httpClient *resty.Client
 }
 
+// New creates http client for Kandinksy API
 func New(config IConfigFactory) Client {
 	httpClient := resty.New()
 
@@ -40,6 +46,7 @@ func New(config IConfigFactory) Client {
 	}
 }
 
+// GenerateImage request new image and get uuid
 func (c *client) GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error) {
 	params := GenerateParams{
 		Type:      Generate,
@@ -74,6 +81,24 @@ func (c *client) GenerateImage(ctx context.Context, prompt string, opts *Generat
 	return generateResp, nil
 }
 
+// GetTextToImageModel helper method to find model
+func (c *client) GetTextToImageModel(ctx context.Context) (*ModelResult, error) {
+	models, err := c.GetModels(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	exitedModel, ok := lo.Find(models, func(m ModelResult) bool {
+		return m.Type == TextToImage
+	})
+	if !ok {
+		return nil, ErrNoModels
+	}
+
+	return &exitedModel, nil
+}
+
+// GetModels returns all available models
 func (c *client) GetModels(ctx context.Context) ([]ModelResult, error) {
 	resp, err := c.httpClient.R().
 		SetContext(ctx).
@@ -96,6 +121,7 @@ func (c *client) GetModels(ctx context.Context) ([]ModelResult, error) {
 	return modelsResp, nil
 }
 
+// CheckStatus of recent requested image. Return (once) generated image or fail
 func (c *client) CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error) {
 	resp, err := c.httpClient.R().
 		SetHeader("Accept", "application/json").

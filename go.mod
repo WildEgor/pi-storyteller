@@ -8,10 +8,16 @@ require (
 	github.com/gofiber/fiber/v3 v3.0.0-beta.3
 	github.com/google/wire v0.6.0
 	github.com/hashicorp/golang-lru/v2 v2.0.7
+	github.com/pemistahl/lingua-go v1.4.0
 	github.com/samber/lo v1.46.0
 	github.com/spf13/viper v1.19.0
 	golang.org/x/sync v0.7.0
 	gopkg.in/telebot.v3 v3.3.6
+)
+
+require (
+	github.com/shopspring/decimal v1.3.1 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 )
 
 require (

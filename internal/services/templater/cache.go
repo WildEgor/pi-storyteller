@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 )
 
+// templatePath ...
 const templatePath = "assets/templates"
 
 // TemplateCache ...

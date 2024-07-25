@@ -1,3 +1,4 @@
+// Package catch any http errors
 package http_error_handler
 
 import (

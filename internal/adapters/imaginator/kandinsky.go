@@ -17,6 +17,13 @@ import (
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky/mocks"
 )
 
+const (
+	// Default error counter
+	MAX_GEN_ERRORS = 3
+	// Generated img size
+	DEFAULT_IMG_SIZE = 512
+)
+
 var _ Imagininator = (*KandinskyAdapter)(nil)
 
 // KandinskyClientProvider wrapper for client
@@ -87,14 +94,20 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 					slog.Warn("context canceled")
 					return
 				case <-ticker.C:
-					slog.Debug(fmt.Sprintf("process uuid %s", uuid))
+					slog.Debug(fmt.Sprintf("processing uuid=%s", uuid))
 
 					imgResult, cErr := k.client.CheckStatus(ctx, uuid)
 					if cErr != nil {
 						errCounter++
-						if errCounter <= 3 {
+						if errCounter <= MAX_GEN_ERRORS {
 							slog.Error("check status fail", slog.Any("err", err))
 							continue
+						}
+
+						ch <- GeneratedImageResult{
+							ID:     id,
+							Prompt: p,
+							Error:  cErr,
 						}
 						return
 					}
@@ -105,12 +118,13 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 
 					slog.Debug(fmt.Sprintf("done processing image=%d uuid=%s", id, uuid))
 
-					img, _ := k.base64ToImage(imgResult.Images[0])
+					img, convErr := k.base64ToImage(imgResult.Images[0])
 
 					ch <- GeneratedImageResult{
 						ID:     id,
 						Prompt: p,
 						Image:  img,
+						Error:  convErr,
 					}
 					return
 				}
@@ -119,7 +133,7 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 	}
 	wg.Wait()
 
-	slog.Info(fmt.Sprintf("process took %s", time.Now().Sub(startAt)))
+	slog.Info(fmt.Sprintf("process done, took - %s", time.Now().Sub(startAt)))
 
 	return ch
 }
@@ -128,28 +142,18 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 func (k *KandinskyAdapter) generateImage(ctx context.Context, prompt string) (uuid string, err error) {
 	existedModel, ok := k.cache.Get(string(kandinsky.TextToImage))
 	if !ok {
-		models, err := k.client.GetModels(ctx)
+		existedModel, err = k.client.GetTextToImageModel(ctx)
 		if err != nil {
 			return "", err
 		}
-
-		for _, model := range models {
-			if model.Type == kandinsky.TextToImage {
-				existedModel = &model
-				break
-			}
-		}
-	}
-	if existedModel == nil {
-		return "", ErrNoModels
 	}
 
 	k.cache.Add(string(kandinsky.TextToImage), existedModel)
 
 	resp, err := k.client.GenerateImage(ctx, prompt, &kandinsky.GenerateImageOpts{
 		ModelId: existedModel.Id,
-		Width:   512,
-		Height:  512,
+		Width:   DEFAULT_IMG_SIZE,
+		Height:  DEFAULT_IMG_SIZE,
 	})
 	if err != nil {
 		return "", err

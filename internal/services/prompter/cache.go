@@ -6,19 +6,28 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
+// promptsPath default path
 const promptsPath = "assets/prompts.json"
 
 // Cache ...
 type Cache struct {
-	mu    sync.Mutex
-	cache map[string]string
+	mu         sync.Mutex
+	dictionary map[string]map[string]string
 }
 
+// NewPromptsCache ...
 func NewPromptsCache(path string) *Cache {
-	cache := &Cache{}
+	cache := &Cache{
+		dictionary: make(map[string]map[string]string),
+	}
+
+	cache.dictionary["en"] = make(map[string]string)
+	cache.dictionary["ru"] = make(map[string]string)
+	
 	cache.Init(path)
 
 	return cache
@@ -26,9 +35,6 @@ func NewPromptsCache(path string) *Cache {
 
 // Init ...
 func (t *Cache) Init(path string) {
-	t.mu.Lock()
-	defer t.mu.Unlock()
-
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, promptsPath)
 	if len(path) != 0 {
@@ -48,27 +54,51 @@ func (t *Cache) Init(path string) {
 		panic("")
 	}
 
+	prompts := make(map[string]string)
+
 	// Unmarshal the JSON data into the map
-	err = json.Unmarshal(byteValue, &t.cache)
+	err = json.Unmarshal(byteValue, &prompts)
 	if err != nil {
 		slog.Error("cannot open prompts", slog.Any("err", err))
 		panic("")
 	}
+
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	for lang, v := range prompts {
+		if strings.Contains(lang, "_en") {
+			t.dictionary["en"][strings.ReplaceAll(lang, "_en", "")] = v
+		}
+
+		if strings.Contains(lang, "_ru") {
+			t.dictionary["ru"][strings.ReplaceAll(lang, "_ru", "")] = v
+		}
+	}
 }
 
 // Get ...
-func (t *Cache) Get(name string) string {
+func (t *Cache) Get(name string, lang string) string {
 	t.mu.Lock()
 	defer t.mu.Unlock()
-	return t.cache[name]
+
+	if len(lang) == 0 {
+		lang = "en"
+	}
+
+	return t.dictionary[lang][name]
 }
 
 // Keys ...
-func (t *Cache) Keys() (keys []string) {
+func (t *Cache) Keys(lang string) (keys []string) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	for k, _ := range t.cache {
+	if len(lang) == 0 {
+		lang = "en"
+	}
+
+	for k, _ := range t.dictionary[lang] {
 		keys = append(keys, k)
 	}
 

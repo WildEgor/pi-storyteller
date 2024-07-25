@@ -25,7 +25,7 @@ func NewWorker(workerPool chan chan Job) *Worker {
 }
 
 // Start initializes a select loop to listen for jobs to execute
-func (w Worker) Start() {
+func (w *Worker) Start() {
 	go func() {
 		for {
 			w.workerPool <- w.jobChannel
@@ -60,7 +60,7 @@ func (w Worker) Start() {
 }
 
 // Stop will end the job select loop for the worker
-func (w Worker) Stop() {
+func (w *Worker) Stop() {
 	go func() {
 		w.done <- struct{}{}
 	}()

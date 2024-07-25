@@ -5,12 +5,13 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/jpeg"
 	"time"
+
+	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 )
 
 type KandinskyDummyClient struct{}
@@ -25,6 +26,13 @@ func (c *KandinskyDummyClient) GenerateImage(ctx context.Context, prompt string,
 	return &kandinsky.GenerateResult{
 		Status: kandinsky.Done,
 		UUID:   "777",
+	}, nil
+}
+
+func (c *KandinskyDummyClient) GetTextToImageModel(ctx context.Context) (*kandinsky.ModelResult, error) {
+	return &kandinsky.ModelResult{
+		Id:   1,
+		Type: kandinsky.TextToImage,
 	}, nil
 }
 

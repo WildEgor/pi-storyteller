@@ -1,3 +1,4 @@
+// Package route telegram commands
 package routers
 
 import (
@@ -36,7 +37,7 @@ func NewImageRouter(
 // Setup router
 func (r *TelegramRouter) Setup(app *fiber.App) {
 	r.registry.HandleCommand(context.TODO(), "/generate", func(data *bot.CommandData) error {
-		return r.gh.Handle(context.TODO(), &tg_generate_handler.GeneratePayload{
+		return r.gh.Handle(context.TODO(), &tg_generate_handler.GenerateCommandDTO{
 			Nickname:  data.Nickname,
 			ChatID:    strconv.Itoa(int(data.ChatID)),
 			MessageID: strconv.Itoa(int(data.MessageID)),

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Status of Job
 type Status string
 
 const (
@@ -18,28 +19,37 @@ const (
 	StatusDone Status = "successful"
 )
 
+// Priority of Job
 type Priority uint
 
 var (
-	LowPriority  Priority = 0
+	// LowPriority lowest priority (by default)
+	LowPriority Priority = 0
+	// HighPriority highest priority
 	HighPriority Priority = 3
 )
 
+// JobCtx for callback
 type JobCtx struct {
 	context.Context
 
 	Meta *JobMeta
 }
 
+// JobMeta some info
 type JobMeta struct {
 	ID        string
 	OwnerID   string
 	StartedAt time.Time
 }
 
+// handler ...
 type handler func(JobCtx) error
+
+// onHandler ...
 type onHandler func(JobCtx)
 
+// JobOpts settings
 type JobOpts struct {
 	Name         string
 	At           time.Time
@@ -50,6 +60,7 @@ type JobOpts struct {
 	OnFail       func(JobCtx, error)
 }
 
+// NewDefaultOpts ...
 func NewDefaultOpts() *JobOpts {
 	return &JobOpts{
 		OnSuccess: func(ctx JobCtx) {

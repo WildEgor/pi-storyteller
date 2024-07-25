@@ -1,8 +1,15 @@
+// Package is responsible for generating images
 package tg_generate_handler
 
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"slices"
+	"sort"
+	"strconv"
+	"time"
+
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
 	"github.com/WildEgor/pi-storyteller/internal/configs"
@@ -10,11 +17,6 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
 	"github.com/WildEgor/pi-storyteller/internal/services/templater"
 	"golang.org/x/sync/errgroup"
-	"log/slog"
-	"slices"
-	"sort"
-	"strconv"
-	"time"
 )
 
 // GenerateHandler ...
@@ -47,7 +49,7 @@ func NewGenerateHandler(
 }
 
 // Handle ...
-func (h *GenerateHandler) Handle(ctx context.Context, payload *GeneratePayload) error {
+func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDTO) error {
 	chat := &bot.MessageRecipient{
 		ID: payload.ChatID,
 	}

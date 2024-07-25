@@ -2,9 +2,10 @@ package dispatcher
 
 import (
 	"errors"
+	"sync"
+
 	"github.com/google/uuid"
 	"github.com/samber/lo"
-	"sync"
 )
 
 // Dispatcher maintains a pool for available workers
@@ -135,6 +136,7 @@ func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) 
 	return newUUID, nil
 }
 
+// CountActiveJobs ...
 func (d *Dispatcher) CountActiveJobs(ownerId string) int {
 	d.mu.Lock()
 	defer d.mu.Unlock()
@@ -146,11 +148,13 @@ func (d *Dispatcher) CountActiveJobs(ownerId string) int {
 	return 0
 }
 
+// uuid ...
 func (d *Dispatcher) uuid() string {
 	newUUID, _ := uuid.NewUUID()
 	return newUUID.String()
 }
 
+// enqueue ...
 func (d *Dispatcher) enqueue(job *Job) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
@@ -160,6 +164,7 @@ func (d *Dispatcher) enqueue(job *Job) {
 	d.inProgressMap[job.opts.OwnerID] = lo.Uniq(v)
 }
 
+// dequeue ...
 func (d *Dispatcher) dequeue(meta *JobMeta) {
 	d.mu.Lock()
 	defer d.mu.Unlock()

@@ -30,6 +30,7 @@ func NewKandinskyConfig() *KandinskyConfig {
 	return cfg
 }
 
+// Config ...
 func (c *KandinskyConfig) Config() *kandinsky.ClientConfig {
 	return &kandinsky.ClientConfig{
 		BaseURL: c.BaseURL,
