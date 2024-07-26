@@ -9,9 +9,11 @@ package app
 import (
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
+	"github.com/WildEgor/pi-storyteller/internal/adapters/monitor"
 	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/WildEgor/pi-storyteller/internal/handlers/http/http_error_handler"
 	"github.com/WildEgor/pi-storyteller/internal/handlers/http/http_health_check_handler"
+	"github.com/WildEgor/pi-storyteller/internal/handlers/http/metrics"
 	"github.com/WildEgor/pi-storyteller/internal/handlers/tg/generate"
 	"github.com/WildEgor/pi-storyteller/internal/handlers/tg/start"
 	"github.com/WildEgor/pi-storyteller/internal/routers"
@@ -31,18 +33,23 @@ func NewServer() (*App, error) {
 	errorsHandler := http_error_handler.NewErrorsHandler()
 	healthCheckHandler := http_health_check_handler.NewHealthCheckHandler()
 	healthRouter := routers.NewHealthRouter(healthCheckHandler)
+	metricsConfig := configs.NewMetricsConfig()
+	promMetricsRegistry := monitor.NewPromMetricsRegistry(metricsConfig)
+	metricsHandler := http_metrics_handler.NewMetricsHandler(promMetricsRegistry)
+	metricsRouter := routers.NewMetricsRouter(metricsHandler, metricsConfig)
 	telegramBotConfig := configs.NewTelegramBotConfig()
 	telegramBot := bot.NewTelegramBot(telegramBotConfig)
-	dispatcherDispatcher := dispatcher.NewDispatcher()
+	promMetrics := monitor.NewPromMetrics(promMetricsRegistry, appConfig, metricsConfig)
+	dispatcherDispatcher := dispatcher.NewDispatcher(promMetrics)
 	kandinskyConfig := configs.NewKandinskyConfig()
-	kandinskyClientProvider := imaginator.NewKandinskyClientProvider(kandinskyConfig)
+	kandinskyClientProvider := imaginator.NewKandinskyDummyClientProvider(kandinskyConfig)
 	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyClientProvider)
 	templaterTemplater := templater.NewTemplateService(appConfig)
 	prompterPrompter := prompter.New(appConfig)
 	generateHandler := tg_generate_handler.NewGenerateHandler(appConfig, dispatcherDispatcher, kandinskyAdapter, templaterTemplater, prompterPrompter, telegramBot)
 	startHandler := tg_start_handler.NewStartHandler(telegramBot)
 	telegramRouter := routers.NewImageRouter(telegramBot, generateHandler, startHandler)
-	app := NewApp(configurator, appConfig, loggerConfig, errorsHandler, healthRouter, telegramRouter, telegramBot, dispatcherDispatcher)
+	app := NewApp(configurator, appConfig, loggerConfig, errorsHandler, healthRouter, metricsRouter, telegramRouter, telegramBot, dispatcherDispatcher)
 	return app, nil
 }
 

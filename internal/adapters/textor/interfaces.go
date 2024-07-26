@@ -6,7 +6,7 @@ type Textor interface {
 	Txt2Txt(prompt string, opts *Opts) (result chan string, err error)
 }
 
-// Predefined template
+// Template Predefined template
 type Template int
 
 const (

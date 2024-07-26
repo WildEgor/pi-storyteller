@@ -2,7 +2,10 @@
 package tg_generate_handler
 
 import (
+	"golang.org/x/sync/errgroup"
+
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"slices"
@@ -16,35 +19,34 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
 	"github.com/WildEgor/pi-storyteller/internal/services/templater"
-	"golang.org/x/sync/errgroup"
 )
 
 // GenerateHandler ...
 type GenerateHandler struct {
-	appConfig  *configs.AppConfig
-	dispatcher *dispatcher.Dispatcher
-	imaginator imaginator.Imagininator
-	templater  *templater.Templater
-	prompter   *prompter.Prompter
-	bot        bot.Bot
+	appConfig     *configs.AppConfig
+	jobDispatcher *dispatcher.Dispatcher
+	imgGenerator  imaginator.Imagininator
+	template      *templater.Templater
+	prompt        *prompter.Prompter
+	tgBot         bot.Bot
 }
 
 // NewGenerateHandler ...
 func NewGenerateHandler(
 	appConfig *configs.AppConfig,
-	dispatcher *dispatcher.Dispatcher,
-	imaginator imaginator.Imagininator,
-	templater *templater.Templater,
-	prompter *prompter.Prompter,
-	bot bot.Bot,
+	jobDispatcher *dispatcher.Dispatcher,
+	imgGenerator imaginator.Imagininator,
+	template *templater.Templater,
+	prompt *prompter.Prompter,
+	tgBot bot.Bot,
 ) *GenerateHandler {
 	return &GenerateHandler{
 		appConfig,
-		dispatcher,
-		imaginator,
-		templater,
-		prompter,
-		bot,
+		jobDispatcher,
+		imgGenerator,
+		template,
+		prompt,
+		tgBot,
 	}
 }
 
@@ -55,7 +57,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 	}
 
 	if err := payload.Validate(); err != nil {
-		_, err := h.bot.SendMsg(ctx, chat, err.Error())
+		_, err := h.tgBot.SendMsg(ctx, chat, err.Error())
 		return err
 	}
 
@@ -65,36 +67,38 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 	if slices.Contains(h.appConfig.PriorityList, payload.Nickname) {
 		opts.Priority = dispatcher.HighPriority
 	} else {
-		count := h.dispatcher.CountActiveJobs(payload.Nickname)
+		count := h.jobDispatcher.CountActiveJobs(payload.Nickname)
 		if count > 3 {
 			slog.Warn(fmt.Sprintf("%s still wait. Has %d active jobs", payload.Nickname, count))
-			_, err := h.bot.SendMsg(ctx, chat, "Please, wait! Too many request from you :)")
+			_, err := h.tgBot.SendMsg(ctx, chat, "Please, wait! Too many request from you :)")
 			return err
 		}
 	}
 
 	slog.Info("new request", slog.Any("nickname", payload.Nickname), slog.Any("prompt", payload.Prompt))
-	mid, err := h.bot.SendMsg(ctx, chat, "Start process... Please, wait!")
+	mid, err := h.tgBot.SendMsg(ctx, chat, "Start process... Please, wait!")
 	chat.MessageID = strconv.Itoa(mid)
 
-	id, err := h.dispatcher.Dispatch(func(jobCtx dispatcher.JobCtx) error {
+	id, err := h.jobDispatcher.Dispatch(func(jobCtx dispatcher.JobCtx) error {
 		tCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 		defer cancel()
 
-		prompted := h.prompter.Random(payload.Prompt)
+		prompted := h.prompt.Random(payload.Prompt)
 
 		var prompts []string
 		for _, conv := range prompted {
 			prompts = append(prompts, conv.Prompt)
 		}
 
-		results := h.imaginator.GenerateImages(tCtx, prompts)
+		results := h.imgGenerator.GenerateImages(tCtx, prompts)
 
 		errg := errgroup.Group{}
 
 		errg.Go(func() error {
-			h.bot.DeleteMsg(ctx, chat)
-			h.bot.DeleteMsg(ctx, &bot.MessageRecipient{
+			//nolint
+			_ = h.tgBot.DeleteMsg(ctx, chat)
+			//nolint
+			_ = h.tgBot.DeleteMsg(ctx, &bot.MessageRecipient{
 				ID:        payload.ChatID,
 				MessageID: payload.MessageID,
 			})
@@ -110,7 +114,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 
 			sort.Slice(images, func(i, j int) bool { return images[i].ID < images[j].ID })
 
-			err := h.bot.SendStory(ctx, &bot.MessageRecipient{
+			err := h.tgBot.SendStory(ctx, &bot.MessageRecipient{
 				ID: payload.ChatID,
 			}, images)
 			if err != nil {
@@ -122,7 +126,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 
 		err = errg.Wait()
 
-		return err
+		return errors.New("TEST")
 	}, opts)
 
 	slog.Info("dispatch task", slog.Any("uuid", id))

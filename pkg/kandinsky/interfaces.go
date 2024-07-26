@@ -72,7 +72,6 @@ type GenerateImageResult struct {
 	Status   Status   `json:"status"`
 	Images   []string `json:"images"`
 	Censored bool     `json:"censored"`
-	//GenTime  uint     `json:"generationTime"`
 }
 
 // Done ...

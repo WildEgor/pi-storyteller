@@ -1,6 +1,8 @@
 package imaginator
 
 import (
+	"github.com/hashicorp/golang-lru/v2/expirable"
+
 	"bytes"
 	"context"
 	"encoding/base64"
@@ -10,18 +12,16 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/golang-lru/v2/expirable"
-
 	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky/mocks"
 )
 
 const (
-	// Default error counter
-	MAX_GEN_ERRORS = 3
-	// Generated img size
-	DEFAULT_IMG_SIZE = 512
+	// MaxGenErrors Default error counter
+	MaxGenErrors = 3
+	// DefaultImgSize Generated img size
+	DefaultImgSize = 512
 )
 
 var _ Imagininator = (*KandinskyAdapter)(nil)
@@ -89,7 +89,6 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 
 			for {
 				select {
-				default:
 				case <-ctx.Done():
 					slog.Warn("context canceled")
 					return
@@ -99,7 +98,7 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 					imgResult, cErr := k.client.CheckStatus(ctx, uuid)
 					if cErr != nil {
 						errCounter++
-						if errCounter <= MAX_GEN_ERRORS {
+						if errCounter <= MaxGenErrors {
 							slog.Error("check status fail", slog.Any("err", err))
 							continue
 						}
@@ -133,7 +132,7 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 	}
 	wg.Wait()
 
-	slog.Info(fmt.Sprintf("process done, took - %s", time.Now().Sub(startAt)))
+	slog.Info(fmt.Sprintf("process done, took - %s", time.Since(startAt)))
 
 	return ch
 }
@@ -152,8 +151,8 @@ func (k *KandinskyAdapter) generateImage(ctx context.Context, prompt string) (uu
 
 	resp, err := k.client.GenerateImage(ctx, prompt, &kandinsky.GenerateImageOpts{
 		ModelId: existedModel.Id,
-		Width:   DEFAULT_IMG_SIZE,
-		Height:  DEFAULT_IMG_SIZE,
+		Width:   DefaultImgSize,
+		Height:  DefaultImgSize,
 	})
 	if err != nil {
 		return "", err

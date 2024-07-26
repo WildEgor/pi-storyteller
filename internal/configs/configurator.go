@@ -1,12 +1,12 @@
 package configs
 
 import (
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+
 	"fmt"
 	"log/slog"
 	"os"
-
-	"github.com/fsnotify/fsnotify"
-	"github.com/spf13/viper"
 )
 
 // Configurator ...
@@ -47,8 +47,9 @@ func (c *Configurator) load() {
 	if len(path) != 0 {
 		viper.AddConfigPath(path)
 	} else {
-		p, _ := os.Getwd()
-		viper.AddConfigPath(p)
+		//nolint
+		pwd, _ := os.Getwd()
+		viper.AddConfigPath(pwd)
 	}
 
 	viper.SetConfigName("config")

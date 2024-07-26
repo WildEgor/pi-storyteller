@@ -1,10 +1,10 @@
 package configs
 
 import (
+	"github.com/spf13/viper"
+
 	"log/slog"
 	"path/filepath"
-
-	"github.com/spf13/viper"
 )
 
 // AppConfig holds the main app configurations

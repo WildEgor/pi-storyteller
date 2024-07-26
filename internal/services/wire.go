@@ -2,10 +2,11 @@
 package services
 
 import (
+	"github.com/google/wire"
+
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
 	"github.com/WildEgor/pi-storyteller/internal/services/templater"
-	"github.com/google/wire"
 )
 
 // Set ...

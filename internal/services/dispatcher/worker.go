@@ -51,6 +51,7 @@ func (w *Worker) Start() {
 
 				if err != nil {
 					job.Status = StatusFailed
+					job.onFail(ctx, err)
 				}
 			case <-w.done:
 				return

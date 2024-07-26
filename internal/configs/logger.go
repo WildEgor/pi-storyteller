@@ -1,15 +1,15 @@
 package configs
 
 import (
+	"github.com/spf13/viper"
+
 	"log/slog"
 	"os"
-
-	"github.com/spf13/viper"
 )
 
 var (
 	// LogJsonFormat specify json format
-	LogJsonFormat string = "json"
+	LogJsonFormat = "json"
 )
 
 var logLevelToSlogLevel = map[string]slog.Leveler{

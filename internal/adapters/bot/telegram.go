@@ -1,6 +1,8 @@
 package bot
 
 import (
+	tele "gopkg.in/telebot.v3"
+
 	"bytes"
 	"context"
 	"image/jpeg"
@@ -9,7 +11,6 @@ import (
 	"time"
 
 	"github.com/WildEgor/pi-storyteller/internal/configs"
-	tele "gopkg.in/telebot.v3"
 )
 
 var _ Bot = (*TelegramBot)(nil)
@@ -83,13 +84,15 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 
 	for _, v := range slides {
 		buf := new(bytes.Buffer)
-		jpeg.Encode(buf, v.Image, nil)
+		//nolint
+		_ = jpeg.Encode(buf, v.Image, nil)
 
 		files = append(files, &tele.Photo{
 			File:    tele.FromReader(bytes.NewReader(buf.Bytes())),
 			Caption: v.Desc,
 		})
 
+		//nolint
 		sb.WriteString(v.Desc)
 	}
 

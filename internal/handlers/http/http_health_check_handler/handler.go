@@ -1,4 +1,4 @@
-// Package just dummy check
+// Package http_health_check_handler Package just dummy check
 package http_health_check_handler
 
 import (

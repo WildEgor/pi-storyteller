@@ -1,11 +1,13 @@
 package dispatcher
 
 import (
+	"github.com/google/uuid"
+	"github.com/samber/lo"
+
 	"errors"
 	"sync"
 
-	"github.com/google/uuid"
-	"github.com/samber/lo"
+	"github.com/WildEgor/pi-storyteller/internal/adapters/monitor"
 )
 
 // Dispatcher maintains a pool for available workers
@@ -25,12 +27,14 @@ type Dispatcher struct {
 
 	mu            sync.Mutex
 	inProgressMap map[string][]string
+
+	metrics monitor.Monitor
 }
 
 // NewDispatcher creates a new dispatcher with the given
 // number of workers and buffers the job queue based on maxQueue.
 // It also initializes the channels for the worker pool and job queue
-func NewDispatcher() *Dispatcher {
+func NewDispatcher(metrics monitor.Monitor) *Dispatcher {
 	return &Dispatcher{
 		// TODO: move to config
 		maxHighWorkers: 10,
@@ -40,6 +44,7 @@ func NewDispatcher() *Dispatcher {
 		done:           make(chan struct{}),
 		workers:        make([]*Worker, 0),
 		inProgressMap:  make(map[string][]string),
+		metrics:        metrics,
 	}
 }
 
@@ -113,8 +118,16 @@ func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) 
 	newUUID := d.uuid()
 	onDone := func(ctx JobCtx) {
 		d.dequeue(ctx.Meta)
+		d.metrics.DecActiveJobsCounter()
+		d.metrics.IncAllJobsCounter(ctx.Meta.OwnerID)
 	}
-	onStart := func(ctx JobCtx) {}
+	onStart := func(ctx JobCtx) {
+		d.metrics.IncActiveJobsCounter()
+	}
+	onFail := func(ctx JobCtx, err error) {
+		// TODO: err to kind mapping
+		d.metrics.IncFailedJobsCounter(ctx.Meta.OwnerID, monitor.ProblemKindUnknown)
+	}
 
 	job := Job{
 		ID:      newUUID,
@@ -122,6 +135,7 @@ func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) 
 		Status:  StatusStarted,
 		onStart: onStart,
 		onDone:  onDone,
+		onFail:  onFail,
 		opts:    opts,
 	}
 
@@ -150,6 +164,7 @@ func (d *Dispatcher) CountActiveJobs(ownerId string) int {
 
 // uuid ...
 func (d *Dispatcher) uuid() string {
+	//nolint
 	newUUID, _ := uuid.NewUUID()
 	return newUUID.String()
 }
@@ -159,6 +174,7 @@ func (d *Dispatcher) enqueue(job *Job) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
+	//nolint
 	v, _ := d.inProgressMap[job.opts.OwnerID]
 	v = append(v, job.ID)
 	d.inProgressMap[job.opts.OwnerID] = lo.Uniq(v)

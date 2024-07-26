@@ -11,7 +11,7 @@ type Status string
 const (
 	// StatusStarted This is the initial state when a job is pushed onto the broker.
 	StatusStarted Status = "queued"
-	// StatusProcessing This is the state when a worker has recieved a job.
+	// StatusProcessing This is the state when a worker has received a job.
 	StatusProcessing Status = "processing"
 	// StatusFailed The state when a job completes, but returns an error (and all retries are over).
 	StatusFailed Status = "failed"
@@ -23,9 +23,9 @@ const (
 type Priority uint
 
 var (
-	// LowPriority lowest priority (by default)
-	LowPriority Priority = 0
-	// HighPriority highest priority
+	// LowPriority the lowest priority (by default)
+	LowPriority Priority
+	// HighPriority the highest priority
 	HighPriority Priority = 3
 )
 
@@ -48,6 +48,9 @@ type handler func(JobCtx) error
 
 // onHandler ...
 type onHandler func(JobCtx)
+
+// onHandler ...
+type onFailHandler func(JobCtx, error)
 
 // JobOpts settings
 type JobOpts struct {
@@ -80,5 +83,6 @@ type Job struct {
 	handler handler
 	onStart onHandler
 	onDone  onHandler
+	onFail  onFailHandler
 	opts    *JobOpts
 }

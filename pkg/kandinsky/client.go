@@ -1,15 +1,15 @@
 package kandinsky
 
 import (
+	"github.com/go-resty/resty/v2"
+	"github.com/samber/lo"
+
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
-
-	"github.com/go-resty/resty/v2"
-	"github.com/samber/lo"
 )
 
 // Client for Kandinsky API
@@ -63,6 +63,7 @@ func (c *client) GenerateImage(ctx context.Context, prompt string, opts *Generat
 		return nil, err
 	}
 
+	//nolint
 	resp, err := c.httpClient.R().
 		SetContext(ctx).
 		SetHeader("Content-Type", "multipart/form-data").
