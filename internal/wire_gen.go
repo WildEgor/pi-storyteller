@@ -42,7 +42,7 @@ func NewServer() (*App, error) {
 	promMetrics := monitor.NewPromMetrics(promMetricsRegistry, appConfig, metricsConfig)
 	dispatcherDispatcher := dispatcher.NewDispatcher(promMetrics)
 	kandinskyConfig := configs.NewKandinskyConfig()
-	kandinskyClientProvider := imaginator.NewKandinskyDummyClientProvider(kandinskyConfig)
+	kandinskyClientProvider := imaginator.NewKandinskyClientProvider(kandinskyConfig)
 	kandinskyAdapter := imaginator.NewKandinskyAdapter(kandinskyClientProvider)
 	templaterTemplater := templater.NewTemplateService(appConfig)
 	prompterPrompter := prompter.New(appConfig)

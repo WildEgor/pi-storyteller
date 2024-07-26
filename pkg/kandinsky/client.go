@@ -53,6 +53,7 @@ func (c *client) GenerateImage(ctx context.Context, prompt string, opts *Generat
 		NumImages: 1,
 		Width:     opts.Width,
 		Height:    opts.Height,
+		Neg:       opts.Neg,
 		GenerateParams: GeneratePrompt{
 			Prompt: prompt,
 		},

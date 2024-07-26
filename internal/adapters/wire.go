@@ -13,8 +13,8 @@ import (
 
 // Set ...
 var Set = wire.NewSet(
-	imaginator.NewKandinskyDummyClientProvider,
-	// imaginator.NewKandinskyClientProvider,
+	// imaginator.NewKandinskyDummyClientProvider,
+	imaginator.NewKandinskyClientProvider,
 	wire.Bind(new(kandinsky.Client), new(*imaginator.KandinskyClientProvider)),
 	imaginator.NewKandinskyAdapter,
 	wire.Bind(new(imaginator.Imagininator), new(*imaginator.KandinskyAdapter)),

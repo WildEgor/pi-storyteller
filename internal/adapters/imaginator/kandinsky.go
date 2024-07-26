@@ -153,6 +153,7 @@ func (k *KandinskyAdapter) generateImage(ctx context.Context, prompt string) (uu
 		ModelId: existedModel.Id,
 		Width:   DefaultImgSize,
 		Height:  DefaultImgSize,
+		Neg:     "ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, bad anatomy, watermark, signature, cut off, low contrast, underexposed, overexposed, bad art, beginner, amateur, distorted face, blurry, draft, grainy",
 	})
 	if err != nil {
 		return "", err

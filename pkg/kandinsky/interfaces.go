@@ -13,6 +13,7 @@ type GenerateImageOpts struct {
 	ModelId uint
 	Width   uint
 	Height  uint
+	Neg     string
 }
 
 // ModelResult ...
@@ -51,6 +52,7 @@ type GenerateParams struct {
 	NumImages      uint           `json:"numImages"`
 	Width          uint           `json:"width"`
 	Height         uint           `json:"height"`
+	Neg            string         `json:"negativePromptUnclip"`
 	GenerateParams GeneratePrompt `json:"generateParams"`
 }
 
