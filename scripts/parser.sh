@@ -10,11 +10,11 @@ sources=(
 source_key=$(shuf -e "${!sources[@]}" -n 1)
 
 # Fetch the text from the selected source
-text=$(eval "${sources[$source_key]}")
+title=$(eval "${sources[$source_key]}")
 
 # Prepare JSON output
-json_output=$(jq -n --arg source "$source_key" --arg title "$text" \
-    '{source: $source, text: $text}')
-
+json_output=$(jq -n --arg source "$source_key" --arg title "$title" \
+    '{source: $source, text: $title}')
+  
 # Print the JSON output
 echo "$json_output"
