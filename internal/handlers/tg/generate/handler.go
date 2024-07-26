@@ -3,6 +3,7 @@ package tg_generate_handler
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"slices"
@@ -122,7 +123,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 
 		err = errg.Wait()
 
-		return err
+		return errors.New("TEST")
 	}, opts)
 
 	slog.Info("dispatch task", slog.Any("uuid", id))

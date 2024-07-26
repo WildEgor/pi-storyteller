@@ -2,6 +2,7 @@ package dispatcher
 
 import (
 	"errors"
+	"github.com/WildEgor/pi-storyteller/internal/adapters/monitor"
 	"sync"
 
 	"github.com/google/uuid"
@@ -25,12 +26,14 @@ type Dispatcher struct {
 
 	mu            sync.Mutex
 	inProgressMap map[string][]string
+
+	monitor monitor.Monitor
 }
 
 // NewDispatcher creates a new dispatcher with the given
 // number of workers and buffers the job queue based on maxQueue.
 // It also initializes the channels for the worker pool and job queue
-func NewDispatcher() *Dispatcher {
+func NewDispatcher(monitor monitor.Monitor) *Dispatcher {
 	return &Dispatcher{
 		// TODO: move to config
 		maxHighWorkers: 10,
@@ -40,6 +43,7 @@ func NewDispatcher() *Dispatcher {
 		done:           make(chan struct{}),
 		workers:        make([]*Worker, 0),
 		inProgressMap:  make(map[string][]string),
+		monitor:        monitor,
 	}
 }
 
@@ -113,8 +117,16 @@ func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) 
 	newUUID := d.uuid()
 	onDone := func(ctx JobCtx) {
 		d.dequeue(ctx.Meta)
+		d.monitor.DecActiveJobsCounter()
+		d.monitor.IncAllJobsCounter(ctx.Meta.OwnerID)
 	}
-	onStart := func(ctx JobCtx) {}
+	onStart := func(ctx JobCtx) {
+		d.monitor.IncActiveJobsCounter()
+	}
+	onFail := func(ctx JobCtx, err error) {
+		// TODO: err to kind mapping
+		d.monitor.IncFailedJobsCounter(ctx.Meta.OwnerID, monitor.ProblemKindUnknown)
+	}
 
 	job := Job{
 		ID:      newUUID,
@@ -122,6 +134,7 @@ func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) 
 		Status:  StatusStarted,
 		onStart: onStart,
 		onDone:  onDone,
+		onFail:  onFail,
 		opts:    opts,
 	}
 

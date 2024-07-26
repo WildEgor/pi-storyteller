@@ -11,4 +11,5 @@ var Set = wire.NewSet(
 	NewKandinskyConfig,
 	NewOllamaConfig,
 	NewTelegramBotConfig,
+	NewMetricsConfig,
 )

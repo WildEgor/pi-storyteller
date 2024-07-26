@@ -81,6 +81,7 @@ func NewApp(
 	lc *configs.LoggerConfig,
 	eh *eh.ErrorsHandler,
 	pbr *routers.HealthRouter,
+	mr *routers.MetricsRouter,
 	tr *routers.TelegramRouter,
 	bot bot.Bot,
 	dispatcher *dispatcher.Dispatcher,
@@ -101,6 +102,7 @@ func NewApp(
 	app.Use(recover.New())
 
 	pbr.Setup(app)
+	mr.Setup(app)
 	tr.Setup(app)
 
 	return &App{

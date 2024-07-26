@@ -8,6 +8,8 @@ app:
 logger:
   level: "debug"
   format: "json"
+metrics:
+  enabled: true
 kandinsky:
   debug: true
   base_url: "https://api-key.fusionbrain.ai"

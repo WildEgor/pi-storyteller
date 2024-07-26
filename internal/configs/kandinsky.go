@@ -8,7 +8,7 @@ import (
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 )
 
-// KandinskyConfig holds kandinsky api configuration
+// MetricsConfig holds kandinsky api configuration
 type KandinskyConfig struct {
 	BaseURL string `mapstructure:"base_url"`
 	Key     string `mapstructure:"key"`

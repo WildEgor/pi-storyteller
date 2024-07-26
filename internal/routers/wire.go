@@ -10,5 +10,6 @@ import (
 var Set = wire.NewSet(
 	handlers.Set,
 	NewHealthRouter,
+	NewMetricsRouter,
 	NewImageRouter,
 )

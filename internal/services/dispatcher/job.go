@@ -49,6 +49,9 @@ type handler func(JobCtx) error
 // onHandler ...
 type onHandler func(JobCtx)
 
+// onHandler ...
+type onFailHandler func(JobCtx, error)
+
 // JobOpts settings
 type JobOpts struct {
 	Name         string
@@ -80,5 +83,6 @@ type Job struct {
 	handler handler
 	onStart onHandler
 	onDone  onHandler
+	onFail  onFailHandler
 	opts    *JobOpts
 }
