@@ -1,20 +1,25 @@
+# ./internal/configs/app.go
 app:
   name: "app"
-  mode: "debug"
+  mode: "production" # develop | production | debug
   http_port: "8080"
   rpc_port: "8088"
-  assets_path: "assets"
-  priority_list: []
+  assets_path: "" # Example, "/app/assets"
+  priority_list: [] # Example, ["USERNAME"]
+# ./internal/configs/logger.go
 logger:
-  level: "debug"
-  format: "json"
+  level: warn
+  format: json
+# ./internal/configs/metrics.go
 metrics:
-  enabled: true
+  enabled: false
+# ./internal/configs/kandinsky.go
 kandinsky:
-  debug: true
+  debug: false
   base_url: "https://api-key.fusionbrain.ai"
   key: ""
   secret: ""
+# ./internal/configs/telegram.go
 telegram:
   name: ""
   token: ""

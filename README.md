@@ -1,14 +1,20 @@
-
 ## About
-General idea use open-source models (like Ollama) that can be used for story generation and for images (for example, kandinsky).
-Text generation must be generated using Raspberry Pi Zero 2 (need benchmarking) and using Go for image generation calls.
-Also, Go server must render output html story files and send back to frontend.
-Frontend simply show viewer (image carousel) with pagination and input field (if we want to send custom prompt) and "Generate" button (with cancel)
+General idea use open-source models that can be used for story and/or for images generation (for example, Kandinsky and Ollama).
 
 ## Features
-1) Handle "job" (generate images) per "user" request (for telegram uses nickname);
-2) Priority queue for "jobs";
-3) Limit for "bot" commands;
+- [x] Generate images by user prompts;
+- [x] Handle "job" (generate images) per "user" request (for telegram uses nickname); 
+- [x] Priority queue for "jobs"; 
+- [x] Limit for "bot" commands;
+
+## Usage
+
+- Download latest [release](https://github.com/WildEgor/pi-storyteller/releases) or build from source (change `.goreleaser.yml` and run `task build`);
+- Put `bin` executable to any directory (default `/app`);
+- Rename `config.example.yml` to `config.yml` and place near executable (also can specify path via `PI_STORYTELLER_CONFIG_PATH` env);
+- Change `telegram.token` in `config.yml`. See [guide](https://core.telegram.org/bots/tutorial);
+- Change `kandinsky.key` and `kandinsky.secret` in `config.yml`. See [guide](https://fusionbrain.ai/docs/en/doc/api-dokumentaciya/);
+- Optional. Add telegram nicknames to `app.priority_list` in `config.yml` (unlimited image generations).
  
 ## References
 - https://github.com/tvldz/storybook - using Python scripts and several models and show generated images at ink display;

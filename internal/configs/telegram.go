@@ -8,6 +8,7 @@ import (
 
 // TelegramBotConfig holds telegram bot configuration
 type TelegramBotConfig struct {
+	Name  string `mapstructure:"name"`
 	Token string `mapstructure:"token"`
 }
 
