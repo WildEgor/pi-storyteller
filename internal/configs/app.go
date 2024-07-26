@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/viper"
 
 	"log/slog"
-	"path/filepath"
 )
 
 // AppConfig holds the main app configurations
@@ -13,7 +12,6 @@ type AppConfig struct {
 	Mode         string   `mapstructure:"mode"`
 	HTTPPort     string   `mapstructure:"http_port"`
 	PriorityList []string `mapstructure:"priority_list"`
-	AssetsPath   string   `mapstructure:"assets_path"`
 	changer      func(ac *AppConfig)
 }
 
@@ -44,20 +42,4 @@ func (ac *AppConfig) IsProduction() bool {
 // IsDebug Check is application running in debug mode
 func (ac *AppConfig) IsDebug() bool {
 	return ac.Mode == "debug"
-}
-
-// TemplatesPath ...
-func (ac *AppConfig) TemplatesPath() string {
-	if len(ac.AssetsPath) != 0 {
-		return filepath.Join(ac.AssetsPath, "templates")
-	}
-	return ""
-}
-
-// PromptsFilePath ...
-func (ac *AppConfig) PromptsFilePath() string {
-	if len(ac.AssetsPath) != 0 {
-		return filepath.Join(ac.AssetsPath, "prompts.json")
-	}
-	return ""
 }

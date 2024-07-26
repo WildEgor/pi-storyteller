@@ -1,4 +1,5 @@
 // Package services contains "services"
+
 package services
 
 import (
@@ -10,8 +11,12 @@ import (
 )
 
 // Set ...
+
 var Set = wire.NewSet(
+
 	dispatcher.NewDispatcher,
+
 	templater.NewTemplateService,
+
 	prompter.New,
 )

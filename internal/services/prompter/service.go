@@ -9,17 +9,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/WildEgor/pi-storyteller/internal/configs"
+	"github.com/WildEgor/pi-storyteller/internal/adapters/textor"
 )
 
 // Prompter ...
 type Prompter struct {
 	cache    *Cache
 	detector lingua.LanguageDetector
+	textor   textor.Textor
 }
 
 // New ...
-func New(appConfig *configs.AppConfig) *Prompter {
+func New(textor textor.Textor) *Prompter {
 	//nolint
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -34,13 +35,45 @@ func New(appConfig *configs.AppConfig) *Prompter {
 		Build()
 
 	return &Prompter{
-		cache:    NewPromptsCache(appConfig.PromptsFilePath()),
+		cache:    NewCache(),
 		detector: detector,
+		textor:   textor,
 	}
 }
 
 // Random ...
-func (p *Prompter) Random(source string) []Conv {
+func (p *Prompter) Random(lang string) []Conv {
+	if len(lang) == 0 {
+		lang = "en"
+	}
+	prompts := p.cache.Prompts(lang)
+	//nolint
+	randPrompt := prompts[rand.Intn(len(prompts))]
+	story := p.cache.GetPrompt(randPrompt, lang)
+
+	// TODO: find alternative for chat gpt
+	// story, err := p.textor.Txt2Txt(prompt, nil)
+	//if err != nil {
+	//	return nil
+	//}
+
+	var conv []Conv
+	for _, s := range strings.Split(story, ".") {
+		if len(s) == 0 {
+			continue
+		}
+		conv = append(conv, Conv{
+			Style:    randPrompt,
+			Original: s,
+			Prompt:   s,
+		})
+	}
+
+	return conv
+}
+
+// WithPredefinedRandomStyle ...
+func (p *Prompter) WithPredefinedRandomStyle(source string) []Conv {
 	code, ok := p.detector.DetectLanguageOf(source)
 	if !ok {
 		slog.Warn("could not detect language", slog.Any("input", source))
@@ -49,11 +82,11 @@ func (p *Prompter) Random(source string) []Conv {
 
 	lang := strings.ToLower(code.IsoCode639_1().String())
 
-	styles := p.cache.Keys(lang)
+	styles := p.cache.Styles(lang)
 	//nolint
 	randStyle := styles[rand.Intn(len(styles))]
 
-	prompt := p.cache.Get(randStyle, lang)
+	prompt := p.cache.GetStyle(randStyle, lang)
 
 	var prompts []Conv
 	for _, s := range strings.Split(source, ".") {
@@ -61,6 +94,7 @@ func (p *Prompter) Random(source string) []Conv {
 			continue
 		}
 		prompts = append(prompts, Conv{
+			Style:    randStyle,
 			Original: s,
 			Prompt:   fmt.Sprintf(prompt, s),
 		})

@@ -28,6 +28,7 @@ type CommandData struct {
 	Nickname  string
 	MessageID int
 	ChatID    int64
+	Lang      string
 	Payload   string
 }
 
@@ -46,6 +47,7 @@ type btnCallbackHandler func(data *BtnCallbackData) error
 type StorySlide struct {
 	ID    int
 	Image image.Image
+	Style string
 	Desc  string
 }
 

@@ -3,8 +3,6 @@ package templater
 import (
 	"bytes"
 	"errors"
-
-	"github.com/WildEgor/pi-storyteller/internal/configs"
 )
 
 var (
@@ -20,9 +18,9 @@ type Templater struct {
 }
 
 // NewTemplateService ...
-func NewTemplateService(appConfig *configs.AppConfig) *Templater {
+func NewTemplateService() *Templater {
 	cache := &TemplateCache{}
-	cache.Init(appConfig.TemplatesPath())
+	cache.Init()
 
 	return &Templater{
 		cache,

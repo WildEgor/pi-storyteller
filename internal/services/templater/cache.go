@@ -17,14 +17,10 @@ type TemplateCache struct {
 }
 
 // Init ...
-func (t *TemplateCache) Init(path string) {
+func (t *TemplateCache) Init() {
 	//nolint
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, templatePath)
-
-	if len(path) != 0 {
-		tp = path
-	}
 
 	files, err := os.ReadDir(tp)
 	if err != nil {

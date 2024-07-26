@@ -21,14 +21,11 @@ func (hch *ErrorsHandler) Handle(ctx fiber.Ctx, err error) error {
 	sc := fiber.StatusInternalServerError
 
 	var e *fiber.Error
-
 	if errors.As(err, &e) {
 		sc = e.Code
 	}
 
 	ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
-
 	ctx.Status(sc)
-
 	return ctx.Send([]byte{})
 }

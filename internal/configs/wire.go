@@ -9,7 +9,7 @@ var Set = wire.NewSet(
 	NewAppConfig,
 	NewLoggerConfig,
 	NewKandinskyConfig,
-	NewOllamaConfig,
+	NewChatGPTConfig,
 	NewTelegramBotConfig,
 	NewMetricsConfig,
 )

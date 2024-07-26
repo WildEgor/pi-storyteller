@@ -10,37 +10,67 @@ import (
 	"sync"
 )
 
+// stylesPath default path
+const stylesPath = "assets/styles.json"
+
 // promptsPath default path
 const promptsPath = "assets/prompts.json"
 
 // Cache ...
 type Cache struct {
-	mu         sync.Mutex
-	dictionary map[string]map[string]string
+	mu      sync.Mutex
+	styles  map[string]map[string]string
+	prompts map[string]map[string]string
 }
 
-// NewPromptsCache ...
-func NewPromptsCache(path string) *Cache {
+// NewCache ...
+func NewCache() *Cache {
 	cache := &Cache{
-		dictionary: make(map[string]map[string]string),
+		styles:  make(map[string]map[string]string),
+		prompts: make(map[string]map[string]string),
 	}
 
-	cache.dictionary["en"] = make(map[string]string)
-	cache.dictionary["ru"] = make(map[string]string)
+	cache.styles["en"] = make(map[string]string)
+	cache.styles["ru"] = make(map[string]string)
+	cache.prompts["en"] = make(map[string]string)
+	cache.prompts["ru"] = make(map[string]string)
 
-	cache.Init(path)
+	cache.Init()
 
 	return cache
 }
 
 // Init ...
-func (t *Cache) Init(path string) {
+func (t *Cache) Init() {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	for i, p := range []string{stylesPath, promptsPath} {
+		data := t.readAndMapJSON(p)
+
+		for lang, v := range data {
+			if strings.Contains(lang, "_en") {
+				if i == 0 {
+					t.styles["en"][strings.ReplaceAll(lang, "_en", "")] = v
+				} else {
+					t.prompts["en"][strings.ReplaceAll(lang, "_en", "")] = v
+				}
+			}
+			if strings.Contains(lang, "_ru") {
+				if i == 0 {
+					t.styles["ru"][strings.ReplaceAll(lang, "_ru", "")] = v
+				} else {
+					t.prompts["ru"][strings.ReplaceAll(lang, "_ru", "")] = v
+				}
+			}
+		}
+	}
+}
+
+func (t *Cache) readAndMapJSON(path string) map[string]string {
 	//nolint
 	pwd, _ := os.Getwd()
-	tp := filepath.Join(pwd, promptsPath)
-	if len(path) != 0 {
-		tp = path
-	}
+	tp := filepath.Join(pwd, path)
 
 	file, err := os.Open(tp)
 	if err != nil {
@@ -64,22 +94,11 @@ func (t *Cache) Init(path string) {
 		panic("")
 	}
 
-	t.mu.Lock()
-	defer t.mu.Unlock()
-
-	for lang, v := range prompts {
-		if strings.Contains(lang, "_en") {
-			t.dictionary["en"][strings.ReplaceAll(lang, "_en", "")] = v
-		}
-
-		if strings.Contains(lang, "_ru") {
-			t.dictionary["ru"][strings.ReplaceAll(lang, "_ru", "")] = v
-		}
-	}
+	return prompts
 }
 
-// Get ...
-func (t *Cache) Get(name string, lang string) string {
+// GetStyle ...
+func (t *Cache) GetStyle(name string, lang string) string {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
@@ -87,11 +106,11 @@ func (t *Cache) Get(name string, lang string) string {
 		lang = "en"
 	}
 
-	return t.dictionary[lang][name]
+	return t.styles[lang][name]
 }
 
-// Keys ...
-func (t *Cache) Keys(lang string) (keys []string) {
+// Styles ...
+func (t *Cache) Styles(lang string) (keys []string) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
@@ -100,7 +119,36 @@ func (t *Cache) Keys(lang string) (keys []string) {
 	}
 
 	//nolint
-	for k, _ := range t.dictionary[lang] {
+	for k, _ := range t.styles[lang] {
+		keys = append(keys, k)
+	}
+
+	return keys
+}
+
+// GetPrompt ...
+func (t *Cache) GetPrompt(name string, lang string) string {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	if len(lang) == 0 {
+		lang = "en"
+	}
+
+	return t.prompts[lang][name]
+}
+
+// Prompts ...
+func (t *Cache) Prompts(lang string) (keys []string) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	if len(lang) == 0 {
+		lang = "en"
+	}
+
+	//nolint
+	for k, _ := range t.prompts[lang] {
 		keys = append(keys, k)
 	}
 

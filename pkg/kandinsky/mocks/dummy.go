@@ -18,7 +18,7 @@ import (
 type KandinskyDummyClient struct{}
 
 // NewKandinskyDummyClient ...
-func NewKandinskyDummyClient(config kandinsky.IConfigFactory) *KandinskyDummyClient {
+func NewKandinskyDummyClient(config kandinsky.ConfigFactory) *KandinskyDummyClient {
 	return &KandinskyDummyClient{}
 }
 

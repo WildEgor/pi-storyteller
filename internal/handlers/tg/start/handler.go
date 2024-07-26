@@ -1,4 +1,5 @@
 // Package responsible to show instructions
+
 package tg_start_handler
 
 import (
@@ -9,23 +10,33 @@ import (
 )
 
 // StartHandler ...
+
 type StartHandler struct {
 	tgBot bot.Bot
 }
 
 // NewStartHandler ...
+
 func NewStartHandler(tgBot bot.Bot) *StartHandler {
+
 	return &StartHandler{
+
 		tgBot,
 	}
+
 }
 
 // Handle ...
+
 func (h *StartHandler) Handle(ctx context.Context, payload *StartPayload) error {
+
 	//nolint
+
 	_, err := h.tgBot.SendMsg(ctx, &bot.MessageRecipient{
+
 		ID: payload.ChatID,
 	}, fmt.Sprintf("Hi, %s", payload.Nickname))
 
 	return err
+
 }

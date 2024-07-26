@@ -12,23 +12,13 @@ import (
 	"time"
 )
 
-// Client for Kandinsky API
-//
-//go:generate mockery --name=IKandinskyClient --structname=KandinskyClientMock --case=underscore
-type Client interface {
-	GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error)
-	GetModels(ctx context.Context) ([]ModelResult, error)
-	GetTextToImageModel(ctx context.Context) (*ModelResult, error)
-	CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error)
-}
-
 // client ...
 type client struct {
 	httpClient *resty.Client
 }
 
 // New creates http client for Kandinksy API
-func New(config IConfigFactory) Client {
+func New(config ConfigFactory) Client {
 	httpClient := resty.New()
 
 	httpClient.SetBaseURL(config().BaseURL).

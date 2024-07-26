@@ -7,6 +7,7 @@ import (
 	hch "github.com/WildEgor/pi-storyteller/internal/handlers/http/http_health_check_handler"
 	mh "github.com/WildEgor/pi-storyteller/internal/handlers/http/metrics"
 	tgh "github.com/WildEgor/pi-storyteller/internal/handlers/tg/generate"
+	trh "github.com/WildEgor/pi-storyteller/internal/handlers/tg/random"
 	tsh "github.com/WildEgor/pi-storyteller/internal/handlers/tg/start"
 )
 
@@ -17,4 +18,5 @@ var Set = wire.NewSet(
 	mh.NewMetricsHandler,
 	tgh.NewGenerateHandler,
 	tsh.NewStartHandler,
+	trh.NewRandomHandler,
 )

@@ -1,5 +1,5 @@
-// Package is responsible for generating images
-package tg_generate_handler
+// Package tg_random_handler is responsible for random generating images
+package tg_random_handler
 
 import (
 	"golang.org/x/sync/errgroup"
@@ -20,8 +20,8 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/services/templater"
 )
 
-// GenerateHandler ...
-type GenerateHandler struct {
+// RandomHandler ...
+type RandomHandler struct {
 	appConfig     *configs.AppConfig
 	jobDispatcher *dispatcher.Dispatcher
 	imgGenerator  imaginator.Imagininator
@@ -30,16 +30,16 @@ type GenerateHandler struct {
 	tgBot         bot.Bot
 }
 
-// NewGenerateHandler ...
-func NewGenerateHandler(
+// NewRandomHandler ...
+func NewRandomHandler(
 	appConfig *configs.AppConfig,
 	jobDispatcher *dispatcher.Dispatcher,
 	imgGenerator imaginator.Imagininator,
 	template *templater.Templater,
 	prompt *prompter.Prompter,
 	tgBot bot.Bot,
-) *GenerateHandler {
-	return &GenerateHandler{
+) *RandomHandler {
+	return &RandomHandler{
 		appConfig,
 		jobDispatcher,
 		imgGenerator,
@@ -50,14 +50,9 @@ func NewGenerateHandler(
 }
 
 // Handle ...
-func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDTO) error {
+func (h *RandomHandler) Handle(ctx context.Context, payload *RandomCommandDTO) error {
 	chat := &bot.MessageRecipient{
 		ID: payload.ChatID,
-	}
-
-	if err := payload.Validate(); err != nil {
-		_, err := h.tgBot.SendMsg(ctx, chat, err.Error())
-		return err
 	}
 
 	opts := &dispatcher.JobOpts{
@@ -74,16 +69,15 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 		}
 	}
 
-	slog.Info("new generate request", slog.Any("nickname", payload.Nickname), slog.Any("prompt", payload.Prompt))
-	mid, err := h.tgBot.SendMsg(ctx, chat, "Start process... Please, wait!")
+	slog.Info("new random request", slog.Any("nickname", payload.Nickname), slog.Any("lang", payload.Lang))
+	mid, err := h.tgBot.SendMsg(ctx, chat, "Hmmm... Please, wait!")
 	chat.MessageID = strconv.Itoa(mid)
 
 	id, err := h.jobDispatcher.Dispatch(func(jobCtx dispatcher.JobCtx) error {
 		tCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 		defer cancel()
 
-		prompted := h.prompt.WithPredefinedRandomStyle(payload.Prompt)
-
+		prompted := h.prompt.Random(payload.Lang)
 		prompts := make([]string, 0, len(prompted))
 		for _, conv := range prompted {
 			prompts = append(prompts, conv.Prompt)

@@ -1,5 +1,17 @@
 package kandinsky
 
+import "context"
+
+// Client for Kandinsky API
+//
+//go:generate mockery --name=Client --structname=KandinskyClientMock --case=underscore
+type Client interface {
+	GenerateImage(ctx context.Context, prompt string, opts *GenerateImageOpts) (*GenerateResult, error)
+	GetModels(ctx context.Context) ([]ModelResult, error)
+	GetTextToImageModel(ctx context.Context) (*ModelResult, error)
+	CheckStatus(ctx context.Context, uuid string) (*GenerateImageResult, error)
+}
+
 // ModelType currently only supports one model type
 type ModelType string
 
@@ -80,3 +92,14 @@ type GenerateImageResult struct {
 func (r *GenerateImageResult) Done() bool {
 	return r.Status == "DONE"
 }
+
+// ClientConfig client config
+type ClientConfig struct {
+	BaseURL string
+	Key     string
+	Secret  string
+	Debug   bool
+}
+
+// ConfigFactory helper
+type ConfigFactory func() *ClientConfig

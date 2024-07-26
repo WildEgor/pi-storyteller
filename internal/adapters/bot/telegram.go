@@ -5,6 +5,7 @@ import (
 
 	"bytes"
 	"context"
+	"fmt"
 	"image/jpeg"
 	"log/slog"
 	"strings"
@@ -82,15 +83,21 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 
 	sb := strings.Builder{}
 
-	for _, v := range slides {
+	for i, v := range slides {
 		buf := new(bytes.Buffer)
 		//nolint
 		_ = jpeg.Encode(buf, v.Image, nil)
 
-		files = append(files, &tele.Photo{
+		photo := &tele.Photo{
 			File:    tele.FromReader(bytes.NewReader(buf.Bytes())),
 			Caption: v.Desc,
-		})
+		}
+
+		if i == 0 {
+			photo.Caption = fmt.Sprintf("[%s] %s", v.Style, v.Desc)
+		}
+
+		files = append(files, photo)
 
 		//nolint
 		sb.WriteString(v.Desc)
@@ -100,36 +107,6 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 	if err != nil {
 		return err
 	}
-
-	selector := &tele.ReplyMarkup{}
-	btnRegen := selector.Data("   🔁   ", "__generate_regenerate__", sb.String())
-	btnWarn := selector.Data("   ⚠️   ", "__generate_warn__", sb.String())
-	selector.Inline(
-		selector.Row(btnRegen),
-		selector.Row(btnWarn),
-	)
-
-	if fn, ok := t.callbacks[btnRegen.Unique]; ok {
-		t.bot.Handle(&btnRegen, func(c tele.Context) error {
-			slog.Debug("regen pressed")
-			return fn(&BtnCallbackData{
-				// TODO
-			})
-		})
-	}
-
-	if fn, ok := t.callbacks[btnWarn.Unique]; ok {
-		t.bot.Handle(&btnWarn, func(c tele.Context) error {
-			slog.Debug("warn pressed")
-			return fn(&BtnCallbackData{
-				// TODO
-			})
-		})
-	}
-
-	_, err = t.bot.Send(to, "~", &tele.SendOptions{
-		ReplyMarkup: selector,
-	})
 
 	return err
 }
@@ -142,6 +119,7 @@ func (t *TelegramBot) HandleCommand(ctx context.Context, command string, fn comm
 			MessageID: c.Message().ID,
 			ChatID:    c.Chat().ID,
 			Payload:   c.Message().Payload,
+			Lang:      c.Sender().LanguageCode,
 		})
 	})
 }

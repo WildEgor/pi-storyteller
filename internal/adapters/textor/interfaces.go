@@ -3,10 +3,10 @@ package textor
 // Textor for text2text generator
 type Textor interface {
 	// Txt2Txt send request and receive any text
-	Txt2Txt(prompt string, opts *Opts) (result chan string, err error)
+	Txt2Txt(prompt string, opts *Opts) (result string, err error)
 }
 
-// Template Predefined template
+// Template WithPredefinedRandomStyle template
 type Template int
 
 const (

@@ -4,7 +4,6 @@ app:
   mode: "production" # develop | production | debug
   http_port: "8080"
   rpc_port: "8088"
-  assets_path: "" # Example, "/app/assets"
   priority_list: [] # Example, ["USERNAME"]
 # ./internal/configs/logger.go
 logger:
@@ -18,6 +17,10 @@ kandinsky:
   debug: false
   base_url: "https://api-key.fusionbrain.ai"
   key: ""
+  secret: ""
+# ./internal/configs/chatgpt.go
+chatgpt:
+  base_url: "https://api.openai.com"
   secret: ""
 # ./internal/configs/telegram.go
 telegram:

@@ -8,22 +8,33 @@ import (
 )
 
 // PromMetricsRegistry ...
+
 type PromMetricsRegistry struct {
 	Reg *prometheus.Registry
 }
 
 // NewPromMetricsRegistry ...
+
 func NewPromMetricsRegistry(config *configs.MetricsConfig) *PromMetricsRegistry {
+
 	if config.Enabled {
+
 		reg := prometheus.NewRegistry()
+
 		reg.MustRegister(
+
 			collectors.NewGoCollector(),
+
 			collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 		)
+
 		return &PromMetricsRegistry{
+
 			Reg: reg,
 		}
+
 	}
 
 	return &PromMetricsRegistry{}
+
 }
