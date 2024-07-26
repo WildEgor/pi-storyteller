@@ -1,7 +1,11 @@
 package prompter
 
 import (
+	"encoding/json"
 	"github.com/pemistahl/lingua-go"
+	"os"
+	"os/exec"
+	"path/filepath"
 
 	"fmt"
 	"log/slog"
@@ -11,6 +15,8 @@ import (
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters/textor"
 )
+
+const parserPath = "scripts/parser.sh"
 
 // Prompter ...
 type Prompter struct {
@@ -39,6 +45,32 @@ func New(textor textor.Textor) *Prompter {
 		detector: detector,
 		textor:   textor,
 	}
+}
+
+// GetRandomNews ...
+func (p *Prompter) GetRandomNews() (string, error) {
+	wd, _ := os.Getwd()
+
+	cmd := exec.Command("/bin/sh", filepath.Join(wd, parserPath))
+	if cmd.Err != nil {
+		return "", cmd.Err
+	}
+
+	raw, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	parsedNews := &ParsedNews{}
+
+	pErr := json.Unmarshal(raw, parsedNews)
+	if pErr != nil {
+		return "", pErr
+	}
+
+	slog.Debug("", parsedNews)
+
+	return parsedNews.Text, nil
 }
 
 // Random ...

@@ -24,4 +24,4 @@ tasks:
     CGO_ENABLED=0 go test -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
   lint:
-    golangci-lint run --config=./.github/linters/.golangci.yml --fix
+    golangci-lint run --config=./.github/linters/.golangci.yml

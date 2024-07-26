@@ -19,5 +19,6 @@ General idea use open-source models that can be used for story and/or for images
 ## References
 - https://github.com/tvldz/storybook - using Python scripts and several models and show generated images at ink display;
 - https://github.com/vitoplantamura/OnnxStream - lightweight wrapper for image generation;
+- https://github.com/rvdveen/epaper-slow-generative-art - another example parsing news and generate images;
 - https://github.com/go-telegram-bot-api/telegram-bot-api - Telegram API client for Go;
 - https://github.com/go-resty/resty - HTTP client for Go;

@@ -67,41 +67,23 @@ func (w *Worker) Start() {
 				}
 
 				job.onStart(ctx)
-
 				err := job.handler(ctx)
-
 				job.Status = StatusDone
-
 				job.onDone(ctx)
-
 				if err != nil {
-
 					job.Status = StatusFailed
-
 					job.onFail(ctx, err)
-
 				}
-
 			case <-w.done:
-
 				return
-
 			}
-
 		}
-
 	}()
-
 }
 
 // Stop will end the job select loop for the worker
-
 func (w *Worker) Stop() {
-
 	go func() {
-
 		w.done <- struct{}{}
-
 	}()
-
 }

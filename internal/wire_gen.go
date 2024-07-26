@@ -19,6 +19,7 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/handlers/tg/random"
 	"github.com/WildEgor/pi-storyteller/internal/handlers/tg/start"
 	"github.com/WildEgor/pi-storyteller/internal/routers"
+	"github.com/WildEgor/pi-storyteller/internal/services/cronus"
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
 	"github.com/WildEgor/pi-storyteller/internal/services/templater"
@@ -55,7 +56,8 @@ func NewServer() (*App, error) {
 	startHandler := tg_start_handler.NewStartHandler(telegramBot)
 	randomHandler := tg_random_handler.NewRandomHandler(appConfig, dispatcherDispatcher, kandinskyAdapter, templaterTemplater, prompterPrompter, telegramBot)
 	telegramRouter := routers.NewImageRouter(telegramBot, generateHandler, startHandler, randomHandler)
-	app := NewApp(configurator, appConfig, loggerConfig, errorsHandler, healthRouter, metricsRouter, telegramRouter, telegramBot, dispatcherDispatcher)
+	service := cronus.New(dispatcherDispatcher, prompterPrompter, telegramBot, kandinskyAdapter, telegramBotConfig)
+	app := NewApp(configurator, appConfig, loggerConfig, errorsHandler, healthRouter, metricsRouter, telegramRouter, telegramBot, dispatcherDispatcher, service)
 	return app, nil
 }
 
