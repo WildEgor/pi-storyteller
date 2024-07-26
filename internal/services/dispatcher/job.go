@@ -11,7 +11,7 @@ type Status string
 const (
 	// StatusStarted This is the initial state when a job is pushed onto the broker.
 	StatusStarted Status = "queued"
-	// StatusProcessing This is the state when a worker has recieved a job.
+	// StatusProcessing This is the state when a worker has received a job.
 	StatusProcessing Status = "processing"
 	// StatusFailed The state when a job completes, but returns an error (and all retries are over).
 	StatusFailed Status = "failed"

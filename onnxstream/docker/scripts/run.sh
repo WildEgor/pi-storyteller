@@ -4,7 +4,7 @@ STEPS=5
 
 SOURCES_COUNT=2
 TITLE_9GAG=$(curl -s http://9gagrss.com/feed/ | xmllint --nocdata --xpath '/rss/channel/item[1]/title/text()' -)
-TITLE_REDDIT=$(curl -s 'https://www.reddit.com/r/nottheonion.rss' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/115.0' -H 'Accept: text/html,applcation/xml;q=0.9,image/avif,image/webp,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Upgrade-Insecure-Requests: 1' -H 'Sec-Fetch-Dest: document' -H 'Sec-Fetch-Mode: navigate' -H 'Sec-Fetch-Site: none' -H 'Sec-Fetch-User: ?1' -H 'Connection: keep-alive' -H 'TE: trailers' | sed 's/<title>/\n<title>/g' | sed 's/<\/title>/<\/title>\n/g' | grep -Po '<title>.*</title>' | sed 's/<title>//g' | sed 's/<\/title>//g' | sed -n '2p')
+TITLE_REDDIT=$(curl -s 'https://www.reddit.com/r/nottheonion.rss' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/115.0' -H 'Accept: text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Upgrade-Insecure-Requests: 1' -H 'Sec-Fetch-Dest: document' -H 'Sec-Fetch-Mode: navigate' -H 'Sec-Fetch-Site: none' -H 'Sec-Fetch-User: ?1' -H 'Connection: keep-alive' -H 'TE: trailers' | sed 's/<title>/\n<title>/g' | sed 's/<\/title>/<\/title>\n/g' | grep -Po '<title>.*</title>' | sed 's/<title>//g' | sed 's/<\/title>//g' | sed -n '2p')
 
 set -e
 
@@ -45,6 +45,6 @@ START=$(date +%s);
 END=$(date +%s);
 echo $((END-START)) | awk '{print int($1/60)":"int($1%60)}'
 
-echo "title: ${TITLE} \\n promt: ${PROMPT} \\n neg: ${NEG}" >> "${RESULT_DIR}/info.txt"
+echo "title: ${TITLE} \\n prompt: ${PROMPT} \\n neg: ${NEG}" >> "${RESULT_DIR}/info.txt"
 
 /app/bin/templater -v TITLE=$TITLE -v IMAGE=$RESULT_DIR/result.png -v TEXT=$PROMPT -t /app/templates/base.html -o $RESULT_DIR/result.html
