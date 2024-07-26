@@ -1,9 +1,9 @@
 package configs
 
 import (
-	"log/slog"
-
 	"github.com/spf13/viper"
+
+	"log/slog"
 )
 
 // MetricsConfig holds metrics config

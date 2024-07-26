@@ -1,15 +1,18 @@
 package monitor
 
 import (
-	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
+
+	"github.com/WildEgor/pi-storyteller/internal/configs"
 )
 
+// PromMetricsRegistry ...
 type PromMetricsRegistry struct {
 	Reg *prometheus.Registry
 }
 
+// NewPromMetricsRegistry ...
 func NewPromMetricsRegistry(config *configs.MetricsConfig) *PromMetricsRegistry {
 	if config.Enabled {
 		reg := prometheus.NewRegistry()

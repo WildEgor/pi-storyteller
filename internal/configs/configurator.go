@@ -1,12 +1,12 @@
 package configs
 
 import (
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+
 	"fmt"
 	"log/slog"
 	"os"
-
-	"github.com/fsnotify/fsnotify"
-	"github.com/spf13/viper"
 )
 
 // Configurator ...

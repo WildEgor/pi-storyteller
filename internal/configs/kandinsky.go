@@ -1,14 +1,14 @@
 package configs
 
 import (
-	"log/slog"
-
 	"github.com/spf13/viper"
+
+	"log/slog"
 
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 )
 
-// MetricsConfig holds kandinsky api configuration
+// KandinskyConfig holds kandinsky api configuration
 type KandinskyConfig struct {
 	BaseURL string `mapstructure:"base_url"`
 	Key     string `mapstructure:"key"`

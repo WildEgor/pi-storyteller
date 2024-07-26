@@ -10,19 +10,20 @@ import (
 
 // StartHandler ...
 type StartHandler struct {
-	bot bot.Bot
+	tgBot bot.Bot
 }
 
 // NewStartHandler ...
-func NewStartHandler(bot bot.Bot) *StartHandler {
+func NewStartHandler(tgBot bot.Bot) *StartHandler {
 	return &StartHandler{
-		bot,
+		tgBot,
 	}
 }
 
 // Handle ...
 func (h *StartHandler) Handle(ctx context.Context, payload *StartPayload) error {
-	_, err := h.bot.SendMsg(ctx, &bot.MessageRecipient{
+	//nolint
+	_, err := h.tgBot.SendMsg(ctx, &bot.MessageRecipient{
 		ID: payload.ChatID,
 	}, fmt.Sprintf("Hi, %s", payload.Nickname))
 

@@ -2,12 +2,13 @@
 package adapters
 
 import (
+	"github.com/google/wire"
+
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/monitor"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/textor"
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
-	"github.com/google/wire"
 )
 
 // Set ...

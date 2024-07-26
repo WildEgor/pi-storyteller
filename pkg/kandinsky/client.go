@@ -1,15 +1,15 @@
 package kandinsky
 
 import (
+	"github.com/go-resty/resty/v2"
+	"github.com/samber/lo"
+
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
-
-	"github.com/go-resty/resty/v2"
-	"github.com/samber/lo"
 )
 
 // Client for Kandinsky API

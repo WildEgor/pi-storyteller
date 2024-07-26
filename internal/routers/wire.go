@@ -2,8 +2,9 @@
 package routers
 
 import (
-	"github.com/WildEgor/pi-storyteller/internal/handlers"
 	"github.com/google/wire"
+
+	"github.com/WildEgor/pi-storyteller/internal/handlers"
 )
 
 // Set ...

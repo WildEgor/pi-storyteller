@@ -1,6 +1,8 @@
 package imaginator
 
 import (
+	"github.com/hashicorp/golang-lru/v2/expirable"
+
 	"bytes"
 	"context"
 	"encoding/base64"
@@ -9,8 +11,6 @@ import (
 	"log/slog"
 	"sync"
 	"time"
-
-	"github.com/hashicorp/golang-lru/v2/expirable"
 
 	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"

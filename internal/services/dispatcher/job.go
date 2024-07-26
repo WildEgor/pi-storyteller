@@ -23,9 +23,9 @@ const (
 type Priority uint
 
 var (
-	// LowPriority lowest priority (by default)
-	LowPriority Priority = 0
-	// HighPriority highest priority
+	// LowPriority the lowest priority (by default)
+	LowPriority Priority
+	// HighPriority the highest priority
 	HighPriority Priority = 3
 )
 

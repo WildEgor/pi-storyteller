@@ -2,25 +2,25 @@
 package routers
 
 import (
-	"log/slog"
-
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
 	"github.com/gofiber/fiber/v3/middleware/limiter"
 
-	hch "github.com/WildEgor/pi-storyteller/internal/handlers/http/http_health_check_handler"
+	"log/slog"
+
+	"github.com/WildEgor/pi-storyteller/internal/handlers/http/http_health_check_handler"
 )
 
 var _ IRouter[*fiber.App] = (*HealthRouter)(nil)
 
 // HealthRouter router
 type HealthRouter struct {
-	hch *hch.HealthCheckHandler
+	hch *http_health_check_handler.HealthCheckHandler
 }
 
 // NewHealthRouter creates router
 func NewHealthRouter(
-	hch *hch.HealthCheckHandler,
+	hch *http_health_check_handler.HealthCheckHandler,
 ) *HealthRouter {
 	return &HealthRouter{
 		hch,

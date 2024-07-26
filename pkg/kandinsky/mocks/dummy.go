@@ -4,22 +4,25 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/jpeg"
+	"log/slog"
 	"time"
 
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
 )
 
+// KandinskyDummyClient ...
 type KandinskyDummyClient struct{}
 
+// NewKandinskyDummyClient ...
 func NewKandinskyDummyClient(config kandinsky.IConfigFactory) *KandinskyDummyClient {
 	return &KandinskyDummyClient{}
 }
 
+// GenerateImage ...
 func (c *KandinskyDummyClient) GenerateImage(ctx context.Context, prompt string, opts *kandinsky.GenerateImageOpts) (*kandinsky.GenerateResult, error) {
 	time.Sleep(5 * time.Second)
 
@@ -29,6 +32,7 @@ func (c *KandinskyDummyClient) GenerateImage(ctx context.Context, prompt string,
 	}, nil
 }
 
+// GetTextToImageModel ...
 func (c *KandinskyDummyClient) GetTextToImageModel(ctx context.Context) (*kandinsky.ModelResult, error) {
 	return &kandinsky.ModelResult{
 		Id:   1,
@@ -36,13 +40,15 @@ func (c *KandinskyDummyClient) GetTextToImageModel(ctx context.Context) (*kandin
 	}, nil
 }
 
+// GetModels ...
 func (c *KandinskyDummyClient) GetModels(ctx context.Context) ([]kandinsky.ModelResult, error) {
-	return []kandinsky.ModelResult{kandinsky.ModelResult{
+	return []kandinsky.ModelResult{{
 		Id:   1,
 		Type: kandinsky.TextToImage,
 	}}, nil
 }
 
+// CheckStatus ...
 func (c *KandinskyDummyClient) CheckStatus(ctx context.Context, uuid string) (*kandinsky.GenerateImageResult, error) {
 	width := 100
 	height := 100
@@ -53,7 +59,7 @@ func (c *KandinskyDummyClient) CheckStatus(ctx context.Context, uuid string) (*k
 
 	var buf bytes.Buffer
 	if err := jpeg.Encode(&buf, img, nil); err != nil {
-		fmt.Println("Failed to encode image:", err)
+		slog.Error("failed to encode image", slog.Any("err", err))
 		return nil, err
 	}
 

@@ -1,5 +1,6 @@
 package monitor
 
+// Monitor ...
 type Monitor interface {
 	IncActiveJobsCounter()
 	DecActiveJobsCounter()

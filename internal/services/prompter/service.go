@@ -1,6 +1,8 @@
 package prompter
 
 import (
+	"github.com/pemistahl/lingua-go"
+
 	"fmt"
 	"log/slog"
 	"math/rand"
@@ -8,7 +10,6 @@ import (
 	"time"
 
 	"github.com/WildEgor/pi-storyteller/internal/configs"
-	"github.com/pemistahl/lingua-go"
 )
 
 // Prompter ...
@@ -19,6 +20,7 @@ type Prompter struct {
 
 // New ...
 func New(appConfig *configs.AppConfig) *Prompter {
+	//nolint
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	languages := []lingua.Language{
@@ -48,6 +50,7 @@ func (p *Prompter) Random(source string) []Conv {
 	lang := strings.ToLower(code.IsoCode639_1().String())
 
 	styles := p.cache.Keys(lang)
+	//nolint
 	randStyle := styles[rand.Intn(len(styles))]
 
 	prompt := p.cache.Get(randStyle, lang)

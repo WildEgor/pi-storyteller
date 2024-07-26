@@ -23,7 +23,7 @@ func (t *TemplateCache) Init(path string) {
 	tp := filepath.Join(pwd, templatePath)
 
 	if len(path) != 0 {
-		tp = filepath.Join(path)
+		tp = path
 	}
 
 	files, err := os.ReadDir(tp)

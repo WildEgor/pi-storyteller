@@ -39,7 +39,7 @@ func (t *Cache) Init(path string) {
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, promptsPath)
 	if len(path) != 0 {
-		tp = filepath.Join(path)
+		tp = path
 	}
 
 	file, err := os.Open(tp)

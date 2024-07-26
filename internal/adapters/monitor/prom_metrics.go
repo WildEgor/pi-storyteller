@@ -1,9 +1,10 @@
 package monitor
 
 import (
-	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+
+	"github.com/WildEgor/pi-storyteller/internal/configs"
 )
 
 var _ Monitor = (*PromMetrics)(nil)
@@ -15,12 +16,17 @@ const (
 )
 
 const (
+	// ProblemKindUnknown ...
 	ProblemKindUnknown = "unknown"
-	ProblemKindParse   = "parse"
-	ProblemKindDecode  = "decode"
+	// ProblemKindParse ...
+	ProblemKindParse = "parse"
+	// ProblemKindDecode ...
+	ProblemKindDecode = "decode"
+	// ProblemKindPublish ...
 	ProblemKindPublish = "send"
 )
 
+// PromMetrics ...
 type PromMetrics struct {
 	appConfig                      *configs.AppConfig
 	metricsConfig                  *configs.MetricsConfig
@@ -29,6 +35,7 @@ type PromMetrics struct {
 	regAdapter                     *PromMetricsRegistry
 }
 
+// NewPromMetrics ...
 func NewPromMetrics(reg *PromMetricsRegistry, appConfig *configs.AppConfig, metricsConfig *configs.MetricsConfig) *PromMetrics {
 	return &PromMetrics{
 		appConfig:     appConfig,
@@ -53,24 +60,28 @@ func NewPromMetrics(reg *PromMetricsRegistry, appConfig *configs.AppConfig, metr
 	}
 }
 
+// IncActiveJobsCounter ...
 func (m *PromMetrics) IncActiveJobsCounter() {
 	if m.metricsConfig.Enabled {
 		m.activeJobs.Inc()
 	}
 }
 
+// DecActiveJobsCounter ...
 func (m *PromMetrics) DecActiveJobsCounter() {
 	if m.metricsConfig.Enabled {
 		m.activeJobs.Dec()
 	}
 }
 
+// IncAllJobsCounter ...
 func (m *PromMetrics) IncAllJobsCounter(username string) {
 	if m.metricsConfig.Enabled {
 		m.completedJobs.With(prometheus.Labels{labelApp: m.appConfig.Name, labelUsername: username}).Inc()
 	}
 }
 
+// IncFailedJobsCounter ...
 func (m *PromMetrics) IncFailedJobsCounter(username, kind string) {
 	if m.metricsConfig.Enabled {
 		m.problematicJobs.With(prometheus.Labels{labelApp: m.appConfig.Name, labelUsername: username, labelKind: kind}).Inc()

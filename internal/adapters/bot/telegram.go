@@ -1,6 +1,8 @@
 package bot
 
 import (
+	tele "gopkg.in/telebot.v3"
+
 	"bytes"
 	"context"
 	"image/jpeg"
@@ -9,7 +11,6 @@ import (
 	"time"
 
 	"github.com/WildEgor/pi-storyteller/internal/configs"
-	tele "gopkg.in/telebot.v3"
 )
 
 var _ Bot = (*TelegramBot)(nil)
@@ -91,6 +92,7 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 			Caption: v.Desc,
 		})
 
+		//nolint
 		sb.WriteString(v.Desc)
 	}
 

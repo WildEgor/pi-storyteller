@@ -2,10 +2,10 @@
 package routers
 
 import (
+	"github.com/gofiber/fiber/v3"
+
 	"context"
 	"strconv"
-
-	"github.com/gofiber/fiber/v3"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	tg_generate_handler "github.com/WildEgor/pi-storyteller/internal/handlers/tg/generate"
@@ -40,7 +40,7 @@ func (r *TelegramRouter) Setup(app *fiber.App) {
 		return r.gh.Handle(context.TODO(), &tg_generate_handler.GenerateCommandDTO{
 			Nickname:  data.Nickname,
 			ChatID:    strconv.Itoa(int(data.ChatID)),
-			MessageID: strconv.Itoa(int(data.MessageID)),
+			MessageID: strconv.Itoa(data.MessageID),
 			Prompt:    data.Payload,
 		})
 	})

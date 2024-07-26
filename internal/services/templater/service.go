@@ -30,7 +30,7 @@ func NewTemplateService(appConfig *configs.AppConfig) *Templater {
 }
 
 // Build ...
-func (t *Templater) Build(name string, data interface{}) (string, error) {
+func (t *Templater) Build(name string, data any) (string, error) {
 	tmpl := t.cache.Get(name)
 	if tmpl == nil {
 		return "", ErrTemplateNotFound

@@ -2,24 +2,24 @@
 package routers
 
 import (
-	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/limiter"
 
-	mh "github.com/WildEgor/pi-storyteller/internal/handlers/http/metrics"
+	"github.com/WildEgor/pi-storyteller/internal/configs"
+	http_metrics_handler "github.com/WildEgor/pi-storyteller/internal/handlers/http/metrics"
 )
 
 var _ IRouter[*fiber.App] = (*MetricsRouter)(nil)
 
 // MetricsRouter router
 type MetricsRouter struct {
-	mh   *mh.MetricsHandler
+	mh   *http_metrics_handler.MetricsHandler
 	mcfg *configs.MetricsConfig
 }
 
 // NewMetricsRouter creates router
 func NewMetricsRouter(
-	mh *mh.MetricsHandler,
+	mh *http_metrics_handler.MetricsHandler,
 	mcfg *configs.MetricsConfig,
 ) *MetricsRouter {
 	return &MetricsRouter{

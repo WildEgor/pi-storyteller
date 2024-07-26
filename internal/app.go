@@ -2,12 +2,15 @@
 package app
 
 import (
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/gofiber/fiber/v3/middleware/recover"
+	"github.com/google/wire"
+
 	"context"
 	"fmt"
 	"log/slog"
 	"time"
-
-	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
@@ -15,10 +18,7 @@ import (
 	eh "github.com/WildEgor/pi-storyteller/internal/handlers/http/http_error_handler"
 	"github.com/WildEgor/pi-storyteller/internal/routers"
 	"github.com/WildEgor/pi-storyteller/internal/services"
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/cors"
-	"github.com/gofiber/fiber/v3/middleware/recover"
-	"github.com/google/wire"
+	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 )
 
 // Set ...
@@ -79,16 +79,16 @@ func NewApp(
 	c *configs.Configurator,
 	ac *configs.AppConfig,
 	lc *configs.LoggerConfig,
-	eh *eh.ErrorsHandler,
+	erh *eh.ErrorsHandler,
 	pbr *routers.HealthRouter,
 	mr *routers.MetricsRouter,
 	tr *routers.TelegramRouter,
-	bot bot.Bot,
-	dispatcher *dispatcher.Dispatcher,
+	b bot.Bot,
+	dptchr *dispatcher.Dispatcher,
 ) *App {
 	app := fiber.New(fiber.Config{
 		AppName:      ac.Name,
-		ErrorHandler: eh.Handle,
+		ErrorHandler: erh.Handle,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout:  30 * time.Second,
@@ -107,8 +107,8 @@ func NewApp(
 
 	return &App{
 		App:          app,
-		Dispatcher:   dispatcher,
-		Bot:          bot,
+		Dispatcher:   dptchr,
+		Bot:          b,
 		AppConfig:    ac,
 		Configurator: c,
 	}
