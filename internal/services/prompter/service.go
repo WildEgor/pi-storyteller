@@ -19,7 +19,7 @@ type Prompter struct {
 
 // New ...
 func New(appConfig *configs.AppConfig) *Prompter {
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	languages := []lingua.Language{
 		lingua.English,

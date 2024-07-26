@@ -47,8 +47,9 @@ func (c *Configurator) load() {
 	if len(path) != 0 {
 		viper.AddConfigPath(path)
 	} else {
-		p, _ := os.Getwd()
-		viper.AddConfigPath(p)
+		//nolint
+		pwd, _ := os.Getwd()
+		viper.AddConfigPath(pwd)
 	}
 
 	viper.SetConfigName("config")

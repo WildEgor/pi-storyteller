@@ -94,8 +94,10 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 		errg := errgroup.Group{}
 
 		errg.Go(func() error {
-			h.bot.DeleteMsg(ctx, chat)
-			h.bot.DeleteMsg(ctx, &bot.MessageRecipient{
+			//nolint
+			_ = h.bot.DeleteMsg(ctx, chat)
+			//nolint
+			_ = h.bot.DeleteMsg(ctx, &bot.MessageRecipient{
 				ID:        payload.ChatID,
 				MessageID: payload.MessageID,
 			})

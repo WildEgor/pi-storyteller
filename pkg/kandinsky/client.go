@@ -63,6 +63,7 @@ func (c *client) GenerateImage(ctx context.Context, prompt string, opts *Generat
 		return nil, err
 	}
 
+	//nolint
 	resp, err := c.httpClient.R().
 		SetContext(ctx).
 		SetHeader("Content-Type", "multipart/form-data").

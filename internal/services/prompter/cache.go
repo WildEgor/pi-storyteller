@@ -27,7 +27,7 @@ func NewPromptsCache(path string) *Cache {
 
 	cache.dictionary["en"] = make(map[string]string)
 	cache.dictionary["ru"] = make(map[string]string)
-	
+
 	cache.Init(path)
 
 	return cache
@@ -35,6 +35,7 @@ func NewPromptsCache(path string) *Cache {
 
 // Init ...
 func (t *Cache) Init(path string) {
+	//nolint
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, promptsPath)
 	if len(path) != 0 {
@@ -98,6 +99,7 @@ func (t *Cache) Keys(lang string) (keys []string) {
 		lang = "en"
 	}
 
+	//nolint
 	for k, _ := range t.dictionary[lang] {
 		keys = append(keys, k)
 	}

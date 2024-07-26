@@ -89,7 +89,6 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 
 			for {
 				select {
-				default:
 				case <-ctx.Done():
 					slog.Warn("context canceled")
 					return
@@ -133,7 +132,7 @@ func (k *KandinskyAdapter) GenerateImages(ctx context.Context, prompts []string)
 	}
 	wg.Wait()
 
-	slog.Info(fmt.Sprintf("process done, took - %s", time.Now().Sub(startAt)))
+	slog.Info(fmt.Sprintf("process done, took - %s", time.Since(startAt)))
 
 	return ch
 }

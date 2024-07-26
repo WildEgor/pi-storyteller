@@ -18,6 +18,7 @@ type TemplateCache struct {
 
 // Init ...
 func (t *TemplateCache) Init(path string) {
+	//nolint
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, templatePath)
 

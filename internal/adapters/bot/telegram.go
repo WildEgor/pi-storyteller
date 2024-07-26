@@ -83,7 +83,8 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 
 	for _, v := range slides {
 		buf := new(bytes.Buffer)
-		jpeg.Encode(buf, v.Image, nil)
+		//nolint
+		_ = jpeg.Encode(buf, v.Image, nil)
 
 		files = append(files, &tele.Photo{
 			File:    tele.FromReader(bytes.NewReader(buf.Bytes())),

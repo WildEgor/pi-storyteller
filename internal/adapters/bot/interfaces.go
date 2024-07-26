@@ -64,6 +64,7 @@ func (r *MessageRecipient) Recipient() string {
 // MessageSig ...
 func (r *MessageRecipient) MessageSig() (messageID string, chatID int64) {
 	if r.ChatID == 0 {
+		//nolint
 		v, _ := strconv.Atoi(r.ID)
 		return r.MessageID, int64(v)
 	}

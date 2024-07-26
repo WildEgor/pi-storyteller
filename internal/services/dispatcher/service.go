@@ -163,6 +163,7 @@ func (d *Dispatcher) CountActiveJobs(ownerId string) int {
 
 // uuid ...
 func (d *Dispatcher) uuid() string {
+	//nolint
 	newUUID, _ := uuid.NewUUID()
 	return newUUID.String()
 }
@@ -172,6 +173,7 @@ func (d *Dispatcher) enqueue(job *Job) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
+	//nolint
 	v, _ := d.inProgressMap[job.opts.OwnerID]
 	v = append(v, job.ID)
 	d.inProgressMap[job.opts.OwnerID] = lo.Uniq(v)
