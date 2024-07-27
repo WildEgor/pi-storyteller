@@ -7,7 +7,7 @@ FILE_PATTERN="pi-storyteller_.*_linux_armv6.tar.gz"
 DESTINATION_DIR="/app"
 
 echo "Install deps..."
-apt-get bash curl libxml2-utils jq
+apt-get install bash curl libxml2-utils jq
 
 # Fetch latest release info from GitHub API
 echo "Fetching latest release info..."
