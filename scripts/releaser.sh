@@ -76,5 +76,4 @@ echo "Restart app..."
 export PI_STORYTELLER_CONFIG_PATH=$APP_CONFIG_PATH
 systemctl restart $UNIT_NAME
 # systemctl status $UNIT_NAME
-sudo journalctl UNIT=$UNIT_NAME
-exit 1
+journalctl UNIT=$UNIT_NAME
