@@ -7,23 +7,24 @@ app:
   priority_list: [] # Example, ["USERNAME"]
 # ./internal/configs/logger.go
 logger:
-  level: warn
-  format: json
+  level: "warn" # warn | error | debug | info
+  format: "json" # json | pretty
 # ./internal/configs/metrics.go
 metrics:
-  enabled: false
+  enabled: "false"
 # ./internal/configs/kandinsky.go
 kandinsky:
-  debug: false
+  debug: "false"
   base_url: "https://api-key.fusionbrain.ai"
   key: ""
   secret: ""
 # ./internal/configs/chatgpt.go
 chatgpt:
+  debug: "false"
   base_url: "https://api.openai.com"
   secret: ""
 # ./internal/configs/telegram.go
 telegram:
-  chat_id: 0
+  chat_id: "0"
   name: ""
   token: ""

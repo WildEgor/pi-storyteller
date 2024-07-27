@@ -2,33 +2,24 @@ package templater
 
 import (
 	"bytes"
-	"errors"
 )
 
-var (
-	// ErrTemplateNotFound ...
-	ErrTemplateNotFound = errors.New("cannot find template")
-	// ErrParseTemplate ...
-	ErrParseTemplate = errors.New("cannot parse template")
-)
+var _ Templater = (*Service)(nil)
 
-// Templater ...
-type Templater struct {
-	cache *TemplateCache
+// Service ...
+type Service struct {
+	cache *Cache
 }
 
-// NewTemplateService ...
-func NewTemplateService() *Templater {
-	cache := &TemplateCache{}
-	cache.Init()
-
-	return &Templater{
-		cache,
+// New ...
+func New() *Service {
+	return &Service{
+		cache: NewCache(),
 	}
 }
 
 // Build ...
-func (t *Templater) Build(name string, data any) (string, error) {
+func (t *Service) Build(name string, data any) (string, error) {
 	tmpl := t.cache.Get(name)
 	if tmpl == nil {
 		return "", ErrTemplateNotFound

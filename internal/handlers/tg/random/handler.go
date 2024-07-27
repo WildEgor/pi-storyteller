@@ -2,8 +2,6 @@
 package tg_random_handler
 
 import (
-	"golang.org/x/sync/errgroup"
-
 	"context"
 	"fmt"
 	"log/slog"
@@ -11,6 +9,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
@@ -23,20 +23,20 @@ import (
 // RandomHandler ...
 type RandomHandler struct {
 	appConfig     *configs.AppConfig
-	jobDispatcher *dispatcher.Dispatcher
+	jobDispatcher dispatcher.Dispatcher
 	imgGenerator  imaginator.Imagininator
-	template      *templater.Templater
-	prompt        *prompter.Prompter
+	template      templater.Templater
+	prompt        prompter.Prompter
 	tgBot         bot.Bot
 }
 
 // NewRandomHandler ...
 func NewRandomHandler(
 	appConfig *configs.AppConfig,
-	jobDispatcher *dispatcher.Dispatcher,
+	jobDispatcher dispatcher.Dispatcher,
 	imgGenerator imaginator.Imagininator,
-	template *templater.Templater,
-	prompt *prompter.Prompter,
+	template templater.Templater,
+	prompt prompter.Prompter,
 	tgBot bot.Bot,
 ) *RandomHandler {
 	return &RandomHandler{
@@ -77,7 +77,7 @@ func (h *RandomHandler) Handle(ctx context.Context, payload *RandomCommandDTO) e
 		tCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 		defer cancel()
 
-		prompted := h.prompt.Random(payload.Lang)
+		prompted := h.prompt.GetRandomStory(payload.Lang)
 		prompts := make([]string, 0, len(prompted))
 		for _, conv := range prompted {
 			prompts = append(prompts, conv.Prompt)

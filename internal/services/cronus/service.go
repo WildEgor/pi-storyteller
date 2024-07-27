@@ -2,65 +2,69 @@ package cronus
 
 import (
 	"context"
+	"log/slog"
+	"sort"
+	"time"
+
+	"golang.org/x/sync/errgroup"
+
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
 	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
-	"golang.org/x/sync/errgroup"
-	"log/slog"
-	"sort"
-	"time"
 )
 
 // Service ...
 type Service struct {
-	dptchr       *dispatcher.Dispatcher
-	prompt       *prompter.Prompter
+	dptchr       dispatcher.Dispatcher
+	prompt       prompter.Prompter
 	tgBot        bot.Bot
 	imgGenerator imaginator.Imagininator
-	tgConfig     *configs.TelegramBotConfig
+
+	tgConfig *configs.TelegramBotConfig
 
 	crons []*dispatcher.DispatchCron
 }
 
 // New ...
 func New(
-	crons *dispatcher.Dispatcher,
-	prompt *prompter.Prompter,
+	dptchr dispatcher.Dispatcher,
+	prompt prompter.Prompter,
 	tgBot bot.Bot,
 	imgGenerator imaginator.Imagininator,
 	tgConfig *configs.TelegramBotConfig,
 ) *Service {
-	s := &Service{
-		crons,
+	return &Service{
+		dptchr,
 		prompt,
 		tgBot,
 		imgGenerator,
 		tgConfig,
-		nil,
+		make([]*dispatcher.DispatchCron, 0, 1),
 	}
-
-	s.crons = make([]*dispatcher.DispatchCron, 0, 1)
-	return s
 }
 
 // Start ...
 func (s *Service) Start() {
+	//nolint
 	loc, _ := time.LoadLocation("Asia/Almaty")
 
+	//nolint
 	cron, _ := s.dptchr.DispatchCron(func(ctx dispatcher.JobCtx) error {
-		txt, err := s.prompt.GetRandomNews()
+		news, err := s.prompt.GetRandomNews()
 		if err != nil {
 			slog.Error("fail get news", slog.Any("err", err))
 			return err
 		}
 
+		modifiedNew := s.prompt.GetPredefinedRandomStyleStory(news, false)
+
 		tCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 		defer cancel()
 
-		slog.Debug("news: ", slog.Any("value", txt))
-		results := s.imgGenerator.GenerateImages(tCtx, []string{txt})
+		slog.Debug("news: ", slog.Any("value", modifiedNew))
+		results := s.imgGenerator.GenerateImages(tCtx, []string{modifiedNew[0].Prompt})
 
 		errg := errgroup.Group{}
 		errg.Go(func() error {
@@ -69,7 +73,7 @@ func (s *Service) Start() {
 				images = append(images, bot.StorySlide{
 					ID:    v.ID,
 					Image: v.Image,
-					Desc:  txt,
+					Desc:  modifiedNew[0].Original,
 				})
 			}
 
@@ -88,7 +92,7 @@ func (s *Service) Start() {
 
 		return errg.Wait()
 
-	}, "0 * * * * *", loc)
+	}, "0 * * * *", loc)
 
 	slog.Info("init cron")
 

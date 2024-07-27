@@ -1,17 +1,16 @@
 // Package app link main app deps
-
 package app
 
 import (
 	"context"
 	"fmt"
-	"github.com/WildEgor/pi-storyteller/internal/services/cronus"
+	"log/slog"
+	"time"
+
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/google/wire"
-	"log/slog"
-	"time"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
@@ -19,6 +18,7 @@ import (
 	eh "github.com/WildEgor/pi-storyteller/internal/handlers/http/http_error_handler"
 	"github.com/WildEgor/pi-storyteller/internal/routers"
 	"github.com/WildEgor/pi-storyteller/internal/services"
+	"github.com/WildEgor/pi-storyteller/internal/services/cronus"
 	"github.com/WildEgor/pi-storyteller/internal/services/dispatcher"
 )
 
@@ -32,19 +32,17 @@ var Set = wire.NewSet(
 )
 
 // App represents the main server configuration.
-
 type App struct {
 	App          *fiber.App
-	Cron         *cronus.Service
+	Cron         cronus.Cronus
 	Bot          bot.Bot
-	Dispatcher   *dispatcher.Dispatcher
+	Dispatcher   dispatcher.Dispatcher
 	Configurator *configs.Configurator
 	AppConfig    *configs.AppConfig
 }
 
 // Run start service with deps
-
-func (srv *App) Run(ctx context.Context) {
+func (srv *App) Run(_ context.Context) {
 	go func() {
 		slog.Info("dispatcher is listening")
 		srv.Dispatcher.Start()
@@ -64,14 +62,12 @@ func (srv *App) Run(ctx context.Context) {
 			slog.Info("success shutdown service")
 		},
 	}); err != nil {
-
 		slog.Error("unable to start server", slog.Any("err", err))
-
 	}
 }
 
 // Shutdown graceful shutdown
-func (srv *App) Shutdown(ctx context.Context) {
+func (srv *App) Shutdown(_ context.Context) {
 	slog.Info("shutdown service")
 	srv.Bot.Stop()
 	srv.Dispatcher.Stop()
@@ -90,8 +86,8 @@ func NewApp(
 	mr *routers.MetricsRouter,
 	tr *routers.TelegramRouter,
 	b bot.Bot,
-	dptchr *dispatcher.Dispatcher,
-	crn *cronus.Service,
+	dptchr dispatcher.Dispatcher,
+	crn cronus.Cronus,
 ) *App {
 	app := fiber.New(fiber.Config{
 		AppName:      ac.Name,
@@ -121,5 +117,4 @@ func NewApp(
 		AppConfig:    ac,
 		Configurator: c,
 	}
-
 }

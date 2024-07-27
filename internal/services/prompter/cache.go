@@ -67,6 +67,7 @@ func (t *Cache) Init() {
 	}
 }
 
+// readAndMapJSON ...
 func (t *Cache) readAndMapJSON(path string) map[string]string {
 	//nolint
 	pwd, _ := os.Getwd()

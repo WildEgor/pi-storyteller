@@ -1,4 +1,4 @@
-// Package route telegram commands
+// Package routers route telegram commands
 package routers
 
 import (
@@ -39,7 +39,7 @@ func NewImageRouter(
 }
 
 // Setup router
-func (r *TelegramRouter) Setup(app *fiber.App) {
+func (r *TelegramRouter) Setup(_ *fiber.App) {
 	r.br.HandleCommand(context.TODO(), "/generate", func(data *bot.CommandData) error {
 		return r.gh.Handle(context.TODO(), &tg_generate_handler.GenerateCommandDTO{
 			Nickname:  data.Nickname,
@@ -59,7 +59,7 @@ func (r *TelegramRouter) Setup(app *fiber.App) {
 	})
 
 	r.br.HandleCommand(context.TODO(), "/start", func(data *bot.CommandData) error {
-		return r.sh.Handle(context.TODO(), &tg_start_handler.StartPayload{
+		return r.sh.Handle(context.TODO(), &tg_start_handler.StartDTO{
 			Nickname: data.Nickname,
 			ChatID:   strconv.Itoa(int(data.ChatID)),
 		})

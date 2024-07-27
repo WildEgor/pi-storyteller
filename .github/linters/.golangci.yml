@@ -12,13 +12,13 @@ linters:
     - govet
     - revive
     - gofmt
-    - gci
+    # - gci
     - gosimple
     - ineffassign
     - gocheckcompilerdirectives
     - sloglint
     - unconvert
-    - whitespace
+    # - whitespace
 linters-settings:
   errcheck:
     # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
@@ -100,12 +100,12 @@ linters-settings:
         disabled: true
       - name: argument-limit
         disabled: true
-  gci:
-    custom-order: true
-    sections:
-      - default
-      - standard
-      - prefix(github.com/WildEgor/pi-storyteller)
+#  gci:
+#    custom-order: true
+#    sections:
+#      - default
+#      - standard
+#      - prefix(github.com/WildEgor/pi-storyteller)
   staticcheck:
     checks:
       - all

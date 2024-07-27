@@ -11,8 +11,12 @@ import (
 
 // Set ...
 var Set = wire.NewSet(
-	dispatcher.NewDispatcher,
-	templater.NewTemplateService,
+	dispatcher.New,
+	wire.Bind(new(dispatcher.Dispatcher), new(*dispatcher.Service)),
+	templater.New,
+	wire.Bind(new(templater.Templater), new(*templater.Service)),
 	prompter.New,
+	wire.Bind(new(prompter.Prompter), new(*prompter.Service)),
 	cronus.New,
+	wire.Bind(new(cronus.Cronus), new(*cronus.Service)),
 )

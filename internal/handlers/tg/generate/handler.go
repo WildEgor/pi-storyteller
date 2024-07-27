@@ -1,9 +1,7 @@
-// Package is responsible for generating images
+// Package tg_generate_handler is responsible for generating images
 package tg_generate_handler
 
 import (
-	"golang.org/x/sync/errgroup"
-
 	"context"
 	"fmt"
 	"log/slog"
@@ -11,6 +9,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
@@ -23,20 +23,20 @@ import (
 // GenerateHandler ...
 type GenerateHandler struct {
 	appConfig     *configs.AppConfig
-	jobDispatcher *dispatcher.Dispatcher
+	jobDispatcher dispatcher.Dispatcher
 	imgGenerator  imaginator.Imagininator
-	template      *templater.Templater
-	prompt        *prompter.Prompter
+	template      templater.Templater
+	prompt        prompter.Prompter
 	tgBot         bot.Bot
 }
 
 // NewGenerateHandler ...
 func NewGenerateHandler(
 	appConfig *configs.AppConfig,
-	jobDispatcher *dispatcher.Dispatcher,
+	jobDispatcher dispatcher.Dispatcher,
 	imgGenerator imaginator.Imagininator,
-	template *templater.Templater,
-	prompt *prompter.Prompter,
+	template templater.Templater,
+	prompt prompter.Prompter,
 	tgBot bot.Bot,
 ) *GenerateHandler {
 	return &GenerateHandler{
@@ -82,7 +82,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 		tCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 		defer cancel()
 
-		prompted := h.prompt.WithPredefinedRandomStyle(payload.Prompt)
+		prompted := h.prompt.GetPredefinedRandomStyleStory(payload.Prompt, true)
 
 		prompts := make([]string, 0, len(prompted))
 		for _, conv := range prompted {

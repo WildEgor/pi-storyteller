@@ -12,9 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/WildEgor/pi-storyteller/internal/configs"
 	"github.com/WildEgor/pi-storyteller/pkg/kandinsky"
-	"github.com/WildEgor/pi-storyteller/pkg/kandinsky/mocks"
 )
 
 const (
@@ -25,25 +23,6 @@ const (
 )
 
 var _ Imagininator = (*KandinskyAdapter)(nil)
-
-// KandinskyClientProvider wrapper for client
-type KandinskyClientProvider struct {
-	kandinsky.Client
-}
-
-// NewKandinskyClientProvider create client
-func NewKandinskyClientProvider(
-	config *configs.KandinskyConfig,
-) *KandinskyClientProvider {
-	return &KandinskyClientProvider{kandinsky.New(config.Config)}
-}
-
-// NewKandinskyDummyClientProvider creates dummy client
-func NewKandinskyDummyClientProvider(
-	config *configs.KandinskyConfig,
-) *KandinskyClientProvider {
-	return &KandinskyClientProvider{mocks.NewKandinskyDummyClient(config.Config)}
-}
 
 // KandinskyAdapter around Kandinsky REST API
 type KandinskyAdapter struct {
@@ -153,7 +132,8 @@ func (k *KandinskyAdapter) generateImage(ctx context.Context, prompt string) (uu
 		ModelId: existedModel.Id,
 		Width:   DefaultImgSize,
 		Height:  DefaultImgSize,
-		Neg:     "ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, bad anatomy, watermark, signature, cut off, low contrast, underexposed, overexposed, bad art, beginner, amateur, distorted face, blurry, draft, grainy",
+		//nolint
+		Neg: "ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, bad anatomy, watermark, signature, cut off, low contrast, underexposed, overexposed, bad art, beginner, amateur, distorted face, blurry, draft, grainy",
 	})
 	if err != nil {
 		return "", err

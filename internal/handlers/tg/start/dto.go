@@ -1,7 +1,7 @@
 package tg_start_handler
 
-// StartPayload ...
-type StartPayload struct {
+// StartDTO ...
+type StartDTO struct {
 	Nickname string
 	ChatID   string
 }

@@ -1,8 +1,6 @@
 package bot
 
 import (
-	tele "gopkg.in/telebot.v3"
-
 	"bytes"
 	"context"
 	"fmt"
@@ -11,20 +9,22 @@ import (
 	"strings"
 	"time"
 
+	tele "gopkg.in/telebot.v3"
+
 	"github.com/WildEgor/pi-storyteller/internal/configs"
 )
 
-var _ Bot = (*TelegramBot)(nil)
+var _ Bot = (*TelegramBotAdapter)(nil)
 
-// TelegramBot wrapper around telegram api
-type TelegramBot struct {
+// TelegramBotAdapter wrapper around telegram api
+type TelegramBotAdapter struct {
 	bot *tele.Bot
 
 	callbacks map[string]btnCallbackHandler
 }
 
 // NewTelegramBot ...
-func NewTelegramBot(config *configs.TelegramBotConfig) *TelegramBot {
+func NewTelegramBot(config *configs.TelegramBotConfig) *TelegramBotAdapter {
 	pref := tele.Settings{
 		Token:  config.Token,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
@@ -36,24 +36,24 @@ func NewTelegramBot(config *configs.TelegramBotConfig) *TelegramBot {
 		panic("")
 	}
 
-	return &TelegramBot{
+	return &TelegramBotAdapter{
 		bot:       bot,
 		callbacks: make(map[string]btnCallbackHandler),
 	}
 }
 
 // Start ...
-func (t *TelegramBot) Start() {
+func (t *TelegramBotAdapter) Start() {
 	t.bot.Start()
 }
 
 // Stop ...
-func (t *TelegramBot) Stop() {
+func (t *TelegramBotAdapter) Stop() {
 	t.bot.Stop()
 }
 
 // SendMsg ...
-func (t *TelegramBot) SendMsg(ctx context.Context, to *MessageRecipient, msg string) (mid int, err error) {
+func (t *TelegramBotAdapter) SendMsg(ctx context.Context, to *MessageRecipient, msg string) (mid int, err error) {
 	m, err := t.bot.Send(to, msg)
 	if err != nil {
 		return 0, err
@@ -63,7 +63,7 @@ func (t *TelegramBot) SendMsg(ctx context.Context, to *MessageRecipient, msg str
 }
 
 // EditMsg ...
-func (t *TelegramBot) EditMsg(ctx context.Context, to *MessageRecipient, msg string) (mid int, err error) {
+func (t *TelegramBotAdapter) EditMsg(ctx context.Context, to *MessageRecipient, msg string) (mid int, err error) {
 	m, err := t.bot.Edit(to, msg)
 	if err != nil {
 		return 0, err
@@ -73,12 +73,12 @@ func (t *TelegramBot) EditMsg(ctx context.Context, to *MessageRecipient, msg str
 }
 
 // DeleteMsg ...
-func (t *TelegramBot) DeleteMsg(ctx context.Context, to *MessageRecipient) error {
+func (t *TelegramBotAdapter) DeleteMsg(ctx context.Context, to *MessageRecipient) error {
 	return t.bot.Delete(to)
 }
 
 // SendStory ...
-func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slides []StorySlide) error {
+func (t *TelegramBotAdapter) SendStory(ctx context.Context, to *MessageRecipient, slides []StorySlide) error {
 	files := make(tele.Album, 0, len(slides))
 
 	sb := strings.Builder{}
@@ -95,6 +95,9 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 
 		if i == 0 {
 			photo.Caption = fmt.Sprintf("[%s] %s", v.Style, v.Desc)
+			if len(v.Style) == 0 {
+				photo.Caption = v.Desc
+			}
 		}
 
 		files = append(files, photo)
@@ -112,7 +115,7 @@ func (t *TelegramBot) SendStory(ctx context.Context, to *MessageRecipient, slide
 }
 
 // HandleCommand ...
-func (t *TelegramBot) HandleCommand(ctx context.Context, command string, fn commandHandler) {
+func (t *TelegramBotAdapter) HandleCommand(ctx context.Context, command string, fn commandHandler) {
 	t.bot.Handle(command, func(c tele.Context) error {
 		return fn(&CommandData{
 			Nickname:  c.Sender().Username,
@@ -125,6 +128,6 @@ func (t *TelegramBot) HandleCommand(ctx context.Context, command string, fn comm
 }
 
 // RegisterBtnCallback ...
-func (t *TelegramBot) RegisterBtnCallback(ctx context.Context, name string, fn btnCallbackHandler) {
+func (t *TelegramBotAdapter) RegisterBtnCallback(ctx context.Context, name string, fn btnCallbackHandler) {
 	t.callbacks[name] = fn
 }

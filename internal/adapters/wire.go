@@ -14,20 +14,17 @@ import (
 
 // Set ...
 var Set = wire.NewSet(
-	// imaginator.NewKandinskyDummyClientProvider,
 	imaginator.NewKandinskyClientProvider,
 	wire.Bind(new(kandinsky.Client), new(*imaginator.KandinskyClientProvider)),
 	imaginator.NewKandinskyAdapter,
 	wire.Bind(new(imaginator.Imagininator), new(*imaginator.KandinskyAdapter)),
 	textor.NewChatGPTClientProvider,
-	// textor.NewChatGPTDummyClientProvider,
 	wire.Bind(new(chatgpt.Client), new(*textor.ChatGPTClientProvider)),
 	textor.NewChatGPTAdapter,
 	wire.Bind(new(textor.Textor), new(*textor.ChatGPTAdapter)),
 	bot.NewTelegramBot,
-	wire.Bind(new(bot.Bot), new(*bot.TelegramBot)),
-	wire.Bind(new(bot.Registry), new(*bot.TelegramBot)),
-	monitor.NewPromMetricsRegistry,
+	wire.Bind(new(bot.Bot), new(*bot.TelegramBotAdapter)),
+	wire.Bind(new(bot.Registry), new(*bot.TelegramBotAdapter)),
 	monitor.NewPromMetrics,
 	wire.Bind(new(monitor.Monitor), new(*monitor.PromMetrics)),
 )

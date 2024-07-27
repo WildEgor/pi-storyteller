@@ -7,7 +7,7 @@ tasks:
     dir: '{{.USER_WORKING_DIR}}'
     preconditions:
       - test -f docker-compose.yml
-    cmd: docker-compose up -d app
+    cmd: docker-compose up --build -d app
 
   # Run locally with hot-reload
   local:

@@ -11,13 +11,24 @@ import (
 // templatePath ...
 const templatePath = "assets/templates"
 
-// TemplateCache ...
-type TemplateCache struct {
+// Cache ...
+type Cache struct {
 	templates map[string]*template.Template
 }
 
+// NewCache ...
+func NewCache() *Cache {
+	c := &Cache{
+		templates: make(map[string]*template.Template),
+	}
+
+	c.Init()
+
+	return c
+}
+
 // Init ...
-func (t *TemplateCache) Init() {
+func (c *Cache) Init() {
 	//nolint
 	pwd, _ := os.Getwd()
 	tp := filepath.Join(pwd, templatePath)
@@ -28,7 +39,7 @@ func (t *TemplateCache) Init() {
 		panic(err)
 	}
 
-	t.templates = make(map[string]*template.Template, len(files))
+	c.templates = make(map[string]*template.Template, len(files))
 	for _, file := range files {
 		if file.IsDir() {
 			continue
@@ -40,13 +51,12 @@ func (t *TemplateCache) Init() {
 			continue
 		}
 
-		t.templates[file.Name()] = tml
+		c.templates[file.Name()] = tml
 	}
 }
 
 // Get ...
-func (t *TemplateCache) Get(name string) *template.Template {
+func (c *Cache) Get(name string) *template.Template {
 	fn := fmt.Sprintf("%s.html", name)
-
-	return t.templates[fn]
+	return c.templates[fn]
 }

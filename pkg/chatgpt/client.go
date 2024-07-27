@@ -49,9 +49,9 @@ func (c *client) Generate(content string, opts *GenerateOpts) (string, error) {
 
 	response, err := c.httpClient.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(map[string]interface{}{
+		SetBody(map[string]any{
 			"model": model,
-			"messages": []interface{}{map[string]interface{}{
+			"messages": []any{map[string]any{
 				"role":    "system",
 				"content": content,
 			},
@@ -66,14 +66,14 @@ func (c *client) Generate(content string, opts *GenerateOpts) (string, error) {
 
 	body := response.Body()
 
-	var data map[string]interface{}
+	var data map[string]any
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		return "", err
 	}
 
 	// Extract the content from the JSON response
-	result := data["choices"].([]interface{})[0].(map[string]interface{})["message"].(map[string]interface{})["content"].(string)
+	result := data["choices"].([]any)[0].(map[string]any)["message"].(map[string]any)["content"].(string)
 
 	return result, nil
 }

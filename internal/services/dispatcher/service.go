@@ -1,22 +1,23 @@
 package dispatcher
 
 import (
+	"errors"
 	"fmt"
+	"log/slog"
+	"sync"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 	"github.com/samber/lo"
-	"log/slog"
-	"time"
-
-	"errors"
-	"sync"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters/monitor"
 )
 
-// Dispatcher maintains a pool for available workers
-// and a job queue that workers will process
-type Dispatcher struct {
+var _ Dispatcher = (*Service)(nil)
+
+// Service ...
+type Service struct {
 	maxHighWorkers int
 	maxLowWorkers  int
 	maxQueueLen    int
@@ -35,11 +36,11 @@ type Dispatcher struct {
 	metrics        monitor.Monitor
 }
 
-// NewDispatcher creates a new dispatcher with the given
+// New creates a new Service with the given
 // number of workers and buffers the job queue based on maxQueue.
 // It also initializes the channels for the worker pool and job queue
-func NewDispatcher(metrics monitor.Monitor) *Dispatcher {
-	return &Dispatcher{
+func New(metrics monitor.Monitor) *Service {
+	return &Service{
 		// TODO: move to config
 		maxHighWorkers: 10,
 		maxLowWorkers:  1,
@@ -56,7 +57,7 @@ func NewDispatcher(metrics monitor.Monitor) *Dispatcher {
 // Start creates and starts workers, adding them to the worker pool.
 // Then, it starts a select loop to wait for job to be dispatched
 // to available workers
-func (d *Dispatcher) Start() {
+func (d *Service) Start() {
 	d.tickers = []*DispatchTicker{}
 	d.crons = []*DispatchCron{}
 	d.lowWorkerPool = make(chan chan Job, d.maxLowWorkers)
@@ -101,7 +102,7 @@ func (d *Dispatcher) Start() {
 
 // Stop ends execution for all workers/tickers and
 // closes all channels, then removes all workers/tickers
-func (d *Dispatcher) Stop() {
+func (d *Service) Stop() {
 	if !d.active {
 		return
 	}
@@ -129,9 +130,9 @@ func (d *Dispatcher) Stop() {
 
 // Dispatch pushes the given job into the job queue.
 // The first available worker will perform the job
-func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) {
+func (d *Service) Dispatch(fn handler, opts *JobOpts) (id string, err error) {
 	if !d.active {
-		return "", errors.New("dispatcher is not active")
+		return "", errors.New("Service is not active")
 	}
 
 	newUUID := d.uuid()
@@ -174,9 +175,9 @@ func (d *Dispatcher) Dispatch(fn handler, opts *JobOpts) (id string, err error) 
 
 // DispatchCron pushes the given job into the job queue
 // each time the cron definition is met, using the given location
-func (d *Dispatcher) DispatchCron(fn handler, cronStr string, loc *time.Location) (*DispatchCron, error) {
+func (d *Service) DispatchCron(fn handler, cronStr string, loc *time.Location) (*DispatchCron, error) {
 	if !d.active {
-		return nil, errors.New("dispatcher is not active")
+		return nil, errors.New("Service is not active")
 	}
 
 	dc := &DispatchCron{cron: cron.New(cron.WithSeconds(), cron.WithLocation(loc))}
@@ -215,19 +216,18 @@ func (d *Dispatcher) DispatchCron(fn handler, cronStr string, loc *time.Location
 		return nil, errors.New("invalid cron definition")
 	}
 
-	dc.cron.Start()
-
 	slog.Debug(fmt.Sprintf("cron started %d", cronID))
 	dc.cron.Run()
+	dc.cron.Start()
 
 	return dc, nil
 }
 
 // DispatchAt pushes the given job into the job queue
 // at the given time
-func (d *Dispatcher) DispatchAt(fn handler, at time.Time) error {
+func (d *Service) DispatchAt(fn handler, at time.Time) error {
 	if !d.active {
-		return errors.New("dispatcher is not active")
+		return errors.New("Service is not active")
 	}
 
 	go func() {
@@ -271,7 +271,7 @@ func (d *Dispatcher) DispatchAt(fn handler, at time.Time) error {
 }
 
 // CountActiveJobs ...
-func (d *Dispatcher) CountActiveJobs(ownerId string) int {
+func (d *Service) CountActiveJobs(ownerId string) int {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -283,14 +283,14 @@ func (d *Dispatcher) CountActiveJobs(ownerId string) int {
 }
 
 // uuid ...
-func (d *Dispatcher) uuid() string {
+func (d *Service) uuid() string {
 	//nolint
 	newUUID, _ := uuid.NewUUID()
 	return newUUID.String()
 }
 
 // enqueue ...
-func (d *Dispatcher) enqueue(job *Job) {
+func (d *Service) enqueue(job *Job) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -301,7 +301,7 @@ func (d *Dispatcher) enqueue(job *Job) {
 }
 
 // dequeue ...
-func (d *Dispatcher) dequeue(meta *JobMeta) {
+func (d *Service) dequeue(meta *JobMeta) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 

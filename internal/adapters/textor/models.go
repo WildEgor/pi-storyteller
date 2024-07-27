@@ -6,7 +6,7 @@ type Textor interface {
 	Txt2Txt(prompt string, opts *Opts) (result string, err error)
 }
 
-// Template WithPredefinedRandomStyle template
+// Template GetPredefinedRandomStyleStory template
 type Template int
 
 const (

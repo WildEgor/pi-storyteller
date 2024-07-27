@@ -11,9 +11,9 @@ services:
 ##   if use private libs uncomment this
 #      args:
 #       - GITHUB_TOKEN=${GITHUB_TOKEN}
-      context: ./
+      context: .
       dockerfile: Dockerfile
-      target: ${TARGET} # dev or debug or prod
+      target: ${PI_STORYTELLER_TARGET} # dev or debug or prod
     environment:
       - .env
     security_opt:
@@ -21,9 +21,10 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ./:.
-      # - ./config.yaml:/config.yaml
+      - ./assets:/assets
+      - ./scripts:/scripts
+      - ./config.yaml:/config.yaml
     ports:
       - "8080:8080" # http port
       - "8088:8088" # rpc port
-      # - "40000:40000" # debug port
+      - "40000:40000" # debug port

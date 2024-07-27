@@ -1,5 +1,8 @@
+.github
 dist
 vendor
+postman
+onnxstream
 docker-compose.yml
 .air.toml
 .air-unix.toml
