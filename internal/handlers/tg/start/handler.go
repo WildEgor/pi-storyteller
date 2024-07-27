@@ -4,9 +4,49 @@ package tg_start_handler
 import (
 	"context"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 )
+
+type Layout struct {
+	Lang     string
+	Guide    string
+	Commands []string
+}
+
+const msgEn = `
+Welcome, %s! 🎉
+
+Hello and thank you for starting me!
+
+🔍 Key Features:
+- /generate [text] - use this command to create content based on the text you provide. 
+Simply type /generate followed by your text, and I’ll generate images related to your input.
+Please note that sentences should be separated by periods. The text should not contain any offensive language and should not be too lengthy!
+
+- /random - this command provides you with a random story with images. It’s perfect for when you need a quick bit of inspiration or just want to learn something new!
+
+Example:
+
+`
+
+const msgRu = `
+Добро пожаловать, %s! 🎉
+
+Привет и спасибо, что запустили меня!
+
+🔍 Основные функции:
+- /generate [текст] - используйте эту команду для создания контента на основе предоставленного вами текста. 
+Просто напишите /generate, за которым следует ваш текст, и я сгенерирую изображения, связанные с вашим вводом.
+Учтите, что предложения должны быть разделены точкой, текст не должен содержать нецензурные выражения и быть слишком большим!
+
+- /random - эта команда предоставляет вам случайную историю с картинками. Это идеально подходит, когда вам нужно быстрое вдохновение или просто хотите узнать что-то новое!
+
+Пример:
+
+`
 
 // StartHandler ...
 type StartHandler struct {
@@ -22,10 +62,36 @@ func NewStartHandler(tgBot bot.Bot) *StartHandler {
 
 // Handle ...
 func (h *StartHandler) Handle(ctx context.Context, payload *StartDTO) error {
+	layout := &Layout{
+		Lang: payload.Lang,
+	}
+
+	layout.Guide = msgEn
+	layout.Commands = []string{
+		"/generate Geralt of Rivia accidentally getting stuck in a magical sauna, where all his attempts to escape are thwarted by enchanted towels and talking soap bars.",
+		"/generate Frodo Baggins trying to use a modern smartphone but keeps accidentally sending selfies to the Dark Lord. His quest turns into a comedic race to stop Sauron from discovering his silly photos.",
+		"/generate Joker trying to host a cooking show. His attempts at making extravagant dishes lead to chaos in the kitchen, with ingredients exploding and a pie fight that ends with him covered in flour and cream.",
+	}
+	if payload.Lang == "ru" {
+		layout.Guide = msgRu
+		layout.Commands = []string{
+			"/generate Геральт из Ривии, который случайно застрял в волшебной сауне, где все его попытки выбраться мешают заколдованные полотенца и говорящие мыльные пузыри.",
+			"/generate Фродо Бэггинс, который пытается использовать современный смартфон, но всё время случайно отправляет селфи Темному Лорду. Его путешествие превращается в комедийную гонку, чтобы помешать Саурону увидеть его глупые фотографии.",
+			"/generate Джокер, который пытается вести кулинарное шоу. Его попытки приготовить экстравагантные блюда приводят к хаосу на кухне, с взрывами ингредиентов и пирогами, в итоге он оказывается покрытым мукой и кремом.",
+		}
+	}
+
 	//nolint
 	_, err := h.tgBot.SendMsg(ctx, &bot.MessageRecipient{
 		ID: payload.ChatID,
-	}, fmt.Sprintf("Hi, %s", payload.Nickname))
+	}, fmt.Sprintf(layout.Guide, payload.Nickname))
+
+	time.Sleep(5 * time.Second)
+
+	//nolint
+	_, err = h.tgBot.SendMsg(ctx, &bot.MessageRecipient{
+		ID: payload.ChatID,
+	}, layout.Commands[rand.Intn(len(layout.Commands))])
 
 	return err
 }

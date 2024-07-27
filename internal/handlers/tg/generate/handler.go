@@ -69,13 +69,13 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 		count := h.jobDispatcher.CountActiveJobs(payload.Nickname)
 		if count > 3 {
 			slog.Warn(fmt.Sprintf("%s still wait. Has %d active jobs", payload.Nickname, count))
-			_, err := h.tgBot.SendMsg(ctx, chat, "Please, wait! Too many request from you :)")
+			_, err := h.tgBot.SendMsg(ctx, chat, "🤯🤯🤯")
 			return err
 		}
 	}
 
 	slog.Info("new generate request", slog.Any("nickname", payload.Nickname), slog.Any("prompt", payload.Prompt))
-	mid, err := h.tgBot.SendMsg(ctx, chat, "Start process... Please, wait!")
+	mid, err := h.tgBot.SendMsg(ctx, chat, "🤔")
 	chat.MessageID = strconv.Itoa(mid)
 
 	id, err := h.jobDispatcher.Dispatch(func(jobCtx dispatcher.JobCtx) error {

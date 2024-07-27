@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"gopkg.in/telebot.v3/middleware"
 	"image/jpeg"
 	"log/slog"
 	"strings"
@@ -124,7 +125,7 @@ func (t *TelegramBotAdapter) HandleCommand(ctx context.Context, command string, 
 			Payload:   c.Message().Payload,
 			Lang:      c.Sender().LanguageCode,
 		})
-	})
+	}, middleware.Recover())
 }
 
 // RegisterBtnCallback ...

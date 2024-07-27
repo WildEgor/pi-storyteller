@@ -4,4 +4,5 @@ package tg_start_handler
 type StartDTO struct {
 	Nickname string
 	ChatID   string
+	Lang     string
 }

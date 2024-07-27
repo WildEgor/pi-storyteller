@@ -64,13 +64,13 @@ func (h *RandomHandler) Handle(ctx context.Context, payload *RandomCommandDTO) e
 		count := h.jobDispatcher.CountActiveJobs(payload.Nickname)
 		if count > 3 {
 			slog.Warn(fmt.Sprintf("%s still wait. Has %d active jobs", payload.Nickname, count))
-			_, err := h.tgBot.SendMsg(ctx, chat, "Please, wait! Too many request from you :)")
+			_, err := h.tgBot.SendMsg(ctx, chat, "🤯🤯🤯")
 			return err
 		}
 	}
 
 	slog.Info("new random request", slog.Any("nickname", payload.Nickname), slog.Any("lang", payload.Lang))
-	mid, err := h.tgBot.SendMsg(ctx, chat, "Hmmm... Please, wait!")
+	mid, err := h.tgBot.SendMsg(ctx, chat, "🤔")
 	chat.MessageID = strconv.Itoa(mid)
 
 	id, err := h.jobDispatcher.Dispatch(func(jobCtx dispatcher.JobCtx) error {

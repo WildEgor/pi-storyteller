@@ -62,6 +62,7 @@ func (r *TelegramRouter) Setup(_ *fiber.App) {
 		return r.sh.Handle(context.TODO(), &tg_start_handler.StartDTO{
 			Nickname: data.Nickname,
 			ChatID:   strconv.Itoa(int(data.ChatID)),
+			Lang:     data.Lang,
 		})
 	})
 }
