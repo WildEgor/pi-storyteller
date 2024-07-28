@@ -6,8 +6,6 @@ import (
 	"sort"
 	"time"
 
-	"golang.org/x/sync/errgroup"
-
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
 	"github.com/WildEgor/pi-storyteller/internal/configs"
@@ -66,32 +64,26 @@ func (s *Service) Start() {
 		slog.Debug("news: ", slog.Any("value", modifiedNew))
 		results := s.imgGenerator.GenerateImages(tCtx, []string{modifiedNew[0].Prompt})
 
-		errg := errgroup.Group{}
-		errg.Go(func() error {
-			images := make([]bot.StorySlide, 0, len(results))
-			for v := range results {
-				images = append(images, bot.StorySlide{
-					ID:    v.ID,
-					Image: v.Image,
-					Desc:  modifiedNew[0].Original,
-				})
-			}
+		images := make([]bot.StorySlide, 0, len(results))
+		for v := range results {
+			images = append(images, bot.StorySlide{
+				ID:    v.ID,
+				Image: v.Image,
+				Desc:  modifiedNew[0].Original,
+			})
+		}
 
-			sort.Slice(images, func(i, j int) bool { return images[i].ID < images[j].ID })
+		sort.Slice(images, func(i, j int) bool { return images[i].ID < images[j].ID })
 
-			sErr := s.tgBot.SendStory(ctx, &bot.MessageRecipient{
-				ID: s.tgConfig.ChatID,
-			}, images)
-			if sErr != nil {
-				slog.Error("error cron job", slog.Any("err", err))
-				return sErr
-			}
+		sErr := s.tgBot.SendStory(ctx, &bot.MessageRecipient{
+			ID: s.tgConfig.ChatID,
+		}, images)
+		if sErr != nil {
+			slog.Error("error cron job", slog.Any("err", err))
+			return sErr
+		}
 
-			return nil
-		})
-
-		return errg.Wait()
-
+		return nil
 	}, "0 * * * *", loc)
 
 	slog.Info("init cron")

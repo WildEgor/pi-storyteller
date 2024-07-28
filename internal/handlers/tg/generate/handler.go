@@ -10,8 +10,6 @@ import (
 	"strconv"
 	"time"
 
-	"golang.org/x/sync/errgroup"
-
 	"github.com/WildEgor/pi-storyteller/internal/adapters/bot"
 	"github.com/WildEgor/pi-storyteller/internal/adapters/imaginator"
 	"github.com/WildEgor/pi-storyteller/internal/configs"
@@ -75,6 +73,7 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 	}
 
 	slog.Info("new generate request", slog.Any("nickname", payload.Nickname), slog.Any("prompt", payload.Prompt))
+
 	mid, err := h.tgBot.SendMsg(ctx, chat, "🤔")
 	chat.MessageID = strconv.Itoa(mid)
 
@@ -91,39 +90,34 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 
 		results := h.imgGenerator.GenerateImages(tCtx, prompts)
 
-		errg := errgroup.Group{}
-		errg.Go(func() error {
-			//nolint
-			_ = h.tgBot.DeleteMsg(ctx, chat)
-			//nolint
-			_ = h.tgBot.DeleteMsg(ctx, &bot.MessageRecipient{
-				ID:        payload.ChatID,
-				MessageID: payload.MessageID,
-			})
-
-			images := make([]bot.StorySlide, 0, len(results))
-			for v := range results {
-				images = append(images, bot.StorySlide{
-					ID:    v.ID,
-					Style: prompted[0].Style,
-					Image: v.Image,
-					Desc:  prompted[v.ID].Original,
-				})
-			}
-
-			sort.Slice(images, func(i, j int) bool { return images[i].ID < images[j].ID })
-
-			sErr := h.tgBot.SendStory(ctx, &bot.MessageRecipient{
-				ID: payload.ChatID,
-			}, images)
-			if sErr != nil {
-				slog.Error("error generating", slog.Any("err", err))
-			}
-
-			return sErr
+		//nolint
+		_ = h.tgBot.DeleteMsg(ctx, chat)
+		//nolint
+		_ = h.tgBot.DeleteMsg(ctx, &bot.MessageRecipient{
+			ID:        payload.ChatID,
+			MessageID: payload.MessageID,
 		})
 
-		return errg.Wait()
+		images := make([]bot.StorySlide, 0, len(results))
+		for v := range results {
+			images = append(images, bot.StorySlide{
+				ID:    v.ID,
+				Style: prompted[0].Style,
+				Image: v.Image,
+				Desc:  prompted[v.ID].Original,
+			})
+		}
+
+		sort.Slice(images, func(i, j int) bool { return images[i].ID < images[j].ID })
+
+		sErr := h.tgBot.SendStory(ctx, &bot.MessageRecipient{
+			ID: payload.ChatID,
+		}, images)
+		if sErr != nil {
+			slog.Error("error generating", slog.Any("err", err))
+		}
+
+		return sErr
 	}, opts)
 
 	slog.Info("dispatch task", slog.Any("uuid", id))

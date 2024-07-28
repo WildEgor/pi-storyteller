@@ -77,9 +77,10 @@ func (p *Service) GetRandomNews() (string, error) {
 
 // GetRandomStory ...
 func (p *Service) GetRandomStory(lang string) []Conv {
-	if len(lang) == 0 {
+	if lang != "ru" && lang != "en" {
 		lang = "en"
 	}
+
 	prompts := p.cache.Prompts(lang)
 	//nolint
 	randPrompt := prompts[rand.Intn(len(prompts))]
@@ -87,7 +88,7 @@ func (p *Service) GetRandomStory(lang string) []Conv {
 
 	var conv []Conv
 	for _, s := range strings.Split(story, ".") {
-		if len(s) == 0 {
+		if len(s) <= 3 {
 			continue
 		}
 		conv = append(conv, Conv{
@@ -122,7 +123,7 @@ func (p *Service) GetPredefinedRandomStyleStory(source string, sep bool) []Conv 
 	var prompts []Conv
 	if sep {
 		for _, s := range strings.Split(source, ".") {
-			if len(s) == 0 {
+			if len(s) <= 3 {
 				continue
 			}
 			prompts = append(prompts, Conv{

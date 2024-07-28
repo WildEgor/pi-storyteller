@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apt install -y cmake build-essential curl libxml2-utils coreutils git git-lfs && git lfs install
+apt-get install -y cmake build-essential curl libxml2-utils coreutils git git-lfs && git lfs install
 
 git clone https://github.com/google/XNNPACK.git /app/XNNPACK
 cd /app/XNNPACK
