@@ -76,6 +76,9 @@ func (h *RandomHandler) Handle(ctx context.Context, payload *RandomCommandDTO) e
 		defer cancel()
 
 		prompted := h.prompt.GetRandomStory(payload.Lang)
+
+		slog.Debug("generate prompt", slog.Any("value", prompted))
+
 		prompts := make([]string, 0, len(prompted))
 		for _, conv := range prompted {
 			prompts = append(prompts, conv.Prompt)

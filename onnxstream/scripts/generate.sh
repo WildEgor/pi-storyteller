@@ -4,7 +4,7 @@ START_TIMESTAMP=$(date "+%s")
 
 RESULT_DIR="/app/out"
 NEG="ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, bad anatomy, watermark, signature, cut off, low contrast, underexposed, overexposed, bad art, beginner, amateur, distorted face, blurry, draft, grainy"
-STEPS=5
+STEPS=28
 PROMPT="comic photo of (yennefer from vengerberg:1.1) . graphic illustration, comic art, graphic novel art, vibrant, highly detailed"
 MODELS="/app/weights"
 
@@ -38,7 +38,7 @@ if [ "$(uname -m)" = "aarch64" ]; then
     RPI="--rpi"
 fi
 
-/app/OnnxStream/src/build/sd --xl --models-path $MODELS --steps $STEPS $RPI --prompt $PROMPT --neg-prompt $NEG --output "${RESULT_DIR}/result.png"
+/app/OnnxStream/src/build/sd --turbo --models-path $MODELS --steps $STEPS $RPI --prompt "$PROMPT" --neg-prompt "$NEG" --output "${RESULT_DIR}/result.png"
 
 END_TIMESTAMP=$(date "+%s")
 

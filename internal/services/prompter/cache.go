@@ -2,38 +2,33 @@ package prompter
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/samber/lo"
 	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 )
 
-// stylesPath default path
-const stylesPath = "assets/styles.json"
-
-// promptsPath default path
-const promptsPath = "assets/prompts.json"
+// sourcePath default path
+const sourcePath = "assets/source.json"
 
 // Cache ...
 type Cache struct {
-	mu      sync.Mutex
-	styles  map[string]map[string]string
-	prompts map[string]map[string]string
+	mu     sync.Mutex
+	source *Source
 }
 
 // NewCache ...
 func NewCache() *Cache {
 	cache := &Cache{
-		styles:  make(map[string]map[string]string),
-		prompts: make(map[string]map[string]string),
+		source: &Source{
+			Actors: make([]Lang, 0),
+			Places: make([]Lang, 0),
+			Styles: make([]Lang, 0),
+		},
 	}
-
-	cache.styles["en"] = make(map[string]string)
-	cache.styles["ru"] = make(map[string]string)
-	cache.prompts["en"] = make(map[string]string)
-	cache.prompts["ru"] = make(map[string]string)
 
 	cache.Init()
 
@@ -45,33 +40,9 @@ func (t *Cache) Init() {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	for i, p := range []string{stylesPath, promptsPath} {
-		data := t.readAndMapJSON(p)
-
-		for lang, v := range data {
-			if strings.Contains(lang, "_en") {
-				if i == 0 {
-					t.styles["en"][strings.ReplaceAll(lang, "_en", "")] = v
-				} else {
-					t.prompts["en"][strings.ReplaceAll(lang, "_en", "")] = v
-				}
-			}
-			if strings.Contains(lang, "_ru") {
-				if i == 0 {
-					t.styles["ru"][strings.ReplaceAll(lang, "_ru", "")] = v
-				} else {
-					t.prompts["ru"][strings.ReplaceAll(lang, "_ru", "")] = v
-				}
-			}
-		}
-	}
-}
-
-// readAndMapJSON ...
-func (t *Cache) readAndMapJSON(path string) map[string]string {
 	//nolint
 	pwd, _ := os.Getwd()
-	tp := filepath.Join(pwd, path)
+	tp := filepath.Join(pwd, sourcePath)
 
 	file, err := os.Open(tp)
 	if err != nil {
@@ -86,71 +57,82 @@ func (t *Cache) readAndMapJSON(path string) map[string]string {
 		panic("")
 	}
 
-	prompts := make(map[string]string)
-
-	// Unmarshal the JSON data into the map
-	err = json.Unmarshal(byteValue, &prompts)
+	err = json.Unmarshal(byteValue, t.source)
 	if err != nil {
 		slog.Error("cannot open prompts", slog.Any("err", err))
 		panic("")
 	}
-
-	return prompts
-}
-
-// GetStyle ...
-func (t *Cache) GetStyle(name string, lang string) string {
-	t.mu.Lock()
-	defer t.mu.Unlock()
-
-	if len(lang) == 0 {
-		lang = "en"
-	}
-
-	return t.styles[lang][name]
 }
 
 // Styles ...
-func (t *Cache) Styles(lang string) (keys []string) {
+func (t *Cache) Styles() []string {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	if len(lang) == 0 {
-		lang = "en"
-	}
+	keys := make([]string, 0, len(t.source.Styles))
 
 	//nolint
-	for k, _ := range t.styles[lang] {
-		keys = append(keys, k)
+	for _, v := range t.source.Styles {
+		keys = append(keys, v.Alias)
 	}
 
 	return keys
 }
 
-// GetPrompt ...
-func (t *Cache) GetPrompt(name string, lang string) string {
+// GetStyledPrompt ...
+func (t *Cache) GetStyledPrompt(alias string, lang string, params ...string) string {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	if len(lang) == 0 {
-		lang = "en"
+	style, ok := lo.Find(t.source.Styles, func(item Lang) bool {
+		return item.Alias == alias
+	})
+	if ok {
+		if lang == "ru" {
+			return fmt.Sprintf(style.Ru, params[0], params[1])
+		}
+
+		return fmt.Sprintf(style.En, params[0], params[1])
 	}
 
-	return t.prompts[lang][name]
+	return ""
 }
 
-// Prompts ...
-func (t *Cache) Prompts(lang string) (keys []string) {
+// Actors ...
+func (t *Cache) Actors(lang string) []string {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	if len(lang) == 0 {
-		lang = "en"
-	}
+	keys := make([]string, 0, len(t.source.Actors))
 
 	//nolint
-	for k, _ := range t.prompts[lang] {
-		keys = append(keys, k)
+	for _, v := range t.source.Actors {
+		if lang == "ru" {
+			keys = append(keys, v.Ru)
+			continue
+		}
+
+		keys = append(keys, v.En)
+	}
+
+	return keys
+}
+
+// Places ...
+func (t *Cache) Places(lang string) []string {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	keys := make([]string, 0, len(t.source.Places))
+
+	//nolint
+	for _, v := range t.source.Places {
+		if lang == "ru" {
+			keys = append(keys, v.Ru)
+			continue
+		}
+
+		keys = append(keys, v.En)
 	}
 
 	return keys

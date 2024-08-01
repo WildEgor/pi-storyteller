@@ -1,7 +1,7 @@
-# FROM arm32v7/debian:latest as base
-FROM ubuntu:jammy as base
-RUN apt update && \
-    apt install -y git git-lfs python3 cmake build-essential curl coreutils && \
+FROM arm32v7/debian as base
+# FROM ubuntu:jammy as base
+RUN apt-get update && \
+    apt-get install -y git git-lfs python3 cmake build-essential curl coreutils && \
     git lfs install
 
 FROM base as XNNPACK
@@ -24,7 +24,7 @@ COPY --from=XNNPACK /XNNPACK /XNNPACK
 WORKDIR /OnnxStream
 RUN git clone --verbose https://github.com/vitoplantamura/OnnxStream.git .
 WORKDIR /OnnxStream/src/build
-RUN cmake -DMAX_SPEED=ON -DXNNPACK_DIR=/XNNPACK .. && \
+RUN cmake -DMAX_SPEED=ON -DOS_LLM=OFF -DOS_CUDA=OFF -DXNNPACK_DIR=/XNNPACK .. && \
     cmake --build . -j --config Release
 
 # lightweight model for testing
@@ -33,9 +33,10 @@ RUN apk update && \
     apk add git git-lfs && \
     git lfs install && \
     mkdir -p /weights && \
-    git clone --depth=1 https://huggingface.co/AeroX2/stable-diffusion-xl-turbo-1.0-onnxstream /weights
+    git clone --verbose --depth=1 https://huggingface.co/AeroX2/stable-diffusion-xl-turbo-1.0-onnxstream /weights
 
 FROM base as app
-# COPY --from=weights /weights /app/weights
+RUN mkdir -p /app/weights
+COPY --from=weights /weights /app/weights
 COPY --from=OnnxStream /OnnxStream/src/build/sd /app/OnnxStream/src/build/sd
 ENTRYPOINT [ "/app/scripts/generate.sh" ]

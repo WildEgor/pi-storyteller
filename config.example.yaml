@@ -25,6 +25,7 @@ chatgpt:
   secret: ""
 # ./internal/configs/telegram.go
 telegram:
+  lang: "" # ru | en
   chat_id: "0"
   name: ""
   token: ""

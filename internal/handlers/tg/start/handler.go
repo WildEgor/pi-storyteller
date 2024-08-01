@@ -16,7 +16,20 @@ type Layout struct {
 	Commands []string
 }
 
-const msgEn = `
+type Lang struct {
+	Ru string
+	En string
+}
+
+type WelcomeData struct {
+	Messages         Lang
+	GenerateExamples []Lang
+	RandomExamples   []Lang
+}
+
+var data = &WelcomeData{
+	Messages: Lang{
+		En: `
 Welcome, %s! 🎉
 
 Hello and thank you for starting me!
@@ -30,9 +43,8 @@ Please note that sentences should be separated by periods. The text should not c
 
 Example:
 
-`
-
-const msgRu = `
+`,
+		Ru: `
 Добро пожаловать, %s! 🎉
 
 Привет и спасибо, что запустили меня!
@@ -46,7 +58,23 @@ const msgRu = `
 
 Пример:
 
-`
+`,
+	},
+	GenerateExamples: []Lang{
+		{
+			En: "/generate Geralt of Rivia accidentally getting stuck in a magical sauna, where all his attempts to escape are thwarted by enchanted towels and talking soap bars.",
+			Ru: "/generate Геральт из Ривии, который случайно застрял в волшебной сауне, где все его попытки выбраться мешают заколдованные полотенца и говорящие мыльные пузыри.",
+		},
+		{
+			En: "/generate Frodo Baggins trying to use a modern smartphone but keeps accidentally sending selfies to the Dark Lord. His quest turns into a comedic race to stop Sauron from discovering his silly photos.",
+			Ru: "/generate Фродо Бэггинс, который пытается использовать современный смартфон, но всё время случайно отправляет селфи Темному Лорду. Его путешествие превращается в комедийную гонку, чтобы помешать Саурону увидеть его глупые фотографии.",
+		},
+		{
+			En: "/generate Joker trying to host a cooking show. His attempts at making extravagant dishes lead to chaos in the kitchen, with ingredients exploding and a pie fight that ends with him covered in flour and cream.",
+			Ru: "/generate Джокер, который пытается вести кулинарное шоу. Его попытки приготовить экстравагантные блюда приводят к хаосу на кухне, с взрывами ингредиентов и пирогами, в итоге он оказывается покрытым мукой и кремом.",
+		},
+	},
+}
 
 // StartHandler ...
 type StartHandler struct {
@@ -63,22 +91,22 @@ func NewStartHandler(tgBot bot.Bot) *StartHandler {
 // Handle ...
 func (h *StartHandler) Handle(ctx context.Context, payload *StartDTO) error {
 	layout := &Layout{
-		Lang: payload.Lang,
+		Lang:     payload.Lang,
+		Commands: make([]string, 0),
+		Guide:    data.Messages.En,
 	}
 
-	layout.Guide = msgEn
-	layout.Commands = []string{
-		"/generate Geralt of Rivia accidentally getting stuck in a magical sauna, where all his attempts to escape are thwarted by enchanted towels and talking soap bars.",
-		"/generate Frodo Baggins trying to use a modern smartphone but keeps accidentally sending selfies to the Dark Lord. His quest turns into a comedic race to stop Sauron from discovering his silly photos.",
-		"/generate Joker trying to host a cooking show. His attempts at making extravagant dishes lead to chaos in the kitchen, with ingredients exploding and a pie fight that ends with him covered in flour and cream.",
-	}
 	if payload.Lang == "ru" {
-		layout.Guide = msgRu
-		layout.Commands = []string{
-			"/generate Геральт из Ривии, который случайно застрял в волшебной сауне, где все его попытки выбраться мешают заколдованные полотенца и говорящие мыльные пузыри.",
-			"/generate Фродо Бэггинс, который пытается использовать современный смартфон, но всё время случайно отправляет селфи Темному Лорду. Его путешествие превращается в комедийную гонку, чтобы помешать Саурону увидеть его глупые фотографии.",
-			"/generate Джокер, который пытается вести кулинарное шоу. Его попытки приготовить экстравагантные блюда приводят к хаосу на кухне, с взрывами ингредиентов и пирогами, в итоге он оказывается покрытым мукой и кремом.",
+		layout.Guide = data.Messages.Ru
+	}
+
+	for _, item := range data.GenerateExamples {
+		if payload.Lang == "ru" {
+			layout.Commands = append(layout.Commands, item.Ru)
+			continue
 		}
+
+		layout.Commands = append(layout.Commands, item.En)
 	}
 
 	//nolint

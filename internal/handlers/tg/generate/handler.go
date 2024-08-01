@@ -83,6 +83,8 @@ func (h *GenerateHandler) Handle(ctx context.Context, payload *GenerateCommandDT
 
 		prompted := h.prompt.GetPredefinedRandomStyleStory(payload.Prompt, true)
 
+		slog.Debug("generate prompt", slog.Any("value", prompted))
+
 		prompts := make([]string, 0, len(prompted))
 		for _, conv := range prompted {
 			prompts = append(prompts, conv.Prompt)

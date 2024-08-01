@@ -20,3 +20,17 @@ type Conv struct {
 	Original string
 	Prompt   string
 }
+
+// Lang ...
+type Lang struct {
+	Alias string `json:"alias"`
+	En    string `json:"en"`
+	Ru    string `json:"ru"`
+}
+
+// Source ...
+type Source struct {
+	Actors []Lang `json:"actors"`
+	Places []Lang `json:"places"`
+	Styles []Lang `json:"styles"`
+}

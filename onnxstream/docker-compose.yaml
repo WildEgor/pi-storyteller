@@ -8,7 +8,7 @@ services:
       target: app
     volumes:
       - ./out:/app/out
-      - ./weights:/app/weights
+      # - ./weights:/app/weights
       - ./scripts:/app/scripts
       # - ./bin:/app/OnnxStream/src/build
     stdin_open: true

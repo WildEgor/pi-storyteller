@@ -13,6 +13,8 @@ import (
 	"github.com/WildEgor/pi-storyteller/internal/services/prompter"
 )
 
+const defaultTimezone = "Asia/Almaty"
+
 // Service ...
 type Service struct {
 	dptchr       dispatcher.Dispatcher
@@ -23,6 +25,7 @@ type Service struct {
 	tgConfig *configs.TelegramBotConfig
 
 	crons []*dispatcher.DispatchCron
+	loc   *time.Location
 }
 
 // New ...
@@ -33,6 +36,10 @@ func New(
 	imgGenerator imaginator.Imagininator,
 	tgConfig *configs.TelegramBotConfig,
 ) *Service {
+	// TODO: specify using app config
+	//nolint
+	loc, _ := time.LoadLocation(defaultTimezone)
+
 	return &Service{
 		dptchr,
 		prompt,
@@ -40,19 +47,19 @@ func New(
 		imgGenerator,
 		tgConfig,
 		make([]*dispatcher.DispatchCron, 0, 1),
+		loc,
 	}
 }
 
 // Start ...
 func (s *Service) Start() {
 	//nolint
-	loc, _ := time.LoadLocation("Asia/Almaty")
-
-	//nolint
 	cron, _ := s.dptchr.DispatchCron(func(ctx dispatcher.JobCtx) error {
+		slog.Info("SUCCESS news cron started")
+
 		news, err := s.prompt.GetRandomNews()
 		if err != nil {
-			slog.Error("fail get news", slog.Any("err", err))
+			slog.Error("FAIL get news", slog.Any("err", err))
 			return err
 		}
 
@@ -61,7 +68,7 @@ func (s *Service) Start() {
 		tCtx, cancel := context.WithTimeout(ctx, 5*time.Minute)
 		defer cancel()
 
-		slog.Debug("news: ", slog.Any("value", modifiedNew))
+		slog.Debug("find news", slog.Any("value", modifiedNew))
 		results := s.imgGenerator.GenerateImages(tCtx, []string{modifiedNew[0].Prompt})
 
 		images := make([]bot.StorySlide, 0, len(results))
@@ -79,16 +86,18 @@ func (s *Service) Start() {
 			ID: s.tgConfig.ChatID,
 		}, images)
 		if sErr != nil {
-			slog.Error("error cron job", slog.Any("err", err))
+			slog.Error("FAIL cron job", slog.Any("err", err))
 			return sErr
 		}
 
-		return nil
-	}, "0 * * * *", loc)
+		slog.Info("SUCCESS news cron ended")
 
-	slog.Info("init cron")
+		return nil
+	}, "0 * * * *", s.loc)
 
 	s.crons = append(s.crons, cron)
+
+	slog.Info("SUCCESS cron initialized")
 }
 
 // Stop ...

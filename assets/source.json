@@ -1,0 +1,1703 @@
+{
+  "actors": [
+    {
+      "en": "girl",
+      "ru": "девушка"
+    },
+    {
+      "en": "boy",
+      "ru": "мальчик"
+    },
+    {
+      "en": "cat",
+      "ru": "кот"
+    },
+    {
+      "en": "dog",
+      "ru": "собака"
+    },
+    {
+      "en": "demon",
+      "ru": "демон"
+    },
+    {
+      "en": "angel",
+      "ru": "ангел"
+    },
+    {
+      "en": "ghost",
+      "ru": "призрак"
+    },
+    {
+      "en": "robot",
+      "ru": "робот"
+    },
+    {
+      "en": "alien",
+      "ru": "инопланетянин"
+    },
+    {
+      "en": "vampire",
+      "ru": "вампир"
+    },
+    {
+      "en": "wizard",
+      "ru": "волшебник"
+    },
+    {
+      "en": "warrior",
+      "ru": "воин"
+    },
+    {
+      "en": "knight",
+      "ru": "рыцарь"
+    },
+    {
+      "en": "princess",
+      "ru": "принцесса"
+    },
+    {
+      "en": "prince",
+      "ru": "принц"
+    },
+    {
+      "en": "king",
+      "ru": "король"
+    },
+    {
+      "en": "queen",
+      "ru": "королева"
+    },
+    {
+      "en": "elder",
+      "ru": "старейшина"
+    },
+    {
+      "en": "witch",
+      "ru": "ведьма"
+    },
+    {
+      "en": "ninja",
+      "ru": "ниндзя"
+    },
+    {
+      "en": "samurai",
+      "ru": "самурай"
+    },
+    {
+      "en": "detective",
+      "ru": "детектив"
+    },
+    {
+      "en": "scientist",
+      "ru": "ученый"
+    },
+    {
+      "en": "student",
+      "ru": "студент"
+    },
+    {
+      "en": "teacher",
+      "ru": "учитель"
+    },
+    {
+      "en": "chef",
+      "ru": "шеф-повар"
+    },
+    {
+      "en": "pilot",
+      "ru": "пилот"
+    },
+    {
+      "en": "mechanic",
+      "ru": "механик"
+    },
+    {
+      "en": "musician",
+      "ru": "музыкант"
+    },
+    {
+      "en": "artist",
+      "ru": "художник"
+    },
+    {
+      "en": "writer",
+      "ru": "писатель"
+    },
+    {
+      "en": "librarian",
+      "ru": "библиотекарь"
+    },
+    {
+      "en": "gardener",
+      "ru": "садовник"
+    },
+    {
+      "en": "farmer",
+      "ru": "фермер"
+    },
+    {
+      "en": "sailor",
+      "ru": "моряк"
+    },
+    {
+      "en": "pirate",
+      "ru": "пират"
+    },
+    {
+      "en": "mermaid",
+      "ru": "русалка"
+    },
+    {
+      "en": "dragon",
+      "ru": "дракон"
+    },
+    {
+      "en": "phoenix",
+      "ru": "феникс"
+    },
+    {
+      "en": "unicorn",
+      "ru": "единорог"
+    },
+    {
+      "en": "goblin",
+      "ru": "гоблин"
+    },
+    {
+      "en": "elf",
+      "ru": "эльф"
+    },
+    {
+      "en": "dwarf",
+      "ru": "гном"
+    },
+    {
+      "en": "giant",
+      "ru": "великан"
+    },
+    {
+      "en": "fairy",
+      "ru": "фея"
+    },
+    {
+      "en": "ogre",
+      "ru": "огр"
+    },
+    {
+      "en": "zombie",
+      "ru": "зомби"
+    },
+    {
+      "en": "mummy",
+      "ru": "мумия"
+    },
+    {
+      "en": "werewolf",
+      "ru": "оборотень"
+    },
+    {
+      "en": "cyborg",
+      "ru": "киборг"
+    },
+    {
+      "en": "ghost",
+      "ru": "призрак"
+    },
+    {
+      "en": "superhero",
+      "ru": "супергерой"
+    },
+    {
+      "en": "villain",
+      "ru": "злодей"
+    },
+    {
+      "en": "monster",
+      "ru": "монстр"
+    },
+    {
+      "en": "goddess",
+      "ru": "богиня"
+    },
+    {
+      "en": "god",
+      "ru": "бог"
+    },
+    {
+      "en": "baker",
+      "ru": "пекарь"
+    },
+    {
+      "en": "butler",
+      "ru": "дворецкий"
+    },
+    {
+      "en": "maid",
+      "ru": "горничная"
+    },
+    {
+      "en": "doctor",
+      "ru": "доктор"
+    },
+    {
+      "en": "nurse",
+      "ru": "медсестра"
+    },
+    {
+      "en": "clown",
+      "ru": "клоун"
+    },
+    {
+      "en": "magician",
+      "ru": "фокусник"
+    },
+    {
+      "en": "acrobat",
+      "ru": "акробат"
+    },
+    {
+      "en": "jester",
+      "ru": "шут"
+    },
+    {
+      "en": "puppet",
+      "ru": "марионетка"
+    },
+    {
+      "en": "doll",
+      "ru": "кукла"
+    },
+    {
+      "en": "shadow",
+      "ru": "тень"
+    },
+    {
+      "en": "spirit",
+      "ru": "дух"
+    },
+    {
+      "en": "idol",
+      "ru": "идол"
+    },
+    {
+      "en": "racer",
+      "ru": "гонщик"
+    },
+    {
+      "en": "gambler",
+      "ru": "игрок"
+    },
+    {
+      "en": "thief",
+      "ru": "вор"
+    },
+    {
+      "en": "assassin",
+      "ru": "убийца"
+    },
+    {
+      "en": "shapeshifter",
+      "ru": "оборотень"
+    },
+    {
+      "en": "time traveler",
+      "ru": "путешественник во времени"
+    },
+    {
+      "en": "alien",
+      "ru": "инопланетянин"
+    },
+    {
+      "en": "astronaut",
+      "ru": "астронавт"
+    },
+    {
+      "en": "android",
+      "ru": "андроид"
+    },
+    {
+      "en": "clone",
+      "ru": "клон"
+    },
+    {
+      "en": "dinosaur",
+      "ru": "динозавр"
+    },
+    {
+      "en": "pharaoh",
+      "ru": "фараон"
+    },
+    {
+      "en": "empress",
+      "ru": "императрица"
+    },
+    {
+      "en": "emperor",
+      "ru": "император"
+    },
+    {
+      "en": "jungle boy",
+      "ru": "мальчик из джунглей"
+    },
+    {
+      "en": "jungle girl",
+      "ru": "девочка из джунглей"
+    },
+    {
+      "en": "panda",
+      "ru": "панда"
+    },
+    {
+      "en": "bear",
+      "ru": "медведь"
+    },
+    {
+      "en": "eagle",
+      "ru": "орел"
+    },
+    {
+      "en": "hawk",
+      "ru": "ястреб"
+    },
+    {
+      "en": "raven",
+      "ru": "ворон"
+    },
+    {
+      "en": "wolf",
+      "ru": "волк"
+    },
+    {
+      "en": "fox",
+      "ru": "лиса"
+    },
+    {
+      "en": "lion",
+      "ru": "лев"
+    },
+    {
+      "en": "tiger",
+      "ru": "тигр"
+    },
+    {
+      "en": "cheetah",
+      "ru": "гепард"
+    },
+    {
+      "en": "panther",
+      "ru": "пантера"
+    },
+    {
+      "en": "jaguar",
+      "ru": "ягуар"
+    },
+    {
+      "en": "leopard",
+      "ru": "леопард"
+    },
+    {
+      "en": "horse",
+      "ru": "лошадь"
+    },
+    {
+      "en": "unicorn",
+      "ru": "единорог"
+    },
+    {
+      "en": "pegasus",
+      "ru": "пегас"
+    },
+    {
+      "en": "griffin",
+      "ru": "грифон"
+    },
+    {
+      "en": "hydra",
+      "ru": "гидра"
+    },
+    {
+      "en": "kraken",
+      "ru": "кракен"
+    },
+    {
+      "en": "centaur",
+      "ru": "кентавр"
+    },
+    {
+      "en": "minotaur",
+      "ru": "минотавр"
+    },
+    {
+      "en": "cerberus",
+      "ru": "цербер"
+    },
+    {
+      "en": "chimera",
+      "ru": "химера"
+    },
+    {
+      "en": "cyclops",
+      "ru": "циклоп"
+    },
+    {
+      "en": "sphinx",
+      "ru": "сфинкс"
+    },
+    {
+      "en": "harpy",
+      "ru": "гарпия"
+    },
+    {
+      "en": "basilisk",
+      "ru": "василиск"
+    },
+    {
+      "en": "gargoyle",
+      "ru": "гаргулья"
+    },
+    {
+      "en": "siren",
+      "ru": "сирена"
+    },
+    {
+      "en": "nymph",
+      "ru": "нимфа"
+    },
+    {
+      "en": "dryad",
+      "ru": "дриада"
+    },
+    {
+      "en": "satyr",
+      "ru": "сатир"
+    },
+    {
+      "en": "gnome",
+      "ru": "гном"
+    },
+    {
+      "en": "sprite",
+      "ru": "спрайт"
+    },
+    {
+      "en": "kelpie",
+      "ru": "келпи"
+    },
+    {
+      "en": "vampire",
+      "ru": "вампир"
+    },
+    {
+      "en": "zombie",
+      "ru": "зомби"
+    },
+    {
+      "en": "mummy",
+      "ru": "мумия"
+    },
+    {
+      "en": "werewolf",
+      "ru": "оборотень"
+    },
+    {
+      "en": "ghost",
+      "ru": "призрак"
+    },
+    {
+      "en": "spirit",
+      "ru": "дух"
+    },
+    {
+      "en": "demon",
+      "ru": "демон"
+    },
+    {
+      "en": "angel",
+      "ru": "ангел"
+    },
+    {
+      "en": "cyborg",
+      "ru": "киборг"
+    },
+    {
+      "en": "robot",
+      "ru": "робот"
+    },
+    {
+      "en": "android",
+      "ru": "андроид"
+    },
+    {
+      "en": "alien",
+      "ru": "инопланетянин"
+    },
+    {
+      "en": "human",
+      "ru": "человек"
+    }
+  ],
+  "places": [
+    {
+      "en": "forest",
+      "ru": "лес"
+    },
+    {
+      "en": "lake",
+      "ru": "озеро"
+    },
+    {
+      "en": "mountain",
+      "ru": "гора"
+    },
+    {
+      "en": "ocean",
+      "ru": "океан"
+    },
+    {
+      "en": "desert",
+      "ru": "пустыня"
+    },
+    {
+      "en": "plains",
+      "ru": "равнина"
+    },
+    {
+      "en": "tundra",
+      "ru": "тундра"
+    },
+    {
+      "en": "island",
+      "ru": "остров"
+    },
+    {
+      "en": "canyon",
+      "ru": "каньон"
+    },
+    {
+      "en": "swamp",
+      "ru": "болото"
+    },
+    {
+      "en": "jungle",
+      "ru": "джунгли"
+    },
+    {
+      "en": "volcano",
+      "ru": "вулкан"
+    },
+    {
+      "en": "river",
+      "ru": "река"
+    },
+    {
+      "en": "waterfall",
+      "ru": "водопад"
+    },
+    {
+      "en": "glacier",
+      "ru": "ледник"
+    },
+    {
+      "en": "cave",
+      "ru": "пещера"
+    },
+    {
+      "en": "beach",
+      "ru": "пляж"
+    },
+    {
+      "en": "valley",
+      "ru": "долина"
+    },
+    {
+      "en": "hill",
+      "ru": "холм"
+    },
+    {
+      "en": "cliff",
+      "ru": "утес"
+    },
+    {
+      "en": "plateau",
+      "ru": "плато"
+    },
+    {
+      "en": "dune",
+      "ru": "дюна"
+    },
+    {
+      "en": "creek",
+      "ru": "ручей"
+    },
+    {
+      "en": "pond",
+      "ru": "пруд"
+    },
+    {
+      "en": "spring",
+      "ru": "родник"
+    },
+    {
+      "en": "meadow",
+      "ru": "луг"
+    },
+    {
+      "en": "ridge",
+      "ru": "хребет"
+    },
+    {
+      "en": "bay",
+      "ru": "залив"
+    },
+    {
+      "en": "gulf",
+      "ru": "залив"
+    },
+    {
+      "en": "fjord",
+      "ru": "фьорд"
+    },
+    {
+      "en": "lagoon",
+      "ru": "лагуна"
+    },
+    {
+      "en": "marsh",
+      "ru": "болото"
+    },
+    {
+      "en": "bog",
+      "ru": "трясина"
+    },
+    {
+      "en": "delta",
+      "ru": "дельта"
+    },
+    {
+      "en": "reef",
+      "ru": "риф"
+    },
+    {
+      "en": "strait",
+      "ru": "пролив"
+    },
+    {
+      "en": "cavern",
+      "ru": "пещера"
+    },
+    {
+      "en": "grotto",
+      "ru": "грот"
+    },
+    {
+      "en": "crater",
+      "ru": "кратер"
+    },
+    {
+      "en": "savanna",
+      "ru": "саванна"
+    },
+    {
+      "en": "steppe",
+      "ru": "степь"
+    },
+    {
+      "en": "taiga",
+      "ru": "тайга"
+    },
+    {
+      "en": "tropics",
+      "ru": "тропики"
+    },
+    {
+      "en": "wilderness",
+      "ru": "дикая местность"
+    },
+    {
+      "en": "woodland",
+      "ru": "лесная местность"
+    },
+    {
+      "en": "rainforest",
+      "ru": "тропический лес"
+    },
+    {
+      "en": "bamboo forest",
+      "ru": "бамбуковый лес"
+    },
+    {
+      "en": "cherry blossom grove",
+      "ru": "вишнёвый сад"
+    },
+    {
+      "en": "pine forest",
+      "ru": "сосновый лес"
+    },
+    {
+      "en": "snowfield",
+      "ru": "снежное поле"
+    },
+    {
+      "en": "glade",
+      "ru": "поляна"
+    },
+    {
+      "en": "garden",
+      "ru": "сад"
+    },
+    {
+      "en": "orchard",
+      "ru": "фруктовый сад"
+    },
+    {
+      "en": "vineyard",
+      "ru": "виноградник"
+    },
+    {
+      "en": "farm",
+      "ru": "ферма"
+    },
+    {
+      "en": "ranch",
+      "ru": "ранчо"
+    },
+    {
+      "en": "pasture",
+      "ru": "пастбище"
+    },
+    {
+      "en": "field",
+      "ru": "поле"
+    },
+    {
+      "en": "prairie",
+      "ru": "прерия"
+    },
+    {
+      "en": "heath",
+      "ru": "пустошь"
+    },
+    {
+      "en": "moor",
+      "ru": "вересковая пустошь"
+    },
+    {
+      "en": "oasis",
+      "ru": "оазис"
+    },
+    {
+      "en": "castle",
+      "ru": "замок"
+    },
+    {
+      "en": "village",
+      "ru": "деревня"
+    },
+    {
+      "en": "city",
+      "ru": "город"
+    },
+    {
+      "en": "town",
+      "ru": "городок"
+    },
+    {
+      "en": "countryside",
+      "ru": "сельская местность"
+    },
+    {
+      "en": "metropolis",
+      "ru": "мегаполис"
+    },
+    {
+      "en": "slum",
+      "ru": "трущобы"
+    },
+    {
+      "en": "suburb",
+      "ru": "пригород"
+    },
+    {
+      "en": "downtown",
+      "ru": "центр города"
+    },
+    {
+      "en": "seaside town",
+      "ru": "приморский город"
+    },
+    {
+      "en": "port",
+      "ru": "порт"
+    },
+    {
+      "en": "harbor",
+      "ru": "гавань"
+    },
+    {
+      "en": "ruin",
+      "ru": "руины"
+    },
+    {
+      "en": "temple",
+      "ru": "храм"
+    },
+    {
+      "en": "shrine",
+      "ru": "святилище"
+    },
+    {
+      "en": "church",
+      "ru": "церковь"
+    },
+    {
+      "en": "cathedral",
+      "ru": "собор"
+    },
+    {
+      "en": "abbey",
+      "ru": "аббатство"
+    },
+    {
+      "en": "monastery",
+      "ru": "монастырь"
+    },
+    {
+      "en": "theatre",
+      "ru": "театр"
+    },
+    {
+      "en": "museum",
+      "ru": "музей"
+    },
+    {
+      "en": "library",
+      "ru": "библиотека"
+    },
+    {
+      "en": "school",
+      "ru": "школа"
+    },
+    {
+      "en": "university",
+      "ru": "университет"
+    },
+    {
+      "en": "hospital",
+      "ru": "больница"
+    },
+    {
+      "en": "prison",
+      "ru": "тюрьма"
+    },
+    {
+      "en": "cemetery",
+      "ru": "кладбище"
+    },
+    {
+      "en": "graveyard",
+      "ru": "кладбище"
+    },
+    {
+      "en": "crypt",
+      "ru": "склеп"
+    },
+    {
+      "en": "dungeon",
+      "ru": "подземелье"
+    },
+    {
+      "en": "fortress",
+      "ru": "крепость"
+    },
+    {
+      "en": "watchtower",
+      "ru": "сторожевая башня"
+    },
+    {
+      "en": "lighthouse",
+      "ru": "маяк"
+    },
+    {
+      "en": "mill",
+      "ru": "мельница"
+    },
+    {
+      "en": "factory",
+      "ru": "фабрика"
+    },
+    {
+      "en": "bakery",
+      "ru": "пекарня"
+    },
+    {
+      "en": "brewery",
+      "ru": "пивоварня"
+    },
+    {
+      "en": "winery",
+      "ru": "винодельня"
+    },
+    {
+      "en": "distillery",
+      "ru": "винокурня"
+    },
+    {
+      "en": "smithy",
+      "ru": "кузница"
+    },
+    {
+      "en": "workshop",
+      "ru": "мастерская"
+    },
+    {
+      "en": "barn",
+      "ru": "амбар"
+    },
+    {
+      "en": "stables",
+      "ru": "конюшни"
+    },
+    {
+      "en": "inn",
+      "ru": "гостиница"
+    },
+    {
+      "en": "tavern",
+      "ru": "таверна"
+    },
+    {
+      "en": "pub",
+      "ru": "паб"
+    },
+    {
+      "en": "brothel",
+      "ru": "бордель"
+    },
+    {
+      "en": "casino",
+      "ru": "казино"
+    },
+    {
+      "en": "marketplace",
+      "ru": "рынок"
+    },
+    {
+      "en": "bazaar",
+      "ru": "базар"
+    },
+    {
+      "en": "emporium",
+      "ru": "магазин"
+    },
+    {
+      "en": "mall",
+      "ru": "торговый центр"
+    },
+    {
+      "en": "arcade",
+      "ru": "аркада"
+    },
+    {
+      "en": "amusement park",
+      "ru": "парк аттракционов"
+    },
+    {
+      "en": "circus",
+      "ru": "цирк"
+    },
+    {
+      "en": "zoo",
+      "ru": "зоопарк"
+    },
+    {
+      "en": "aquarium",
+      "ru": "аквариум"
+    },
+    {
+      "en": "planetarium",
+      "ru": "планетарий"
+    },
+    {
+      "en": "observatory",
+      "ru": "обсерватория"
+    },
+    {
+      "en": "stadium",
+      "ru": "стадион"
+    },
+    {
+      "en": "arena",
+      "ru": "арена"
+    },
+    {
+      "en": "colosseum",
+      "ru": "колизей"
+    },
+    {
+      "en": "racecourse",
+      "ru": "ипподром"
+    },
+    {
+      "en": "golf course",
+      "ru": "гольф-поле"
+    },
+    {
+      "en": "park",
+      "ru": "парк"
+    },
+    {
+      "en": "garden",
+      "ru": "сад"
+    },
+    {
+      "en": "orchard",
+      "ru": "фруктовый сад"
+    },
+    {
+      "en": "vineyard",
+      "ru": "виноградник"
+    },
+    {
+      "en": "greenhouse",
+      "ru": "оранжерея"
+    },
+    {
+      "en": "nursery",
+      "ru": "питомник"
+    },
+    {
+      "en": "flower shop",
+      "ru": "цветочный магазин"
+    },
+    {
+      "en": "bookstore",
+      "ru": "книжный магазин"
+    },
+    {
+      "en": "library",
+      "ru": "библиотека"
+    },
+    {
+      "en": "museum",
+      "ru": "музей"
+    },
+    {
+      "en": "art gallery",
+      "ru": "художественная галерея"
+    },
+    {
+      "en": "concert hall",
+      "ru": "концертный зал"
+    },
+    {
+      "en": "opera house",
+      "ru": "оперный театр"
+    },
+    {
+      "en": "recording studio",
+      "ru": "студия звукозаписи"
+    },
+    {
+      "en": "film studio",
+      "ru": "киностудия"
+    },
+    {
+      "en": "dance studio",
+      "ru": "танцевальная студия"
+    },
+    {
+      "en": "theater",
+      "ru": "театр"
+    },
+    {
+      "en": "laboratory",
+      "ru": "лаборатория"
+    },
+    {
+      "en": "workshop",
+      "ru": "мастерская"
+    },
+    {
+      "en": "factory",
+      "ru": "фабрика"
+    },
+    {
+      "en": "power plant",
+      "ru": "электростанция"
+    },
+    {
+      "en": "hospital",
+      "ru": "больница"
+    },
+    {
+      "en": "pharmacy",
+      "ru": "аптека"
+    },
+    {
+      "en": "veterinary clinic",
+      "ru": "ветеринарная клиника"
+    },
+    {
+      "en": "fire station",
+      "ru": "пожарная станция"
+    },
+    {
+      "en": "police station",
+      "ru": "полицейский участок"
+    },
+    {
+      "en": "post office",
+      "ru": "почта"
+    },
+    {
+      "en": "bank",
+      "ru": "банк"
+    },
+    {
+      "en": "courthouse",
+      "ru": "суд"
+    },
+    {
+      "en": "embassy",
+      "ru": "посольство"
+    },
+    {
+      "en": "city hall",
+      "ru": "ратуша"
+    },
+    {
+      "en": "parliament",
+      "ru": "парламент"
+    },
+    {
+      "en": "capitol",
+      "ru": "капитолий"
+    },
+    {
+      "en": "palace",
+      "ru": "дворец"
+    },
+    {
+      "en": "mansion",
+      "ru": "особняк"
+    },
+    {
+      "en": "villa",
+      "ru": "вилла"
+    },
+    {
+      "en": "cottage",
+      "ru": "коттедж"
+    },
+    {
+      "en": "farmhouse",
+      "ru": "фермерский дом"
+    },
+    {
+      "en": "bungalow",
+      "ru": "бунгало"
+    },
+    {
+      "en": "apartment building",
+      "ru": "многоквартирный дом"
+    },
+    {
+      "en": "skyscraper",
+      "ru": "небоскрёб"
+    },
+    {
+      "en": "hotel",
+      "ru": "гостиница"
+    },
+    {
+      "en": "motel",
+      "ru": "мотель"
+    },
+    {
+      "en": "bed and breakfast",
+      "ru": "ночлег и завтрак"
+    },
+    {
+      "en": "hostel",
+      "ru": "хостел"
+    },
+    {
+      "en": "campsite",
+      "ru": "кемпинг"
+    },
+    {
+      "en": "caravan park",
+      "ru": "караван-парк"
+    },
+    {
+      "en": "trailer park",
+      "ru": "трейлерный парк"
+    },
+    {
+      "en": "resort",
+      "ru": "курорт"
+    },
+    {
+      "en": "spa",
+      "ru": "спа"
+    },
+    {
+      "en": "hot spring",
+      "ru": "горячий источник"
+    },
+    {
+      "en": "beach house",
+      "ru": "дом на пляже"
+    },
+    {
+      "en": "mountain cabin",
+      "ru": "горная хижина"
+    },
+    {
+      "en": "hunting lodge",
+      "ru": "охотничий домик"
+    },
+    {
+      "en": "castle",
+      "ru": "замок"
+    },
+    {
+      "en": "fort",
+      "ru": "форт"
+    },
+    {
+      "en": "outpost",
+      "ru": "форпост"
+    },
+    {
+      "en": "bunker",
+      "ru": "бункер"
+    },
+    {
+      "en": "bomb shelter",
+      "ru": "бомбоубежище"
+    },
+    {
+      "en": "spaceship",
+      "ru": "космический корабль"
+    },
+    {
+      "en": "space station",
+      "ru": "космическая станция"
+    },
+    {
+      "en": "moon base",
+      "ru": "лунная база"
+    },
+    {
+      "en": "planet",
+      "ru": "планета"
+    },
+    {
+      "en": "galaxy",
+      "ru": "галактика"
+    },
+    {
+      "en": "universe",
+      "ru": "вселенная"
+    },
+    {
+      "en": "multiverse",
+      "ru": "мультивселенная"
+    },
+    {
+      "en": "dimension",
+      "ru": "измерение"
+    },
+    {
+      "en": "realm",
+      "ru": "царство"
+    },
+    {
+      "en": "kingdom",
+      "ru": "королевство"
+    },
+    {
+      "en": "empire",
+      "ru": "империя"
+    },
+    {
+      "en": "federation",
+      "ru": "федерация"
+    },
+    {
+      "en": "republic",
+      "ru": "республика"
+    },
+    {
+      "en": "dictatorship",
+      "ru": "диктатура"
+    },
+    {
+      "en": "monarchy",
+      "ru": "монархия"
+    },
+    {
+      "en": "theocracy",
+      "ru": "теократия"
+    },
+    {
+      "en": "anarchy",
+      "ru": "анархия"
+    },
+    {
+      "en": "colony",
+      "ru": "колония"
+    },
+    {
+      "en": "protectorate",
+      "ru": "протекторат"
+    },
+    {
+      "en": "tribe",
+      "ru": "племя"
+    },
+    {
+      "en": "clan",
+      "ru": "клан"
+    },
+    {
+      "en": "family",
+      "ru": "семья"
+    },
+    {
+      "en": "community",
+      "ru": "сообщество"
+    },
+    {
+      "en": "society",
+      "ru": "общество"
+    },
+    {
+      "en": "culture",
+      "ru": "культура"
+    },
+    {
+      "en": "civilization",
+      "ru": "цивилизация"
+    },
+    {
+      "en": "species",
+      "ru": "виды"
+    },
+    {
+      "en": "race",
+      "ru": "раса"
+    },
+    {
+      "en": "nation",
+      "ru": "нация"
+    },
+    {
+      "en": "country",
+      "ru": "страна"
+    },
+    {
+      "en": "state",
+      "ru": "штат"
+    },
+    {
+      "en": "province",
+      "ru": "провинция"
+    },
+    {
+      "en": "county",
+      "ru": "округ"
+    },
+    {
+      "en": "city",
+      "ru": "город"
+    },
+    {
+      "en": "town",
+      "ru": "город"
+    },
+    {
+      "en": "village",
+      "ru": "деревня"
+    },
+    {
+      "en": "neighborhood",
+      "ru": "окрестности"
+    },
+    {
+      "en": "district",
+      "ru": "район"
+    },
+    {
+      "en": "region",
+      "ru": "регион"
+    },
+    {
+      "en": "zone",
+      "ru": "зона"
+    },
+    {
+      "en": "area",
+      "ru": "область"
+    },
+    {
+      "en": "sector",
+      "ru": "сектор"
+    },
+    {
+      "en": "quarter",
+      "ru": "квартал"
+    },
+    {
+      "en": "block",
+      "ru": "блок"
+    },
+    {
+      "en": "street",
+      "ru": "улица"
+    },
+    {
+      "en": "avenue",
+      "ru": "авеню"
+    },
+    {
+      "en": "boulevard",
+      "ru": "бульвар"
+    },
+    {
+      "en": "lane",
+      "ru": "переулок"
+    },
+    {
+      "en": "alley",
+      "ru": "аллея"
+    },
+    {
+      "en": "path",
+      "ru": "тропа"
+    },
+    {
+      "en": "trail",
+      "ru": "след"
+    },
+    {
+      "en": "road",
+      "ru": "дорога"
+    },
+    {
+      "en": "highway",
+      "ru": "шоссе"
+    },
+    {
+      "en": "freeway",
+      "ru": "автомагистраль"
+    },
+    {
+      "en": "motorway",
+      "ru": "автомагистраль"
+    },
+    {
+      "en": "bridge",
+      "ru": "мост"
+    },
+    {
+      "en": "tunnel",
+      "ru": "туннель"
+    },
+    {
+      "en": "pass",
+      "ru": "перевал"
+    },
+    {
+      "en": "crossroads",
+      "ru": "перекрёсток"
+    },
+    {
+      "en": "junction",
+      "ru": "перекрёсток"
+    },
+    {
+      "en": "roundabout",
+      "ru": "кольцо"
+    },
+    {
+      "en": "traffic circle",
+      "ru": "кольцо"
+    },
+    {
+      "en": "intersection",
+      "ru": "перекрёсток"
+    },
+    {
+      "en": "corner",
+      "ru": "угол"
+    },
+    {
+      "en": "turn",
+      "ru": "поворот"
+    },
+    {
+      "en": "detour",
+      "ru": "объезд"
+    },
+    {
+      "en": "route",
+      "ru": "маршрут"
+    },
+    {
+      "en": "way",
+      "ru": "путь"
+    },
+    {
+      "en": "course",
+      "ru": "курс"
+    },
+    {
+      "en": "direction",
+      "ru": "направление"
+    },
+    {
+      "en": "line",
+      "ru": "линия"
+    },
+    {
+      "en": "orbit",
+      "ru": "орбита"
+    },
+    {
+      "en": "trajectory",
+      "ru": "траектория"
+    },
+    {
+      "en": "channel",
+      "ru": "канал"
+    },
+    {
+      "en": "passage",
+      "ru": "проход"
+    },
+    {
+      "en": "corridor",
+      "ru": "коридор"
+    },
+    {
+      "en": "hallway",
+      "ru": "прихожая"
+    },
+    {
+      "en": "staircase",
+      "ru": "лестница"
+    },
+    {
+      "en": "escalator",
+      "ru": "эскалатор"
+    },
+    {
+      "en": "elevator",
+      "ru": "лифт"
+    },
+    {
+      "en": "ladder",
+      "ru": "лестница"
+    },
+    {
+      "en": "ramp",
+      "ru": "пандус"
+    },
+    {
+      "en": "slope",
+      "ru": "склон"
+    },
+    {
+      "en": "slide",
+      "ru": "скат"
+    },
+    {
+      "en": "stairway",
+      "ru": "лестница"
+    },
+    {
+      "en": "doorway",
+      "ru": "дверной проём"
+    }
+  ],
+  "styles": [
+    {
+      "alias": "cyberpunk",
+      "en": "Illustration in cyberpunk style of %s, %s, vibrant neon lights illuminating, towering skyscrapers, rain-soaked streets bustling with activity, dynamic composition, high detail, cinematic lighting, energetic vibe, 4k resolution, masterpiece digital painting",
+      "ru": "Киберпанк иллюстрация %s, %s, яркие неоновые огни освещают, высотные небоскребы, залитые дождем улицы, полные активности, динамичная композиция, высокая детализация, кинематографическое освещение, энергичная атмосфера, разрешение 4k, шедевр цифровой живописи"
+    },
+    {
+      "alias": "fantasy",
+      "en": "A fantasy illustration of %s with glowing plants and mythical creatures in %s, beautifully lit, vibrant colors, enchanted atmosphere, highly detailed, digital painting by Brian Froud and Artgerm, epic composition, 4k resolution",
+      "ru": "Фэнтезийная иллюстрация %s с светящимися растениями и мифическими существами, %s, красиво освещенная, яркие цвета, зачарованная атмосфера, высокая детализация, цифровая живопись Брайана Фроуда и Артгерма, эпическая композиция, разрешение 4k"
+    },
+    {
+      "alias": "painting",
+      "en": "An impressionist painting of %s in %s, soft brush strokes, vibrant palette, detailed, masterpiece by Claude Monet and Pierre-Auguste Renoir, warm colors, light reflections, lively atmosphere, 4k resolution",
+      "ru": "Импрессионистская картина %s, %s, мягкие мазки кисти, яркая палитра, детализированная, шедевр Клода Моне и Пьера-Огюста Ренуара, теплые цвета, отражения света, живая атмосфера, разрешение 4k"
+    },
+    {
+      "alias": "minimalist",
+      "en": "A minimalist graphic of %s, %s, with clean lines and a muted color scheme",
+      "ru": "Минималистичная графика %s, %s, с чистыми линиями и приглушенной цветовой схемой"
+    },
+    {
+      "alias": "vintage",
+      "en": "A graphic of %s in vintage style, %s, retro patterns, clean lines, muted color scheme, flat design, vector style, elegant composition, high detail, modern aesthetic, simple shapes, calming atmosphere, digital illustration",
+      "ru": "Графика %s в винтажном стиле, %s, ретро-узоры, чистые линии, приглушенная цветовая схема, плоский дизайн, векторный стиль, элегантная композиция, высокая детализация, современная эстетика, простые формы, успокаивающая атмосфера, цифровая иллюстрация"
+    },
+    {
+      "alias": "anime",
+      "en": "An anime-style of %s, %s, vibrant colors, and dynamic poses, highly detailed, expressive, action-packed scene, by Yoshitaka Amano and Akira Toriyama, 4k resolution, masterpiece digital illustration",
+      "ru": "Аниме-стиль %s, %s, яркие цвета и динамичные позы, высокая детализация, выразительная, насыщенная сцена, от Ёситака Амано и Акиры Ториямы, разрешение 4k, шедевр цифровой иллюстрации"
+    },
+    {
+      "alias": "gothic",
+      "en": "A gothic scene of %s, %s, abandoned, stained glowing faintly, mist swirling in the air, haunting atmosphere, cinematic lighting, highly detailed, masterpiece digital painting by Greg Rutkowski and Peter Mohrbacher, 8k resolution",
+      "ru": "%s в готической сцене с темным, заброшенным, %s, тускло светящимся витражом, туман, клубящийся в воздухе, зловещая атмосфера, кинематографическое освещение, высокая детализация, шедевр цифровой живописи Грега Рутковски и Питера Морбахера, разрешение 8k"
+    },
+    {
+      "alias": "noir",
+      "en": "In a noir film-style scene of %s, %s, dark atmosphere, dramatic lighting and shadows, high contrast, moody composition, film grain texture, cinematically framed, inspired by classic film noir aesthetics, 4k resolution, ultra-detailed",
+      "ru": "В стиле нуар фильма %s, %s, темная атмосфера, драматическое освещение и тени, высокий контраст, мрачная композиция, текстура кинопленки, кинематографическая композиция, вдохновленная классической эстетикой фильмов нуар, разрешение 4k, ультра-детализированная"
+    },
+    {
+      "alias": "pop_art",
+      "en": "%s in a pop art-inspired comic book, %s, bold lines, bright colors, halftone patterns, dynamic composition, graphic style, highly detailed, modern twist, vibrant energy, reminiscent of Roy Lichtenstein and Andy Warhol, 4k resolution, masterpiece",
+      "ru": "%s в стиле поп-арт комикса, %s, жирные линии, яркие цвета, полутоновые узоры, динамичная композиция, графический стиль, высокая детализация, современный поворот, яркая энергия, напоминающая работы Роя Лихтенштейна и Энди Уорхола, разрешение 4k, шедевр"
+    },
+    {
+      "alias": "watercolor",
+      "en": "A delicate watercolor painting of %s, %s, soft edges, pastel color palette, dreamy and ethereal, highly detailed, tranquil atmosphere, by Claude Monet and Vincent van Gogh, 4k resolution, masterpiece digital art",
+      "ru": "Нежная акварельная картина %s, %s, мягкие края, пастельная цветовая палитра, мечтательная и эфирная, высокая детализация, спокойная атмосфера, от Клода Моне и Винсента Ван Гога, разрешение 4k, шедевр цифрового искусства"
+    },
+    {
+      "alias": "post_apocalyptic",
+      "en": "Comics style scene of %s, %s, inspired by The Walking Dead, post-apocalyptic landscape, detailed character design, intense emotions, dynamic poses, black and white, high contrast, gritty textures, atmospheric lighting, narrative composition, artwork by Robert Kirkman and Charlie Adlard, graphic novel aesthetics, UHD",
+      "ru": "Сцена в стиле комиксов %s, %s, вдохновленная The Walking Dead, постапокалиптический ландшафт, детализированный дизайн персонажей, интенсивные эмоции, динамичные позы, черно-белый, высокий контраст, грубые текстуры, атмосферное освещение, нарративная композиция, искусство Роберта Киркмана и Чарли Адларда, эстетика графического романа, UHD"
+    },
+    {
+      "alias": "pixel_art",
+      "en": "Vibrant pixel art of %s, %s, battling against colorful fantasy creatures, dynamic action scene, 16-bit style, highly detailed, bright colors, nostalgic retro aesthetic, digital artwork by Tsutomu Nihei and Hidetaka Miyazaki, immersive environment, fantasy landscape",
+      "ru": "Яркий пиксель-арт %s, %s, сражающийся с красочными фантастическими существами, динамичная экшн-сцена, стиль 16 бит, высокая детализация, яркие цвета, ностальгическая ретро-эстетика, цифровое искусство Цутому Нихеи и Хидэтаки Миядзаки, захватывающая обстановка, фантастический ландшафт"
+    },
+    {
+      "alias": "cartoon",
+      "en": "Cartoon style depiction of %s, %s, vibrant colors, exaggerated expressions, dynamic action poses, playful background, highly detailed animation style, whimsical, nostalgic, lively atmosphere, art by Chuck Jones and Tex Avery, high resolution, 8k",
+      "ru": "Карикатурное изображение %s, %s, яркие цвета, преувеличенные выражения лиц, динамичные экшн-позы, игривая обстановка, высокая детализация анимационного стиля, причудливая, ностальгическая, живая атмосфера, работы Чака Джонса и Текса Эйвери, высокое разрешение, 8k"
+    },
+    {
+      "alias": "medieval",
+      "en": "%s in a majestic medieval style, %s, high detail, realistic, cinematic lighting, digital painting by Artgerm and Greg Rutkowski, 4k resolution, masterpiece",
+      "ru": "%s в величественном средневековом стиле, высокая детализация, реалистичное изображение, кинематографическое освещение, цифровая живопись Артгерма и Грега Рутковски, разрешение 4k, шедевр"
+    },
+    {
+      "alias": "renaissance",
+      "en": "A majestic Renaissance-style of %s, golden hour lighting, beautifully composed, inspired by the works of Leonardo da Vinci and Michelangelo, hyper-detailed, 8k resolution, cinematic atmosphere, rich colors",
+      "renaissance_ru": "Величественный стиль эпохи Возрождения %s, %s, освещение золотого часа, красиво скомпонованное, вдохновленное работами Леонардо да Винчи и Микеланджело, гипердетализированное, разрешение 8k, кинематографическая атмосфера, богатые цвета"
+    }
+  ]
+}

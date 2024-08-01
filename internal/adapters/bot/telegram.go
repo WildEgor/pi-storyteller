@@ -21,7 +21,8 @@ var _ Bot = (*TelegramBotAdapter)(nil)
 type TelegramBotAdapter struct {
 	bot *tele.Bot
 
-	callbacks map[string]btnCallbackHandler
+	callbacks   map[string]btnCallbackHandler
+	defaultLang string
 }
 
 // NewTelegramBot ...
@@ -38,8 +39,9 @@ func NewTelegramBot(config *configs.TelegramBotConfig) *TelegramBotAdapter {
 	}
 
 	return &TelegramBotAdapter{
-		bot:       bot,
-		callbacks: make(map[string]btnCallbackHandler),
+		bot:         bot,
+		callbacks:   make(map[string]btnCallbackHandler),
+		defaultLang: config.Language,
 	}
 }
 
@@ -118,12 +120,18 @@ func (t *TelegramBotAdapter) SendStory(ctx context.Context, to *MessageRecipient
 // HandleCommand ...
 func (t *TelegramBotAdapter) HandleCommand(ctx context.Context, command string, fn commandHandler) {
 	t.bot.Handle(command, func(c tele.Context) error {
+
+		lang := c.Sender().LanguageCode
+		if t.defaultLang != "" {
+			lang = t.defaultLang
+		}
+
 		return fn(&CommandData{
 			Nickname:  c.Sender().Username,
 			MessageID: c.Message().ID,
 			ChatID:    c.Chat().ID,
 			Payload:   c.Message().Payload,
-			Lang:      c.Sender().LanguageCode,
+			Lang:      lang,
 		})
 	}, middleware.Recover())
 }

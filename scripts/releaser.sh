@@ -69,8 +69,8 @@ SOURCE_CODE_URL=$(curl -sL https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/t
 curl -sL "$SOURCE_CODE_URL" -o "$TEMP_DIR/latest_source.tar.gz"
 tar -xzf "$TEMP_DIR/latest_source.tar.gz" -C "$TEMP_DIR"
 EXTRACTED_DIR=$(tar -tf "$TEMP_DIR/latest_source.tar.gz" | head -1 | cut -f1 -d'/')
-mkdir -p "$APP_DIR/assets" && cp -r "$TEMP_DIR/$EXTRACTED_DIR/assets" "$APP_DIR/assets"
-mkdir -p "$APP_DIR/scripts" && cp -r "$TEMP_DIR/$EXTRACTED_DIR/scripts" "$APP_DIR/scripts"
+mkdir -p "$APP_DIR/assets" && cp -r "$TEMP_DIR/$EXTRACTED_DIR/assets" "$APP_DIR"
+mkdir -p "$APP_DIR/scripts" && cp -r "$TEMP_DIR/$EXTRACTED_DIR/scripts" "$APP_DIR"
 
 echo "Restart app..."
 export PI_STORYTELLER_CONFIG_PATH=$APP_CONFIG_PATH

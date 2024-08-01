@@ -77,14 +77,19 @@ func (p *Service) GetRandomNews() (string, error) {
 
 // GetRandomStory ...
 func (p *Service) GetRandomStory(lang string) []Conv {
-	if lang != "ru" && lang != "en" {
-		lang = "en"
-	}
-
-	prompts := p.cache.Prompts(lang)
+	actors := p.cache.Actors(lang)
 	//nolint
-	randPrompt := prompts[rand.Intn(len(prompts))]
-	story := p.cache.GetPrompt(randPrompt, lang)
+	randActor := actors[rand.Intn(len(actors))]
+
+	places := p.cache.Places(lang)
+	//nolint
+	randPlace := places[rand.Intn(len(places))]
+
+	style := p.cache.Styles()
+	randStyle := style[rand.Intn(len(style))]
+
+	//nolint
+	story := p.cache.GetStyledPrompt(randStyle, lang, randActor, randPlace)
 
 	var conv []Conv
 	for _, s := range strings.Split(story, ".") {
@@ -92,7 +97,7 @@ func (p *Service) GetRandomStory(lang string) []Conv {
 			continue
 		}
 		conv = append(conv, Conv{
-			Style:    randPrompt,
+			Style:    randStyle,
 			Original: s,
 			Prompt:   s,
 		})
@@ -103,6 +108,7 @@ func (p *Service) GetRandomStory(lang string) []Conv {
 
 // GetPredefinedRandomStyleStory ...
 func (p *Service) GetPredefinedRandomStyleStory(source string, sep bool) []Conv {
+	// TODO: remove heavy lang detection
 	code, ok := p.detector.DetectLanguageOf(source)
 	if !ok {
 		slog.Warn("could not detect language", slog.Any("input", source))
@@ -114,11 +120,9 @@ func (p *Service) GetPredefinedRandomStyleStory(source string, sep bool) []Conv 
 		lang = "en"
 	}
 
-	styles := p.cache.Styles(lang)
+	styles := p.cache.Styles()
 	//nolint
 	randStyle := styles[rand.Intn(len(styles))]
-
-	prompt := p.cache.GetStyle(randStyle, lang)
 
 	var prompts []Conv
 	if sep {
@@ -129,14 +133,14 @@ func (p *Service) GetPredefinedRandomStyleStory(source string, sep bool) []Conv 
 			prompts = append(prompts, Conv{
 				Style:    randStyle,
 				Original: s,
-				Prompt:   fmt.Sprintf(prompt, s),
+				Prompt:   p.cache.GetStyledPrompt(randStyle, lang, s),
 			})
 		}
 	} else {
 		prompts = append(prompts, Conv{
 			Style:    randStyle,
 			Original: source,
-			Prompt:   fmt.Sprintf(prompt, source),
+			Prompt:   p.cache.GetStyledPrompt(randStyle, lang, source),
 		})
 	}
 

@@ -8,9 +8,10 @@ import (
 
 // TelegramBotConfig holds telegram bot configuration
 type TelegramBotConfig struct {
-	Name   string `mapstructure:"name"`
-	ChatID string `mapstructure:"chat_id"`
-	Token  string `mapstructure:"token"`
+	Language string `mapstructure:"lang"`
+	Name     string `mapstructure:"name"`
+	ChatID   string `mapstructure:"chat_id"`
+	Token    string `mapstructure:"token"`
 }
 
 // NewTelegramBotConfig creates telegram bot config
