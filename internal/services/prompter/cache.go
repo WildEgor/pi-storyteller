@@ -3,7 +3,6 @@ package prompter
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/samber/lo"
 	"io"
 	"log/slog"
 	"os"
@@ -80,22 +79,31 @@ func (t *Cache) Styles() []string {
 }
 
 // GetStyledPrompt ...
-func (t *Cache) GetStyledPrompt(alias string, lang string, params ...string) string {
+func (t *Cache) GetStyledPrompt(alias string, lang string, params ...any) string {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	style, ok := lo.Find(t.source.Styles, func(item Lang) bool {
-		return item.Alias == alias
-	})
-	if ok {
-		if lang == "ru" {
-			return fmt.Sprintf(style.Ru, params[0], params[1])
-		}
-
-		return fmt.Sprintf(style.En, params[0], params[1])
+	styleMap := make(map[string]Lang)
+	for _, item := range t.source.Styles {
+		styleMap[item.Alias] = item
 	}
 
-	return ""
+	style, ok := styleMap[alias]
+	if !ok {
+		return ""
+	}
+
+	var formatString string
+	switch lang {
+	case "ru":
+		formatString = style.Ru
+	case "en":
+		formatString = style.En
+	default:
+		formatString = style.En
+	}
+
+	return fmt.Sprintf(formatString, params...)
 }
 
 // Actors ...
