@@ -13,8 +13,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/samber/lo v1.46.0
 	github.com/spf13/viper v1.19.0
-	golang.org/x/sync v0.7.0
-	gopkg.in/telebot.v3 v3.3.6
+	gopkg.in/telebot.v3 v3.3.7
 )
 
 require (
